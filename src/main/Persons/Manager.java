@@ -1,4 +1,4 @@
 package main.Persons;
 
-public class Manager {
+public class Manager extends Person{
 }

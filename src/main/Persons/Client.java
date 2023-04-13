@@ -1,4 +1,5 @@
 package main.Persons;
 
-public class Client {
+public class Client extends Person{
+
 }
