@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c131795-afd8-4ad7-8e25-9f6d01fa23c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/intellij-javadocs-4.0.1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/ASCII_Art.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Accounts/ITrading.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Accounts/OptionsAccount.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Accounts/TradingAccount.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Accounts/TradingAccountFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Colors.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Display.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Persons/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Persons/CustomerFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Persons/IPerson.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Persons/Manager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Persons/Person.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/PortfolioManager/BankManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Sounds.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Stocks/CustomerStocks.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Stocks/Market.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Stocks/StockData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Stocks/StockFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Stocks/Trading.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Utils/Profit_Loss.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Utils/Statistics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Utils/Unrealized_Money.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/PortfolioManager/BankManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/PortfolioManager/BankManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +55,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1681398649542</updated>
-      <workItem from="1681398650683" duration="2316000" />
+      <workItem from="1681398650683" duration="2792000" />
     </task>
     <servers />
   </component>
