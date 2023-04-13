@@ -10,7 +10,8 @@ This project is a simulation of a trading system which has the following feature
 7) Personal Page
 
 All of this is displayed in a GUI built on Java Swing
-//----------------------------------------------------------------------
+[InitialStructure.pdf](https://github.com/ArkashJ/_611Final_TradingSystem/files/11223661/InitialStructure.pdf)
+
 # CS611 Final Project
 
 Arkash Jain
@@ -68,4 +69,4 @@ java -cp bin main.Main
 ```
 
 
-[InitialStructure.pdf](https://github.com/ArkashJ/_611Final_TradingSystem/files/11223661/InitialStructure.pdf)
+
