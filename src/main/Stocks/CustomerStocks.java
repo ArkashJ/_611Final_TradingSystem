@@ -55,4 +55,12 @@ public class CustomerStocks {
         }
         throw new RuntimeException(stock.getName()+"sell num is larger than the number of you have");
     }
+
+    public void viewStocks() {
+        System.out.println("Your stocks:");
+        System.out.println("StockName\tCompanyName\tCurrentPrice\tNum");
+        for (Stock stock : stocks.keySet()) {
+            System.out.println(stock.getName()+"\t"+stock.getCompanyName()+"\t"+stock.getCurrentPrice()+"\t"+stocks.get(stock));
+        }
+    }
 }
