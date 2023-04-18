@@ -1,7 +1,6 @@
 package main.Accounts;
 
 import main.Stocks.CustomerStocks;
-
 //Create a trading account for a customer
 
 public class TradingAccount implements ITrading{

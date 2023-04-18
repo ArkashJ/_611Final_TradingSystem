@@ -7,9 +7,9 @@ package main.Stocks;
  */
 public class Trading {
     // The trading is a singleton class
-    private static Trading trading=new Trading();
     private Trading() {}
-
+    private static Trading trading = new Trading();
+    
     public static boolean trade(CustomerStocks cs,Stock stock, int num, String way) {
         if(way.equals("buy")) {
             try {

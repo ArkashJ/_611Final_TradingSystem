@@ -1,6 +1,6 @@
 package main.Persons;
 
 public interface IPerson {
-    public boolean deposit(double amount);
-    public boolean withdraw(double amount);
+    boolean deposit(double amount);
+    boolean withdraw(double amount);
 }

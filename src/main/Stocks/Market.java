@@ -15,6 +15,7 @@ public class Market {
         market = new Market();
         stocks = new HashMap<>();
     }
+    
     public static void buyStocks(Stock stock, int num) {
         if(num<=0) {
             throw new RuntimeException("nums must be larger than 0");
