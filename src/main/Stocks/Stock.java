@@ -10,28 +10,29 @@ public class Stock {
     private String name;
     private String companyName;
     private double currentPrice;
+    private double lastClosingPrice;
+    private double highPrice;
+    private double lowPrice;
+    private final double dividend;
 
-    public Stock(String name, String companyName, double currentPrice) {
+    public Stock(String name, String companyName, double currentPrice, double lastClosingPrice, double highPrice, double lowPrice, double dividend) {
         this.name = name;
         this.companyName = companyName;
         this.currentPrice = currentPrice;
+        this.lastClosingPrice =  lastClosingPrice;
+        this.highPrice = highPrice;
+        this.lowPrice = lowPrice;
+        this.dividend = dividend;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCompanyName() {
         return companyName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
 
     public double getCurrentPrice() {
         return currentPrice;
@@ -45,12 +46,41 @@ public class Stock {
         setCurrentPrice(newPrice);
     }
 
+
+    public double getLastClosingPrice() {
+        return lastClosingPrice;
+    }
+
+    public void setLastClosingPrice(double lastClosingPrice) {
+        this.lastClosingPrice = lastClosingPrice;
+    }
+
+    public double getHighPrice() {
+        return highPrice;
+    }
+
+    public void setHighPrice(double highPrice) {
+        this.highPrice = highPrice;
+    }
+
+    public double getLowPrice() {
+        return lowPrice;
+    }
+
+    public void setLowPrice(double lowPrice) {
+        this.lowPrice = lowPrice;
+    }
+
     @Override
     public String toString() {
         return "Stock{" +
                 "name='" + name + '\'' +
                 ", companyName='" + companyName + '\'' +
                 ", currentPrice=" + currentPrice +
+                ", lastClosingPrice=" + lastClosingPrice +
+                ", highPrice=" + highPrice +
+                ", lowPrice=" + lowPrice +
+                ", dividend=" + dividend +
                 '}';
     }
 }
