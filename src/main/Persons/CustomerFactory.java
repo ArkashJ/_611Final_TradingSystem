@@ -4,12 +4,15 @@ public class CustomerFactory {
     // Factory design pattern: create Client, Manager, or Person
     public static Person createCustomer(String type) {
         if (type.equals("Client")) {
+            System.out.println("Client created");
             return new Client();
-        } else if (type.equals("Manager")) {
-            return new Manager();
-        } else {
-            return new Person();
         }
+        if (type.equals("Manager")) {
+            System.out.println("Manager created");
+            return new Manager();
+        }
+        System.out.println("Error, could not create the person entity");
+        return null;
     }
 
 }

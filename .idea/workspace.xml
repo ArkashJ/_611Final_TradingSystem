@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c131795-afd8-4ad7-8e25-9f6d01fa23c6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Accounts/TradingAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Accounts/TradingAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Stocks/Stock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Stocks/Stock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Utils/Profit_Loss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Utils/Profit_Loss.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Utils/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Utils/Statistics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/CustomerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/CustomerFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Stocks/CustomerStocks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Stocks/CustomerStocks.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Stocks/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Stocks/Market.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +63,7 @@
       <option name="presentableId" value="Default" />
       <updated>1681398649542</updated>
       <workItem from="1681398650683" duration="2792000" />
-      <workItem from="1681833008352" duration="1186000" />
+      <workItem from="1681833008352" duration="1686000" />
     </task>
     <servers />
   </component>

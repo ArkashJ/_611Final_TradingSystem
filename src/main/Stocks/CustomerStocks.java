@@ -12,7 +12,6 @@ import java.util.List;
 public class CustomerStocks {
     // stocks: key -> stock, value -> number of stocks
     protected HashMap<Stock, Integer> stocks;
-
     public HashMap<Stock, Integer> getStocks() {
         return stocks;
     }

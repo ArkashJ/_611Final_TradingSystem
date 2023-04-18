@@ -4,11 +4,14 @@ import java.util.HashMap;
 
 /**
  * @Description: This class represents the market, a singleton class
+ * TODO: Add functions for time. You can place order for stocks but can only buy or sell them when the market is open
  */
 
 public class Market {
     // The market is a singleton class
     private static Market market;
+    private String closingTime;
+    private String openingTime;
     // stocks: key -> stock, value -> number of stocks
     private static HashMap<Stock, Integer> stocks;
     private Market() {
