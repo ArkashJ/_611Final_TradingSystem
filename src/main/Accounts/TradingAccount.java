@@ -1,6 +1,7 @@
 package main.Accounts;
 
 import main.Stocks.CustomerStocks;
+import main.Stocks.Stock;
 //Create a trading account for a customer
 
 public class TradingAccount implements ITrading{
@@ -9,15 +10,17 @@ public class TradingAccount implements ITrading{
     private String accountType;
     private String userName;
     private String password;
-
     private CustomerStocks customerStocks;
+    private double balance;
 
-    public TradingAccount(String ownerName, long accountNumber, String accountType, String userName, String password) {
+    public TradingAccount(String ownerName, long accountNumber, String accountType, String userName, String password, CustomerStocks customerStocks, double balance) {
         this.ownerName = ownerName;
         this.accountNumber = accountNumber;
         this.accountType = accountType;
         this.userName = userName;
         this.password = password;
+        this.customerStocks = customerStocks;
+        this.balance = balance;
     }
 
     @Override
@@ -26,6 +29,8 @@ public class TradingAccount implements ITrading{
         System.out.println("Owner Name: " + ownerName);
         System.out.println("Account Number: " + accountNumber);
         System.out.println("Account Type: " + accountType);
+        System.out.println("Customer Stocks: " + customerStocks);
+        System.out.println("Balance: " + balance);
     }
 
     public String getOwnerName() {
@@ -54,6 +59,14 @@ public class TradingAccount implements ITrading{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public double getBalance() {
+        // loop through customer stocks and return the total value
+        return balance;
+    }
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public CustomerStocks getCustomerStocks() {

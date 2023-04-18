@@ -14,6 +14,7 @@ public class Stock {
     private double highPrice;
     private double lowPrice;
     private final double dividend;
+    private double priceBoughtAt;
 
     public Stock(String name, String companyName, double currentPrice, double lastClosingPrice, double highPrice, double lowPrice, double dividend) {
         this.name = name;
@@ -46,7 +47,6 @@ public class Stock {
         setCurrentPrice(newPrice);
     }
 
-
     public double getLastClosingPrice() {
         return lastClosingPrice;
     }
@@ -69,6 +69,34 @@ public class Stock {
 
     public void setLowPrice(double lowPrice) {
         this.lowPrice = lowPrice;
+    }
+
+    public double getDividend() {
+        return dividend;
+    }
+
+    public double getPriceBoughtAt() {
+        return priceBoughtAt;
+    }
+
+    public void setPriceBoughtAt(double priceBoughtAt) {
+        this.priceBoughtAt = priceBoughtAt;
+    }
+
+    public double getChangePercent() {
+        return (currentPrice - lastClosingPrice) / lastClosingPrice;
+    }
+
+    public double getChangeAmount() {
+        return currentPrice - lastClosingPrice;
+    }
+
+    public double getChangePercentSinceBought() {
+        return (currentPrice - priceBoughtAt) / priceBoughtAt;
+    }
+
+    public double getChangeAmountSinceBought() {
+        return currentPrice - priceBoughtAt;
     }
 
     @Override
