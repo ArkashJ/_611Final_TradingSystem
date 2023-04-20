@@ -57,6 +57,7 @@ public class Database {
             stmt.execute(usersTable);
             stmt.execute(accountsTable);
             stmt.execute(stocksTable);
+            stmt.execute(customerStocksTable);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
