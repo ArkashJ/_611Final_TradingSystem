@@ -5,7 +5,7 @@ package main.Accounts;
 import main.Stocks.CustomerStocks;
 
 public class TradingAccountFactory {
-    public static TradingAccount createTradingAccount(String ownerName, long accountNumber, String accountType, String userName, String password, CustomerStocks customerStocks, double balance) {
-        return new TradingAccount(ownerName, accountNumber, accountType, userName, password, customerStocks, balance);
+    public static TradingAccount createTradingAccount(String ownerName, CustomerStocks customerStocks, double balance) {
+        return new TradingAccount(ownerName, customerStocks, balance);
     }
 }

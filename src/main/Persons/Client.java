@@ -18,4 +18,16 @@ public class Client extends Person{
     public String getAccountType() {
         return accountType;
     }
+
+    public void returnAccountDetails(){
+        if (authenticate( getUserName(), getPassword())){
+            System.out.println("Account Number: " + getAccountNumber());
+            System.out.println("Account Type: " + getAccountType());
+        }
+        else {
+            System.out.println("Invalid username or password");
+        }
+    }
+
+
 }

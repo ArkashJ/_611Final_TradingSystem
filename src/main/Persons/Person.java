@@ -21,14 +21,7 @@ public class Person {
         this.password = password;
     }
 
-    public void viewAccountDetails(String userName, String password) {
-        if (this.userName.equals(userName) && this.password.equals(password)) {
-            System.out.println("Account Details:");
-            System.out.println("User Name: " + userName);
-            System.out.println("Account Number: " + accountNumber);
-            System.out.println("Account Type: " + accountType);
-        } else {
-            System.out.println("Incorrect username or password");
-        }
+    public boolean authenticate(String userName, String password) {
+        return this.userName.equals(userName) && this.password.equals(password);
     }
 }
