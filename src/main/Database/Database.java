@@ -43,6 +43,15 @@ public class Database {
                 + "	price real NOT NULL\n"
                 + ");";
 
+        String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
+                + "	account_number integer NOT NULL,\n"
+                + "	symbol text NOT NULL,\n"
+                + "	quantity integer NOT NULL,\n"
+                + "	PRIMARY KEY (account_number, symbol),\n"
+                + "	FOREIGN KEY (account_number) REFERENCES users (account_number),\n"
+                + "	FOREIGN KEY (symbol) REFERENCES stocks (symbol)\n"
+                + ");";
+
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
             stmt.execute(usersTable);
