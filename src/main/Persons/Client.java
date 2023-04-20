@@ -1,5 +1,8 @@
 package main.Persons;
 
+import main.Accounts.TradingAccount;
+import main.Database.Database;
+
 public class Client extends Person{
 
     private long accountNumber;
@@ -19,12 +22,16 @@ public class Client extends Person{
         return accountType;
     }
 
-    public void returnAccountDetails(){
-        if (authenticate( getUserName(), getPassword())){
-            System.out.println("Account Number: " + getAccountNumber());
-            System.out.println("Account Type: " + getAccountType());
-        }
-        else {
+    public void returnAccountDetails() {
+        Client authenticatedClient = Database.authenticate(getUserName(), getPassword());
+        if (authenticatedClient != null) {
+            TradingAccount tradingAccount = Database.getTradingAccount(authenticatedClient.getAccountNumber());
+            if (tradingAccount != null) {
+                tradingAccount.viewAccountDetails();
+            } else {
+                System.out.println("Account not found.");
+            }
+        } else {
             System.out.println("Invalid username or password");
         }
     }

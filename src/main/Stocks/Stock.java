@@ -7,6 +7,7 @@ package main.Stocks;
  */
 
 public class Stock {
+    private String symbol;
     private String name;
     private String companyName;
     private double currentPrice;
@@ -97,6 +98,14 @@ public class Stock {
 
     public double getChangeAmountSinceBought() {
         return currentPrice - priceBoughtAt;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     @Override
