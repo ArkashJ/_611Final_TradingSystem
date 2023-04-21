@@ -104,7 +104,6 @@ public class Stock {
         return currentPrice - priceBoughtAt;
     }
 
-
     @Override
     public String toString() {
         return "Stock{" +

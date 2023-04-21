@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * @Description: This class represents a customer's stocks. like a bag
+ * stocks to database
  */
 
 public class CustomerStocks {

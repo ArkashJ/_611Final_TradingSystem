@@ -3,6 +3,7 @@ package main.Accounts;
 import main.Stocks.CustomerStocks;
 import main.Stocks.Stock;
 import main.Stocks.StockFactory;
+import main.Utils.Profit;
 import main.Utils.Profit_Loss;
 
 import java.util.HashMap;
@@ -10,13 +11,17 @@ import java.util.List;
 import java.util.Scanner;
 //Create a trading account for a customer
 
+/**
+ * stockMap to database
+ */
+
 public class TradingAccount implements ITrading{
     private String ownerName;
     private CustomerStocks customerStocks;
     private double balance;
 
     // profit_loss is a class that stores the profit and loss of each possible trade
-    private Profit_Loss profit_loss;
+    private Profit profit;
 
     // This is a map that stores the stocks that the customer has bought
     // The key is the stock in the customerStock, the value is the orginal stock in the market
@@ -24,11 +29,10 @@ public class TradingAccount implements ITrading{
 
     public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance) {
         this.ownerName = ownerName;
-
         this.customerStocks = customerStocks;
         this.balance = balance;
         this.stockMap = new HashMap<>();
-        this.profit_loss=new Profit_Loss();
+        this.profit=new Profit();
     }
 
     @Override
@@ -38,10 +42,7 @@ public class TradingAccount implements ITrading{
         customerStocks.viewStocks();
     }
 
-    //todo : add profit and loss statistics
-
     /**
-     *
      * @Description: buy stocks:
      */
 
@@ -57,6 +58,7 @@ public class TradingAccount implements ITrading{
             this.customerStocks.add(stock, num);
             this.updateBalance(stock.getCurrentPrice()*num,"b");
             stockMap.put(stock, stock_origin);
+            this.profit.subtract(stock.getCurrentPrice()*num);
         }
     }
 
@@ -86,8 +88,14 @@ public class TradingAccount implements ITrading{
                     num = 0;
                 }
             }
+            // update the balance
+            this.updateBalance(stock_origin.getCurrentPrice()*num,"s");
+            this.profit.add(stock_origin.getCurrentPrice()*num);
         }
     }
+
+    //todo : add profit and loss statistics
+
 
 
     /**
