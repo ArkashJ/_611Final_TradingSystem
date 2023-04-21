@@ -24,6 +24,11 @@ public class Stock {
         this.highPrice = highPrice;
         this.lowPrice = lowPrice;
         this.dividend = dividend;
+        this.priceBoughtAt = 0;
+    }
+    public Stock(String name, String companyName, double currentPrice, double lastClosingPrice, double highPrice, double lowPrice, double dividend,double priceBoughtAt) {
+        this(name, companyName, currentPrice, lastClosingPrice, highPrice, lowPrice, dividend);
+        this.priceBoughtAt = priceBoughtAt;
     }
 
     public String getName() {
@@ -98,6 +103,7 @@ public class Stock {
     public double getChangeAmountSinceBought() {
         return currentPrice - priceBoughtAt;
     }
+
 
     @Override
     public String toString() {

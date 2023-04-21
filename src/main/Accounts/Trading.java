@@ -1,7 +1,8 @@
-package main.Stocks;
+package main.Accounts;
 
-import main.Accounts.OptionsAccount;
-import main.Accounts.TradingAccount;
+import main.Stocks.Market;
+import main.Stocks.Stock;
+import main.Utils.Notify;
 
 import java.util.List;
 
@@ -15,12 +16,11 @@ public class Trading {
     private Trading() {}
     private static Trading trading = new Trading();
     
-    public static boolean trade(TradingAccount tradingAccount, List<OptionsAccount> optionsAccounts, Stock stock, int num, String way) {
+    public static boolean trade(TradingAccount tradingAccount,Stock stock, int num, String way) {
         if(way.equals("buy")) {
             try {
                 Market.sellStocks(stock, num);
                 tradingAccount.buyStock(stock, num);
-                return true;
             }
             catch(Exception e) {
                 System.out.println(e.getMessage());
@@ -30,8 +30,7 @@ public class Trading {
         else if(way.equals("sell")) {
             try {
                 Market.buyStocks(stock, num);
-                tradingAccount.sellStock(stock, num, optionsAccounts);
-                return true;
+                tradingAccount.sellStock(stock, num);
             }
             catch(Exception e) {
                 System.out.println(e.getMessage());
@@ -41,5 +40,9 @@ public class Trading {
         else {
             throw new RuntimeException("way must be buy or sell");
         }
+        if(num>=10000) {
+            Notify.toAll("A trade over 10k is made");
+        }
+        return true;
     }
 }

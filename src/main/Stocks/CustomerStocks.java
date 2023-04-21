@@ -24,14 +24,54 @@ public class CustomerStocks {
         stocks = new HashMap<>();
     }
 
-    // getStock: need to catch exception : not found
-    public Stock getStock(String StockName) {
-        for (Stock stock : stocks.keySet()) {
+    public List<Stock> getStocks(String StockName) {
+        List<Stock> stocks = new ArrayList<>();
+        for (Stock stock : this.stocks.keySet()) {
             if (stock.getName().equals(StockName)) {
-                return stock;
+                stocks.add(stock);
             }
         }
-        throw new RuntimeException( StockName+"Stock not found");
+        return stocks;
+    }
+    public List<Stock> getStocks(Stock stock_orgin) {
+        return getStocks(stock_orgin.getName());
+    }
+
+    public void add(Stock stock, int num) {
+        if (stocks.containsKey(stock)) {
+            stocks.put(stock, stocks.get(stock) + num);
+        } else {
+            stocks.put(stock, num);
+        }
+    }
+
+    public void remove(Stock stock, int num) {
+        if (stocks.containsKey(stock)) {
+            if (stocks.get(stock) > num) {
+                stocks.put(stock, stocks.get(stock) - num);
+            } else {
+                stocks.remove(stock);
+            }
+        } else {
+            throw new RuntimeException("You don't have this stock");
+        }
+    }
+
+
+    public int getOriginalStockNum(Stock stock) {
+        List<Stock> stocks = getStocks(stock);
+        int num = 0;
+        for (Stock stock1 : stocks) {
+            num += getStockNum(stock1);
+        }
+        return num;
+    }
+    public int getStockNum(Stock stock) {
+        if (stocks.containsKey(stock)) {
+            return stocks.get(stock);
+        } else {
+            return 0;
+        }
     }
 
     public void viewStocks() {
