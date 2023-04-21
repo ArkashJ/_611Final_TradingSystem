@@ -13,7 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserLoginRegistration {
-    public static void main(String[] args) {
+
+    public static void run() {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("User Login & Registration");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

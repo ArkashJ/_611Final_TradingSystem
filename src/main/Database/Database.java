@@ -46,7 +46,7 @@ public class Database {
                 + "name VARCHAR(255) NOT NULL UNIQUE,"
                 + "password VARCHAR(255) NOT NULL,"
                 + "account_number INTEGER NOT NULL UNIQUE," // 添加 UNIQUE 约束
-                + "account_type ENUM('ADMIN', 'USER') NOT NULL,";
+                + "account_type ENUM('ADMIN', 'USER') NOT NULL)";
 
         String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
                 + "	id INT AUTO_INCREMENT PRIMARY KEY,\n"
