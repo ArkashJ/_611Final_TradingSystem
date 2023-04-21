@@ -12,11 +12,13 @@ import java.util.Scanner;
 //Create a trading account for a customer
 
 /**
- * stockMap to database
+ *
  */
 
-public class TradingAccount implements ITrading{
+public class TradingAccount extends Account implements ITrading{
     private String ownerName;
+    private long accountNumber;
+    private String accountType;
     private CustomerStocks customerStocks;
     private double balance;
 
@@ -27,12 +29,14 @@ public class TradingAccount implements ITrading{
 //    // The key is the stock in the customerStock, the value is the orginal stock in the market
 //    private HashMap<Stock, Stock> stockMap;
 
-    public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance) {
+    public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, long accountNumber, String accountType) {
         this.ownerName = ownerName;
         this.customerStocks = customerStocks;
         this.balance = balance;
 //        this.stockMap = new HashMap<>();
         this.profit=new Profit();
+        this.accountNumber = accountNumber;
+        this.accountType = accountType;
     }
 
     @Override
@@ -41,6 +45,18 @@ public class TradingAccount implements ITrading{
         System.out.println("Balance:\t" + balance);
         customerStocks.viewStocks();
     }
+
+    public boolean deposit(double amount) {
+        balance += amount;
+        return true;
+    };
+    public boolean withdraw(double amount) {
+        if(balance<amount) {return false;}
+        else {
+            balance -= amount;
+            return true;
+        }
+    };
 
     /**
      * @Description: buy stocks:
@@ -159,6 +175,10 @@ public class TradingAccount implements ITrading{
     }
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public long getAccountNumber() {
+        return accountNumber;
     }
 
     public CustomerStocks getCustomerStocks() {

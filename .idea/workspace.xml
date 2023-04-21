@@ -5,10 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c131795-afd8-4ad7-8e25-9f6d01fa23c6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_8_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/Accounts/Account.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/Database/Database.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/Database/JianxiaoDatabase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/FrontEnd/UserLoginRegistration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_611Final_TradingSystem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/_611Final_TradingSystem.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Accounts/ITrading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Accounts/ITrading.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Accounts/OptionsAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Accounts/OptionsAccount.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Accounts/TradingAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Accounts/TradingAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Stocks/CustomerStocks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Stocks/CustomerStocks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Utils/Profit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Utils/Profit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Accounts/TradingAccountFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Accounts/TradingAccountFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/CustomerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/CustomerFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/IPerson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/IPerson.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/PortfolioManager/BankManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/PortfolioManager/BankManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,22 +53,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Arkash/InitialInfrastructure&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editing.templates&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Arkash/InitialInfrastructure",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "editing.templates",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -66,6 +84,7 @@
       <workItem from="1681833008352" duration="1686000" />
       <workItem from="1681839258879" duration="1002000" />
       <workItem from="1682003306993" duration="685000" />
+      <workItem from="1682102266567" duration="7339000" />
     </task>
     <servers />
   </component>

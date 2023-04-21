@@ -2,5 +2,5 @@ package main.Accounts;
 
 import java.util.Scanner;
 
-public class OptionsAccount {
+public class OptionsAccount extends Account{
 }
