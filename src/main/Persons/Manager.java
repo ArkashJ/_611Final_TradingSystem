@@ -1,9 +1,11 @@
 package main.Persons;
 
+import main.Enums.UserType;
+
 public class Manager extends Person{
     private long accountNumber;
-    private String accountType;
-    public Manager(String userName, String password,long accountNumber, String accountType) {
+    private UserType accountType;
+    public Manager(String userName, String password,long accountNumber, UserType accountType) {
         super(userName, password);
         this.accountNumber = accountNumber;
         this.accountType = accountType;

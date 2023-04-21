@@ -29,14 +29,14 @@ public class TradingAccount extends Account implements ITrading{
 //    // The key is the stock in the customerStock, the value is the orginal stock in the market
 //    private HashMap<Stock, Stock> stockMap;
 
-    public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, long accountNumber, String accountType) {
+    public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, long accountNumber) {
         this.ownerName = ownerName;
         this.customerStocks = customerStocks;
         this.balance = balance;
 //        this.stockMap = new HashMap<>();
         this.profit=new Profit();
         this.accountNumber = accountNumber;
-        this.accountType = accountType;
+        this.accountType = "Trading";
     }
 
     @Override

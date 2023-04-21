@@ -1,5 +1,8 @@
 package main.FrontEnd;
 
+import main.Database.Database;
+import main.Enums.UserType;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,10 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserLoginRegistration {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/your_database_name";
-    private static final String DB_USER = "your_username";
-    private static final String DB_PASSWORD = "your_password";
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("User Login & Registration");
@@ -62,7 +61,7 @@ public class UserLoginRegistration {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String password = String.valueOf(passwordField.getPassword());
-                if (checkLogin(name, password)) {
+                if (Database.checkLogin(name, password)) {
                     JOptionPane.showMessageDialog(null, "Login successful!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Login failed. Please check your credentials.");
@@ -83,7 +82,7 @@ public class UserLoginRegistration {
         JLabel passwordLabel = new JLabel("Password:");
         JPasswordField passwordField = new JPasswordField(20);
         JLabel roleLabel = new JLabel("Role:");
-        JComboBox<String> roleComboBox = new JComboBox<>(new String[]{"admin", "user"});
+        JComboBox<String> roleComboBox = new JComboBox<>(new String[]{"Admin", "User"});
         JLabel accountNumberLabel = new JLabel("Account Number:");
         JTextField accountNumberField = new JTextField(20);
         JButton registerButton = new JButton("Register");
@@ -117,9 +116,9 @@ public class UserLoginRegistration {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String password = String.valueOf(passwordField.getPassword());
-                String role = (String) roleComboBox.getSelectedItem();
+                UserType role = UserType.valueOf(((String) roleComboBox.getSelectedItem()).toUpperCase());
                 int accountNumber = Integer.parseInt(accountNumberField.getText());
-                if (registerUser(name, password, role, accountNumber)) {
+                if (Database.registerUser(name, password, role, accountNumber)) {
                     JOptionPane.showMessageDialog(null, "Registration successful!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Registration failed. Please try again.");
@@ -130,34 +129,5 @@ public class UserLoginRegistration {
         return panel;
     }
 
-    private static boolean checkLogin(String name, String password) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE name = ? AND password = ?");
-            statement.setString(1, name);
-            statement.setString(2, password);
-
-            ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    private static boolean registerUser(String name, String password, String role, int accountNumber) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO users (name, password, role, account_number) VALUES (?, ?, ?, ?)");
-            statement.setString(1, name);
-            statement.setString(2, password);
-            statement.setString(3, role);
-            statement.setInt(4, accountNumber);
-
-            int result = statement.executeUpdate();
-            return result > 0;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
 }
 
