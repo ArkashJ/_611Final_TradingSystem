@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @Description: This class represents a customer's stocks. like a bag
- * stocks to database
+ * @Methods: getStock(Stock) if a stock name is given, return all stocks with the same name
  */
 
 public class CustomerStocks {

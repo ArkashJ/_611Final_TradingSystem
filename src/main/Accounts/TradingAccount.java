@@ -23,15 +23,15 @@ public class TradingAccount implements ITrading{
     // profit_loss is a class that stores the profit and loss of each possible trade
     private Profit profit;
 
-    // This is a map that stores the stocks that the customer has bought
-    // The key is the stock in the customerStock, the value is the orginal stock in the market
-    private HashMap<Stock, Stock> stockMap;
+//    // This is a map that stores the stocks that the customer has bought
+//    // The key is the stock in the customerStock, the value is the orginal stock in the market
+//    private HashMap<Stock, Stock> stockMap;
 
     public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance) {
         this.ownerName = ownerName;
         this.customerStocks = customerStocks;
         this.balance = balance;
-        this.stockMap = new HashMap<>();
+//        this.stockMap = new HashMap<>();
         this.profit=new Profit();
     }
 
@@ -46,19 +46,19 @@ public class TradingAccount implements ITrading{
      * @Description: buy stocks:
      */
 
-    public void buyStock(Stock stock_origin, int num) {
+    public void buyStock(Stock stock, int num) {
         if(num<=0) {
             throw new RuntimeException("nums must be larger than 0");
         }
         else{
-            if(balance < stock_origin.getCurrentPrice()*num) {
+            if(balance < stock.getCurrentPrice()*num) {
                 throw new RuntimeException("You don't have enough money to buy this stock");
             }
-            Stock stock=StockFactory.copyStock_withPriceBoughtAt(stock_origin, stock_origin.getCurrentPrice());
+//            Stock stock=StockFactory.copyStock_withPriceBoughtAt(stock_origin, stock_origin.getCurrentPrice());
             this.customerStocks.add(stock, num);
             this.updateBalance(stock.getCurrentPrice()*num,"b");
-            stockMap.put(stock, stock_origin);
-            this.profit.subtract(stock.getCurrentPrice()*num);
+//            stockMap.put(stock, stock_origin);
+            this.profit.buyStock(stock, num);
         }
     }
 
@@ -90,11 +90,9 @@ public class TradingAccount implements ITrading{
             }
             // update the balance
             this.updateBalance(stock_origin.getCurrentPrice()*num,"s");
-            this.profit.add(stock_origin.getCurrentPrice()*num);
+            this.profit.sellStock(stock_origin, num);
         }
     }
-
-    //todo : add profit and loss statistics
 
 
 
