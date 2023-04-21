@@ -1,32 +1,36 @@
 package main.Persons;
 
+import main.Accounts.OptionsAccount;
+import main.Accounts.TradingAccount;
+
+import java.util.List;
+
 public class Client extends Person{
 
-    private long accountNumber;
-    private String accountType;
+    private List<TradingAccount> accounts;
+    private List<OptionsAccount> optionsAccounts;
 
-    public Client(String userName, String password, long accountNumber, String accountType) {
+    public Client(String userName, String password) {
         super(userName, password);
-        this.accountNumber = accountNumber;
-        this.accountType = accountType;
     }
 
-    public long getAccountNumber() {
-        return accountNumber;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void returnAccountDetails(){
+    public void displayAccounts(){
         if (authenticate( getUserName(), getPassword())){
-            System.out.println("Account Number: " + getAccountNumber());
-            System.out.println("Account Type: " + getAccountType());
+            for(TradingAccount account : accounts){
+                account.viewAccountDetails();
+            }
         }
         else {
             System.out.println("Invalid username or password");
         }
+    }
+
+    public List<TradingAccount> getTradingAccounts(){
+        return this.accounts;
+    }
+
+    public List<OptionsAccount> getOptionsAccounts(){
+        return this.optionsAccounts;
     }
 
 

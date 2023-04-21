@@ -34,27 +34,6 @@ public class CustomerStocks {
         throw new RuntimeException( StockName+"Stock not found");
     }
 
-    public void buyStock(Stock stock, int num) {
-        if(num<=0) {
-            throw new RuntimeException("nums must be larger than 0");
-        }
-        if (stocks.containsKey(stock)) {
-            stocks.put(stock, stocks.get(stock) + num);
-        } else {
-            stocks.put(stock, num);
-        }
-    }
-
-    public void sellStock(Stock stock, int num) {
-        if (stocks.containsKey(stock)) {
-            if (stocks.get(stock) >= num) {
-                stocks.put(stock, stocks.get(stock) - num);
-                return;
-            }
-        }
-        throw new RuntimeException(stock.getName()+"sell num is larger than the number of you have");
-    }
-
     public void viewStocks() {
         System.out.println("Your stocks:");
         System.out.println("StockName\tCompanyName\tCurrentPrice\tNum");
