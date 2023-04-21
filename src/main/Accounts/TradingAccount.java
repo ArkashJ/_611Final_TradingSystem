@@ -94,7 +94,13 @@ public class TradingAccount implements ITrading{
         }
     }
 
-
+    //to show profit
+    public double getRealizedProfit(){
+        return this.profit.get_realizedProfit();
+    }
+    public double getUnrealizedProfit(){
+        return this.profit.get_unrealizedProfit(customerStocks);
+    }
 
     /**
      * By Jianxiao : checkBalance(optionsAccounts.size()) why check Accounts size?
