@@ -13,26 +13,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserLoginRegistration {
+    private JFrame frame;
+    public void run() {
+        frame = new JFrame("User Login & Registration");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
 
-    public static void run() {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("User Login & Registration");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
+        JTabbedPane tabbedPane = new JTabbedPane();
+        JPanel loginPanel = createLoginPanel();
+        JPanel registrationPanel = createRegistrationPanel();
 
-            JTabbedPane tabbedPane = new JTabbedPane();
-            JPanel loginPanel = createLoginPanel();
-            JPanel registrationPanel = createRegistrationPanel();
+        tabbedPane.addTab("Login", loginPanel);
+        tabbedPane.addTab("Register", registrationPanel);
+        frame.add(tabbedPane);
 
-            tabbedPane.addTab("Login", loginPanel);
-            tabbedPane.addTab("Register", registrationPanel);
-            frame.add(tabbedPane);
-
-            frame.setVisible(true);
-        });
+        frame.setVisible(true);
     }
 
-    private static JPanel createLoginPanel() {
+    private JPanel createLoginPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -64,6 +62,7 @@ public class UserLoginRegistration {
                 String password = String.valueOf(passwordField.getPassword());
                 if (Database.checkLogin(name, password)) {
                     JOptionPane.showMessageDialog(null, "Login successful!");
+                    switchToAccountPage(name);
                 } else {
                     JOptionPane.showMessageDialog(null, "Login failed. Please check your credentials.");
                 }
@@ -73,7 +72,7 @@ public class UserLoginRegistration {
         return panel;
     }
 
-    private static JPanel createRegistrationPanel() {
+    private JPanel createRegistrationPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -128,6 +127,11 @@ public class UserLoginRegistration {
         });
 
         return panel;
+    }
+
+    public void switchToAccountPage(String ownerName) {
+        frame.dispose();
+        new AccountPage(ownerName);
     }
 
 }
