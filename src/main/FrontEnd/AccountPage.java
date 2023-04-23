@@ -11,37 +11,42 @@ import java.util.List;
 
 public class AccountPage {
     private String userName;
+    private JList<String> accountList;
+    private DefaultListModel<String> listModel;
+    private JFrame frame;
+    private UserLoginRegistration loginPage;
 
-    public AccountPage(String userName) {
+    public AccountPage(String userName,UserLoginRegistration us) {
         this.userName = userName;
+        this.loginPage=us;
+        accountList = new JList<>();
+        listModel = new DefaultListModel<>();
     }
 
     public void run() {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Account Management");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
+        frame = new JFrame("Account Management");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
 
-            JTabbedPane tabbedPane = new JTabbedPane();
-            JPanel viewAccountsPanel = createViewAccountsPanel();
-            JPanel createAccountPanel = createCreateAccountPanel();
+        JTabbedPane tabbedPane = new JTabbedPane();
+        JPanel viewAccountsPanel = createViewAccountsPanel();
+        JPanel createAccountPanel = createCreateAccountPanel();
 
-            tabbedPane.addTab("View Accounts", viewAccountsPanel);
-            tabbedPane.addTab("Create Account", createAccountPanel);
-            frame.add(tabbedPane);
+        tabbedPane.addTab("View Accounts", viewAccountsPanel);
+        tabbedPane.addTab("Create Account", createAccountPanel);
+        frame.add(tabbedPane,BorderLayout.CENTER);
+        frame.add(createLogoutPanel(), BorderLayout.NORTH);
 
-            frame.setVisible(true);
-        });
+        frame.setVisible(true);
     }
 
     private JPanel createViewAccountsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
-        DefaultListModel<String> listModel = new DefaultListModel<>();
         for (TradingAccount account : accounts) {
             listModel.addElement("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
         }
-        JList<String> accountList = new JList<>(listModel);
+        accountList.setModel(listModel);
         panel.add(new JScrollPane(accountList), BorderLayout.CENTER);
         return panel;
     }
@@ -68,11 +73,35 @@ public class AccountPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double initialBalance = Double.parseDouble(balanceField.getText());
-//                if (Database.createTradingAccount(userId, initialBalance)) {
-//                    JOptionPane.showMessageDialog(null, "New trading account created!");
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
-//                }
+                if (Database.createTradingAccount(userName, initialBalance)) {
+                    JOptionPane.showMessageDialog(null, "New trading account created!");
+                    refreshAccountList();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
+                }
+            }
+        });
+
+        return panel;
+    }
+    private void refreshAccountList() {
+        List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
+        listModel.clear();
+        for (TradingAccount account : accounts) {
+            listModel.addElement("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
+        }
+    }
+
+    private JPanel createLogoutPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton logoutButton = new JButton("Logout");
+        panel.add(logoutButton);
+
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                loginPage.run();
             }
         });
 

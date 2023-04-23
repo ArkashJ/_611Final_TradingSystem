@@ -131,7 +131,7 @@ public class UserLoginRegistration {
 
     public void switchToAccountPage(String ownerName) {
         frame.dispose();
-        new AccountPage(ownerName);
+        new AccountPage(ownerName,this).run();
     }
 
 }

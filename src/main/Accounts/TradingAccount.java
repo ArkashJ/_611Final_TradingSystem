@@ -128,8 +128,8 @@ public class TradingAccount extends Account implements ITrading{
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
             if(input.equals("y")){
-                OptionsAccount newAccount = new OptionsAccount();
-                optionsAccounts.add(newAccount);
+//                OptionsAccount newAccount = new OptionsAccount();
+//                optionsAccounts.add(newAccount);
                 System.out.println("Options Account created");
             }
             else{

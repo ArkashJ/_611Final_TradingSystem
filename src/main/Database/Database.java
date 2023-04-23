@@ -1,5 +1,6 @@
 package main.Database;
 
+import main.Accounts.OptionsAccount;
 import main.Accounts.TradingAccount;
 import main.Accounts.TradingAccountFactory;
 import main.Enums.UserType;
@@ -8,6 +9,7 @@ import main.Stocks.Stock;
 import main.Stocks.StockFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,9 +58,10 @@ public class Database {
                 + "account_type ENUM('ADMIN', 'USER') NOT NULL)";
 
         String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
-                + "	account_number INTEGER NOT NULL UNIQUE PRIMARY KEY,\n"
+                + "	account_number INT AUTO_INCREMENT PRIMARY KEY,\n"
                 + "	user_name VARCHAR(255) NOT NULL,\n"
                 + "	balance DOUBLE NOT NULL,\n"
+                + "account_type ENUM('TRADE', 'OPTIONS') NOT NULL,\n"
                 + "	FOREIGN KEY (user_name) REFERENCES users (name)\n"
                 + ");";
 
@@ -72,7 +75,6 @@ public class Database {
                 + "	dividend INTEGER NOT NULL\n"
                 + ");";
 
-        // HashMap in customerStocks
         String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
                 + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
                 + "	account_number INTEGER NOT NULL,\n"
@@ -126,11 +128,30 @@ public class Database {
         }
     }
 
-    public static List<TradingAccount> getTradingAccountsForUser(String userName) {
-        return null;
+    /**
+     String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
+     + "	account_number INTEGER NOT NULL UNIQUE PRIMARY KEY,\n"
+     + "	user_name VARCHAR(255) NOT NULL,\n"
+     + "	balance DOUBLE NOT NULL,\n"
+     + "account_type ENUM('TRADE', 'OPTIONS') NOT NULL,\n"
+     + "	FOREIGN KEY (user_name) REFERENCES users (name)\n"
+     + ");";
+     */
+    public static boolean createTradingAccount(String userName,double balance) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO accounts (user_name, balance, account_type) VALUES (?, ?, ?)");
+                statement.setString(1, userName);
+                statement.setDouble(2, balance);
+                statement.setString(3, "TRADE");
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
     }
-
-    public static void createTradingAccount() {}
 
     //get stock
     public static Stock getStock(String stockName) {
@@ -208,10 +229,11 @@ public class Database {
         return cs;
     }
 
+    //get a TradingAccount
     public static TradingAccount getTraddingAccount(int account_number) {
         TradingAccount tradingAccount = null;
 
-        String sql = "SELECT * FROM accounts WHERE account_number = ?";
+        String sql = "SELECT * FROM accounts WHERE account_number = ? AND account_type = 'TRADE';";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, account_number);
@@ -229,6 +251,49 @@ public class Database {
         }
 
         return tradingAccount;
+    }
+
+    //get all TradingAccount
+    public static List<TradingAccount> getTradingAccountsForUser(String userName) {
+        List<TradingAccount> tradingAccounts = new ArrayList<>();
+
+        String sql = "SELECT * FROM accounts WHERE user_name = ? AND account_type = 'TRADE';";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userName);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                int accountNumber = resultSet.getInt("account_number");
+                double balance = resultSet.getDouble("balance");
+                CustomerStocks cs=getCustomerStocks(accountNumber);
+                TradingAccount tradingAccount = TradingAccountFactory.createTradingAccount(userName,cs,balance,accountNumber);
+                tradingAccounts.add(tradingAccount);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tradingAccounts;
+    }
+    //get all OptionsAccount
+    public static List<OptionsAccount> getOptionsAccountForUser(String userName) {
+        List<OptionsAccount> tradingAccounts = new ArrayList<>();
+
+        String sql = "SELECT * FROM accounts WHERE user_name = ? AND account_type = 'OPTIONS';";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userName);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                int accountNumber = resultSet.getInt("account_number");
+                double balance = resultSet.getDouble("balance");
+                CustomerStocks cs=getCustomerStocks(accountNumber);
+                OptionsAccount tradingAccount = TradingAccountFactory.createOptionsAccount(userName,cs,balance,accountNumber);
+                tradingAccounts.add(tradingAccount);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tradingAccounts;
     }
 
 }
