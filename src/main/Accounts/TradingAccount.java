@@ -177,7 +177,7 @@ public class TradingAccount extends Account implements ITrading{
         this.balance = balance;
     }
 
-    public long getAccountNumber() {
+    public int getAccountNumber() {
         return accountNumber;
     }
 

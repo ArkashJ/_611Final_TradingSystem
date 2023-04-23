@@ -11,16 +11,13 @@ import java.util.List;
 
 public class AccountPage {
     private String userName;
-    private JList<String> accountList;
-    private DefaultListModel<String> listModel;
     private JFrame frame;
+    private JPanel viewAccountsPanel;
     private UserLoginRegistration loginPage;
 
     public AccountPage(String userName,UserLoginRegistration us) {
         this.userName = userName;
         this.loginPage=us;
-        accountList = new JList<>();
-        listModel = new DefaultListModel<>();
     }
 
     public void run() {
@@ -29,7 +26,7 @@ public class AccountPage {
         frame.setSize(800, 600);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        JPanel viewAccountsPanel = createViewAccountsPanel();
+        viewAccountsPanel = createViewAccountsPanel();
         JPanel createAccountPanel = createCreateAccountPanel();
 
         tabbedPane.addTab("View Accounts", viewAccountsPanel);
@@ -43,13 +40,35 @@ public class AccountPage {
     private JPanel createViewAccountsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
+
+        JPanel accountListPanel = new JPanel();
+        accountListPanel.setLayout(new BoxLayout(accountListPanel, BoxLayout.Y_AXIS));
+
         for (TradingAccount account : accounts) {
-            listModel.addElement("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
+            JPanel accountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+            JLabel accountLabel = new JLabel("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
+            accountPanel.add(accountLabel);
+
+            JButton enterButton = new JButton("Enter");
+            enterButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    StockPage stockPage = new StockPage(account.getAccountNumber(), AccountPage.this);
+                    stockPage.run();
+                }
+            });
+            accountPanel.add(enterButton);
+
+            accountListPanel.add(accountPanel);
         }
-        accountList.setModel(listModel);
-        panel.add(new JScrollPane(accountList), BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(accountListPanel);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
         return panel;
     }
+
 
     private JPanel createCreateAccountPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -75,7 +94,7 @@ public class AccountPage {
                 double initialBalance = Double.parseDouble(balanceField.getText());
                 if (Database.createTradingAccount(userName, initialBalance)) {
                     JOptionPane.showMessageDialog(null, "New trading account created!");
-                    refreshAccountList();
+                    refreshViewAccountsPanel();
                 } else {
                     JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
                 }
@@ -84,12 +103,19 @@ public class AccountPage {
 
         return panel;
     }
-    private void refreshAccountList() {
-        List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
-        listModel.clear();
-        for (TradingAccount account : accounts) {
-            listModel.addElement("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
-        }
+//    private void refreshAccountList() {
+//        List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
+//        listModel.clear();
+//        for (TradingAccount account : accounts) {
+//            listModel.addElement("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
+//        }
+//    }
+    private void refreshViewAccountsPanel() {
+        JPanel newViewAccountsPanel = createViewAccountsPanel();
+        viewAccountsPanel.removeAll();
+        viewAccountsPanel.add(newViewAccountsPanel, BorderLayout.CENTER);
+        viewAccountsPanel.revalidate();
+        viewAccountsPanel.repaint();
     }
 
     private JPanel createLogoutPanel() {
