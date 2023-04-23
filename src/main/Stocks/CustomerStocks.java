@@ -1,6 +1,8 @@
 package main.Stocks;
 
 
+import main.Database.Database;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class CustomerStocks {
     // stocks: key -> stock, value -> number of stocks
     protected HashMap<Stock, Integer> stocks;
+    protected int accountNumber;
     public HashMap<Stock, Integer> getStocks() {
         return stocks;
     }
@@ -21,7 +24,8 @@ public class CustomerStocks {
         this.stocks = stocks;
     }
 
-    public CustomerStocks() {
+    public CustomerStocks(int accountNumber) {
+        this.accountNumber = accountNumber;
         stocks = new HashMap<>();
     }
 

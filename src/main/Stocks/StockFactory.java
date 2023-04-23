@@ -12,8 +12,8 @@ public class StockFactory {
 
     private static StockFactory stockFactory = new StockFactory();
     // making a static stock factory
-    public static Stock createStock(String stockType, String stockName, double stockPrice, double lastClosingPrice, double highPrice, double lowPrice, double dividend) {
-        return new Stock(stockType, stockName, stockPrice, lastClosingPrice, highPrice, lowPrice, dividend);
+    public static Stock createStock(String name, String CompanyName, double stockPrice, double lastClosingPrice, double highPrice, double lowPrice, double dividend) {
+        return new Stock(name, CompanyName, stockPrice, lastClosingPrice, highPrice, lowPrice, dividend);
     }
     public static Stock copyStock(Stock stock) {
         return new Stock(stock.getName(), stock.getCompanyName(), stock.getCurrentPrice(), stock.getLastClosingPrice(), stock.getHighPrice(), stock.getLowPrice(), stock.getDividend());

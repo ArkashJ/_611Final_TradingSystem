@@ -17,7 +17,7 @@ import java.util.Scanner;
 
 public class TradingAccount extends Account implements ITrading{
     private String ownerName;
-    private long accountNumber;
+    private int accountNumber;
     private String accountType;
     private CustomerStocks customerStocks;
     private double balance;
@@ -29,7 +29,7 @@ public class TradingAccount extends Account implements ITrading{
 //    // The key is the stock in the customerStock, the value is the orginal stock in the market
 //    private HashMap<Stock, Stock> stockMap;
 
-    public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, long accountNumber) {
+    public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, int accountNumber) {
         this.ownerName = ownerName;
         this.customerStocks = customerStocks;
         this.balance = balance;

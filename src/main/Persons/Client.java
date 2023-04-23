@@ -26,8 +26,8 @@ public class Client extends Person{
     public void createAccount(){
         if (authenticate( getUserName(), getPassword())){
             // todo: create a new account with different ID
-            long accountNumber = r.nextLong();
-            TradingAccount account = TradingAccountFactory.createTradingAccount(getUserName(), new CustomerStocks(), 0, accountNumber);
+            int accountNumber = r.nextInt();
+            TradingAccount account = TradingAccountFactory.createTradingAccount(getUserName(), new CustomerStocks(accountNumber), 0, accountNumber);
             accounts.add(account);
         }
         else {

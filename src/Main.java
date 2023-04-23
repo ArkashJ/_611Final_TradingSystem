@@ -6,7 +6,7 @@ import java.sql.Connection;
 
 public class Main {
     public static void main(String[] args) {
-//        Database.deleteAllTables();
+        Database.deleteAllTables();
         Database.createTables();
         SwingUtilities.invokeLater(() -> {
             new UserLoginRegistration().run();

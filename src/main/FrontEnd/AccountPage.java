@@ -1,37 +1,59 @@
 package main.FrontEnd;
 
+import main.Database.Database;
 import main.Accounts.TradingAccount;
-import main.Stocks.CustomerStocks;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class AccountPage {
-    private JFrame frame;
-    private String ownerName;
+    private String userName;
 
-    public AccountPage(String ownerName) {
-        this.ownerName = ownerName;
-        frame = new JFrame("Account Page");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-
-        JPanel accountPagePanel = createAccountPage();
-        frame.add(accountPagePanel);
-
-        frame.setVisible(true);
+    public AccountPage(String userName) {
+        this.userName = userName;
     }
-    private JPanel createAccountPage() {
+
+    public void run() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Account Management");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(400, 300);
+
+            JTabbedPane tabbedPane = new JTabbedPane();
+            JPanel viewAccountsPanel = createViewAccountsPanel();
+            JPanel createAccountPanel = createCreateAccountPanel();
+
+            tabbedPane.addTab("View Accounts", viewAccountsPanel);
+            tabbedPane.addTab("Create Account", createAccountPanel);
+            frame.add(tabbedPane);
+
+            frame.setVisible(true);
+        });
+    }
+
+    private JPanel createViewAccountsPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (TradingAccount account : accounts) {
+            listModel.addElement("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
+        }
+        JList<String> accountList = new JList<>(listModel);
+        panel.add(new JScrollPane(accountList), BorderLayout.CENTER);
+        return panel;
+    }
+
+    private JPanel createCreateAccountPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
 
-        // Add balance input field and label
         JLabel balanceLabel = new JLabel("Initial Balance:");
         JTextField balanceField = new JTextField(20);
-        JButton registerNewAccountButton = new JButton("Register New Account");
+        JButton createAccountButton = new JButton("Create Account");
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -40,30 +62,20 @@ public class AccountPage {
         panel.add(balanceField, gbc);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        panel.add(registerNewAccountButton, gbc);
+        panel.add(createAccountButton, gbc);
 
-        registerNewAccountButton.addActionListener(new ActionListener() {
+        createAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get the balance value from the input field and convert it to a double
-                double balance = Double.parseDouble(balanceField.getText());
-
-                // Randomly generate an account number
-                long accountNumber = (long) (Math.random() * 1000000000L);
-
-                String ownerName = AccountPage.this.ownerName;
-                CustomerStocks customerStocks = new CustomerStocks();
-
-                TradingAccount tradingAccount = new TradingAccount(ownerName, customerStocks, balance, accountNumber);
-
-                // Add the TradingAccount to the database or other data structures here
-                // ...
-
-                JOptionPane.showMessageDialog(null, "New trading account created! Account Number: " + accountNumber);
+                double initialBalance = Double.parseDouble(balanceField.getText());
+//                if (Database.createTradingAccount(userId, initialBalance)) {
+//                    JOptionPane.showMessageDialog(null, "New trading account created!");
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
+//                }
             }
         });
 
         return panel;
     }
-
 }

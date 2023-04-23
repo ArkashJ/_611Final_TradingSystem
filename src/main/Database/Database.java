@@ -1,8 +1,15 @@
 package main.Database;
 
+import main.Accounts.TradingAccount;
+import main.Accounts.TradingAccountFactory;
 import main.Enums.UserType;
+import main.Stocks.CustomerStocks;
+import main.Stocks.Stock;
+import main.Stocks.StockFactory;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class Database {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/trading_system";
@@ -45,31 +52,35 @@ public class Database {
                 + "id INT AUTO_INCREMENT PRIMARY KEY,"
                 + "name VARCHAR(255) NOT NULL UNIQUE,"
                 + "password VARCHAR(255) NOT NULL,"
-                + "account_number INTEGER NOT NULL UNIQUE," // 添加 UNIQUE 约束
+                + "account_number INTEGER NOT NULL UNIQUE,"
                 + "account_type ENUM('ADMIN', 'USER') NOT NULL)";
 
         String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
-                + "	id INT AUTO_INCREMENT PRIMARY KEY,\n"
-                + "	user_id INTEGER NOT NULL,\n"
+                + "	account_number INTEGER NOT NULL UNIQUE PRIMARY KEY,\n"
+                + "	user_name VARCHAR(255) NOT NULL,\n"
                 + "	balance DOUBLE NOT NULL,\n"
-                + "	FOREIGN KEY (user_id) REFERENCES users (id)\n"
+                + "	FOREIGN KEY (user_name) REFERENCES users (name)\n"
                 + ");";
 
         String stocksTable = "CREATE TABLE IF NOT EXISTS stocks (\n"
-                + "	id INT AUTO_INCREMENT PRIMARY KEY,\n"
-                + "	name VARCHAR(255) NOT NULL,\n"
-                + "	symbol VARCHAR(255) NOT NULL,\n"
-                + "	price DOUBLE NOT NULL\n"
+                + "	name VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,\n"
+                + "	companyName VARCHAR(255) NOT NULL,\n"
+                + "	currentPrice DOUBLE NOT NULL,\n"
+                + "lastClosingPrice DOUBLE NOT NULL,\n"
+                + "	highestPrice DOUBLE NOT NULL,\n"
+                + "	lowestPrice DOUBLE NOT NULL,\n"
+                + "	dividend INTEGER NOT NULL\n"
                 + ");";
 
+        // HashMap in customerStocks
         String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
+                + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
                 + "	account_number INTEGER NOT NULL,\n"
-                + "	symbol VARCHAR(255) NOT NULL,\n"
-                + "	quantity INTEGER NOT NULL,\n"
-                + "	PRIMARY KEY (account_number, symbol)\n"
+                + "	stock VARCHAR(255) NOT NULL,\n"
+                + "FOREIGN KEY (account_number) REFERENCES accounts (account_number),\n"
+                + "FOREIGN KEY (stock) REFERENCES stocks (name),\n"
+                + "	quantity INTEGER NOT NULL\n"
                 + ");";
-        //                + "	FOREIGN KEY (account_number) REFERENCES users (account_number),\n" // 更新 FOREIGN KEY 引用
-//                + "	FOREIGN KEY (symbol) REFERENCES stocks (symbol)\n"
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(usersTable);
@@ -115,5 +126,109 @@ public class Database {
         }
     }
 
+    public static List<TradingAccount> getTradingAccountsForUser(String userName) {
+        return null;
+    }
+
+    public static void createTradingAccount() {}
+
+    //get stock
+    public static Stock getStock(String stockName) {
+        Stock stock = null;
+
+        String sql = "SELECT * FROM stocks WHERE name = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, stockName);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String companyName = resultSet.getString("companyName");
+                double currentPrice = resultSet.getDouble("currentPrice");
+                double lastClosingPrice = resultSet.getDouble("lastClosingPrice");
+                double highestPrice = resultSet.getDouble("highestPrice");
+                double lowestPrice = resultSet.getDouble("lowestPrice");
+                int dividend = resultSet.getInt("dividend");
+
+                stock = StockFactory.createStock(name, companyName, currentPrice,lastClosingPrice, highestPrice, lowestPrice, dividend);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return stock;
+    }
+
+    //for CustomerStocks -> stocks HashMap
+    public static HashMap<Stock, Integer> getStocksAndQuantityByAccountNumber(int accountNumber) {
+        HashMap<Stock, Integer> stocksAndQuantity = new HashMap<>();
+
+        String sql = "SELECT stock, quantity FROM customer_stocks WHERE account_number = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, accountNumber);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                String stockName = resultSet.getString("stock");
+                Stock stock = getStock(stockName);
+                if(stock == null) { throw new SQLException("Stock not found"); }
+                int quantity = resultSet.getInt("quantity");
+                stocksAndQuantity.put(stock, quantity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return stocksAndQuantity;
+    }
+
+    //get CustomerStocks
+    public static CustomerStocks getCustomerStocks(int accountNumber) {
+        CustomerStocks cs=new CustomerStocks(accountNumber);
+        HashMap<Stock, Integer> stocksAndQuantity = new HashMap<>();
+        String sql = "SELECT stock, quantity FROM customer_stocks WHERE account_number = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, accountNumber);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                String stockName = resultSet.getString("stock");
+                Stock stock = getStock(stockName);
+                if(stock == null) { throw new SQLException("Stock not found"); }
+                int quantity = resultSet.getInt("quantity");
+                stocksAndQuantity.put(stock, quantity);
+            }
+            cs.setStocks(stocksAndQuantity);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cs;
+    }
+
+    public static TradingAccount getTraddingAccount(int account_number) {
+        TradingAccount tradingAccount = null;
+
+        String sql = "SELECT * FROM accounts WHERE account_number = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, account_number);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                int accountNumber = resultSet.getInt("account_number");
+                String userName = resultSet.getString("user_name");
+                double balance = resultSet.getDouble("balance");
+                CustomerStocks cs=getCustomerStocks(accountNumber);
+                tradingAccount = TradingAccountFactory.createTradingAccount(userName,cs,balance,account_number);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tradingAccount;
+    }
 
 }
