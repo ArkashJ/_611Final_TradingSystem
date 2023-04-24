@@ -75,10 +75,12 @@ public class Database {
                 + "	dividend INTEGER NOT NULL\n"
                 + ");";
 
+        // stock can be duplicated in customer_stocks table
         String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
                 + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
                 + "	account_number INTEGER NOT NULL,\n"
                 + "	stock VARCHAR(255) NOT NULL,\n"
+                + "price_bought DOUBLE NOT NULL,\n"
                 + "FOREIGN KEY (account_number) REFERENCES accounts (account_number),\n"
                 + "FOREIGN KEY (stock) REFERENCES stocks (name),\n"
                 + "	quantity INTEGER NOT NULL\n"
@@ -181,40 +183,16 @@ public class Database {
         return stock;
     }
 
-    //for CustomerStocks -> stocks HashMap
-    public static HashMap<Stock, Integer> getStocksAndQuantityByAccountNumber(int accountNumber) {
-        HashMap<Stock, Integer> stocksAndQuantity = new HashMap<>();
-
-        String sql = "SELECT stock, quantity FROM customer_stocks WHERE account_number = ?";
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, accountNumber);
-            ResultSet resultSet = pstmt.executeQuery();
-
-            while (resultSet.next()) {
-                String stockName = resultSet.getString("stock");
-                Stock stock = getStock(stockName);
-                if(stock == null) { throw new SQLException("Stock not found"); }
-                int quantity = resultSet.getInt("quantity");
-                stocksAndQuantity.put(stock, quantity);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return stocksAndQuantity;
-    }
 
     //get CustomerStocks
     public static CustomerStocks getCustomerStocks(int accountNumber) {
         CustomerStocks cs=new CustomerStocks(accountNumber);
         HashMap<Stock, Integer> stocksAndQuantity = new HashMap<>();
-        String sql = "SELECT stock, quantity FROM customer_stocks WHERE account_number = ?";
+        String sql = "SELECT stock, quantity,price_bought FROM customer_stocks WHERE account_number = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, accountNumber);
             ResultSet resultSet = pstmt.executeQuery();
-
             while (resultSet.next()) {
                 String stockName = resultSet.getString("stock");
                 Stock stock = getStock(stockName);
@@ -228,6 +206,62 @@ public class Database {
         }
         return cs;
     }
+    public static boolean setCustomerStocks(int accountNumber, String stockName, int quantity, double transactionPrice, boolean isBuy) {
+        boolean success = false;
+        try {
+            if (isBuy) {
+                // Buy stocks
+                String buySql = "INSERT INTO customer_stocks (account_number, stock, quantity, price_bought) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(buySql)) {
+                    pstmt.setInt(1, accountNumber);
+                    pstmt.setString(2, stockName);
+                    pstmt.setInt(3, quantity);
+                    pstmt.setDouble(4, transactionPrice);
+                    int rowsAffected = pstmt.executeUpdate();
+                    success = rowsAffected > 0;
+                }
+            } else {
+                // Sell stocks
+                String sellSql = "SELECT id, quantity, price_bought FROM customer_stocks WHERE account_number = ? AND stock = ? ORDER BY price_bought ASC";
+                try (PreparedStatement pstmt = conn.prepareStatement(sellSql)) {
+                    pstmt.setInt(1, accountNumber);
+                    pstmt.setString(2, stockName);
+                    ResultSet resultSet = pstmt.executeQuery();
+
+                    int remainingQuantityToSell = quantity;
+                    while (resultSet.next() && remainingQuantityToSell > 0) {
+                        int stockId = resultSet.getInt("id");
+                        int stockQuantity = resultSet.getInt("quantity");
+                        int newQuantity = Math.max(0, stockQuantity - remainingQuantityToSell);
+
+                        String updateSql = "UPDATE customer_stocks SET quantity = ? WHERE id = ?";
+                        try (PreparedStatement updatePstmt = conn.prepareStatement(updateSql)) {
+                            updatePstmt.setInt(1, newQuantity);
+                            updatePstmt.setInt(2, stockId);
+                            updatePstmt.executeUpdate();
+                        }
+
+                        if (newQuantity == 0) {
+                            String deleteSql = "DELETE FROM customer_stocks WHERE id = ?";
+                            try (PreparedStatement deletePstmt = conn.prepareStatement(deleteSql)) {
+                                deletePstmt.setInt(1, stockId);
+                                deletePstmt.executeUpdate();
+                            }
+                        }
+
+                        remainingQuantityToSell -= (stockQuantity - newQuantity);
+                    }
+
+                    success = remainingQuantityToSell == 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return success;
+    }
+
 
     //get a TradingAccount
     public static TradingAccount getTraddingAccount(int account_number) {

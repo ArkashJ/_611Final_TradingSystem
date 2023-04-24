@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * @Description: show all accounts of a user, and user can click into one account
+ */
 public class AccountPage {
     private String userName;
     private JFrame frame;

@@ -15,6 +15,12 @@ import java.util.List;
 public class CustomerStocks {
     // stocks: key -> stock, value -> number of stocks
     protected HashMap<Stock, Integer> stocks;
+
+    //use for database: the same index represents the same stock
+    protected List<String> stockNames;
+    protected List<Integer> stockNumbers;
+    protected List<Double> stock_BoughtPrices;
+
     protected int accountNumber;
     public HashMap<Stock, Integer> getStocks() {
         return stocks;
@@ -27,6 +33,41 @@ public class CustomerStocks {
     public CustomerStocks(int accountNumber) {
         this.accountNumber = accountNumber;
         stocks = new HashMap<>();
+        stockNames = new ArrayList<>();
+        stockNumbers = new ArrayList<>();
+        stock_BoughtPrices = new ArrayList<>();
+    }
+
+    public List<String> getStockNames() {
+        return stockNames;
+    }
+
+    public void setStockNames(List<String> stockNames) {
+        this.stockNames = stockNames;
+    }
+
+    public List<Integer> getStockNumbers() {
+        return stockNumbers;
+    }
+
+    public void setStockNumbers(List<Integer> stockNumbers) {
+        this.stockNumbers = stockNumbers;
+    }
+
+    public List<Double> getStock_BoughtPrices() {
+        return stock_BoughtPrices;
+    }
+
+    public void setStock_BoughtPrices(List<Double> stock_BoughtPrices) {
+        this.stock_BoughtPrices = stock_BoughtPrices;
+    }
+
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(int accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public List<Stock> getStocks(String StockName) {
@@ -50,6 +91,16 @@ public class CustomerStocks {
         }
     }
 
+    public void add(Stock stock, int num, double price) {
+        if (stocks.containsKey(stock)) {
+            stocks.put(stock, stocks.get(stock) + num);
+        } else {
+            stocks.put(stock, num);
+        }
+        stockNames.add(stock.getName());
+        stockNumbers.add(num);
+        stock_BoughtPrices.add(price);
+    }
     public void remove(Stock stock, int num) {
         if (stocks.containsKey(stock)) {
             if (stocks.get(stock) > num) {

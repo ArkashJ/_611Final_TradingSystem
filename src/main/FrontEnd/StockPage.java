@@ -12,6 +12,10 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @Description: show the customerStock of a user, and user can go to the Market to buy stocks
+ * stocks with detail: name, currentprice, quantity, highest price, lowest price, profit/loss
+ */
 public class StockPage {
     private int accountNumber;
     private JFrame frame;
@@ -44,7 +48,14 @@ public class StockPage {
         for (Map.Entry<Stock, Integer> entry : stocksAndQuantity.entrySet()) {
             Stock stock = entry.getKey();
             int quantity = entry.getValue();
-            listModel.addElement(stock.getName() + " | Company: " + stock.getCompanyName() + " | Quantity: " + quantity);
+            listModel.addElement(
+                    stock.getName()
+                            + " | Company: " + stock.getCompanyName()
+                            + " | Quantity: " + quantity
+                            + " | Current Price: " + stock.getCurrentPrice()
+                            + " | Highest Price: " + stock.getHighPrice()
+                            + " | Lowest Price: " + stock.getLowPrice()
+            );
         }
         JList<String> stockList = new JList<>(listModel);
         panel.add(new JScrollPane(stockList), BorderLayout.CENTER);
