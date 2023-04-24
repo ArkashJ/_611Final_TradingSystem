@@ -122,14 +122,19 @@ public class TradingAccount extends Account implements ITrading{
      * By Jianxiao : checkBalance(optionsAccounts.size()) why check Accounts size?
      * @param optionsAccounts : if a customer has gained more than 10k, he can open an options account
      */
+
+    //By Trisha: When a customer has their first 10k, an options account is created
+    //Since the check to crate an options account happens every time the customer sells a stock,
+    // we need a check to make sure the customer has hit their next 10k before creating another options account
+    //The checkBalance is there to make sure the customer has hit their next 10k
     public void createOptionsAccount(List<OptionsAccount> optionsAccounts){
         if(checkBalance(optionsAccounts.size())){
             System.out.println("You can open an Options Account. Would you like to do so? (y/n)");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
             if(input.equals("y")){
-//                OptionsAccount newAccount = new OptionsAccount();
-//                optionsAccounts.add(newAccount);
+                OptionsAccount newAccount = new OptionsAccount(this.ownerName, this.customerStocks, this.balance, optionsAccounts.size()+1);
+                optionsAccounts.add(newAccount);
                 System.out.println("Options Account created");
             }
             else{
@@ -164,10 +169,6 @@ public class TradingAccount extends Account implements ITrading{
 
     public String getOwnerName() {
         return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
     }
 
     public double getBalance() {
