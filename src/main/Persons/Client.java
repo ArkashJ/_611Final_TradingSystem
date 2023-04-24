@@ -5,6 +5,7 @@ import main.Accounts.TradingAccount;
 import main.Accounts.TradingAccountFactory;
 import main.Enums.UserType;
 import main.Stocks.CustomerStocks;
+import main.Utils.RandomGenerator;
 
 import java.util.List;
 import java.util.Random;
@@ -14,8 +15,7 @@ public class Client extends Person{
     private UserType accountType;
     private List<TradingAccount> accounts;
     private List<OptionsAccount> optionsAccounts;
-    private Random r=new Random();
-
+    RandomGenerator r = new RandomGenerator();
     public Client(String userName, String password,long accountNumber, UserType accountType) {
 
         super(userName, password);
@@ -25,8 +25,8 @@ public class Client extends Person{
 
     public void createAccount(){
         if (authenticate( getUserName(), getPassword())){
-            // todo: create a new account with different ID
-            int accountNumber = r.nextInt();
+            // todo: check if account number exists in database before creating an account
+            int accountNumber = r.getAccountNumber();
             TradingAccount account = TradingAccountFactory.createTradingAccount(getUserName(), new CustomerStocks(accountNumber), 0, accountNumber);
             accounts.add(account);
         }
