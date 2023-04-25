@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3c131795-afd8-4ad7-8e25-9f6d01fa23c6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Database/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/IPerson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/IPerson.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Persons/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/Person.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +20,7 @@
       <list>
         <option value="Interface" />
         <option value="AnnotationType" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -48,6 +51,9 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;editing.templates&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -63,7 +69,7 @@
       <workItem from="1681398650683" duration="2792000" />
       <workItem from="1681833008352" duration="1686000" />
       <workItem from="1681839258879" duration="1002000" />
-      <workItem from="1682003306993" duration="4252000" />
+      <workItem from="1682003306993" duration="685000" />
     </task>
     <servers />
   </component>

@@ -1,59 +1,93 @@
 package main.Database;
+
+import main.Accounts.OptionsAccount;
 import main.Accounts.TradingAccount;
-import main.Persons.Client;
+import main.Accounts.TradingAccountFactory;
+import main.Enums.UserType;
 import main.Stocks.CustomerStocks;
 import main.Stocks.Stock;
+import main.Stocks.StockFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Database {
-    private static final String DB_URL = "jdbc:sqlite:trading_system.db";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/trading_system";
+    private static final String uname = "root";
+    private static final String upassword = "distinctive0930";
+
+    private static Database dbInstance = new Database();
+    private static Connection conn;
+
+    private Database() {
+        conn = connect();
+    }
+
+    public static synchronized Database getInstance() {
+        return dbInstance;
+    }
+
 
     public static Connection connect() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(DB_URL);
+            conn = DriverManager.getConnection(DB_URL, uname, upassword);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return conn;
     }
 
-    public static void createTables(){
-        String usersTable = "CREATE TABLE IF NOT EXISTS users ("
-                + "id INTEGER PRIMARY KEY,"
-                + "username TEXT NOT NULL UNIQUE,"
-                + "password TEXT NOT NULL,"
-                + "account_number INTEGER NOT NULL,"
-                + "account_type TEXT NOT NULL,"
-                + "role TEXT NOT NULL);";
+    public static void deleteAllTables() {
+        String sql = "DROP TABLE IF EXISTS users, accounts, stocks, customer_stocks";
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
+
+    public static void createTables() {
+        String usersTable = "CREATE TABLE IF NOT EXISTS users ("
+                + "id INT AUTO_INCREMENT PRIMARY KEY,"
+                + "name VARCHAR(255) NOT NULL UNIQUE,"
+                + "password VARCHAR(255) NOT NULL,"
+                + "account_number INTEGER NOT NULL UNIQUE,"
+                + "account_type ENUM('ADMIN', 'USER') NOT NULL)";
 
         String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
-                + "	id integer PRIMARY KEY,\n"
-                + "	user_id integer NOT NULL,\n"
-                + "	balance real NOT NULL,\n"
-                + "	FOREIGN KEY (user_id) REFERENCES users (id)\n"
+                + "	account_number INT AUTO_INCREMENT PRIMARY KEY,\n"
+                + "	user_name VARCHAR(255) NOT NULL,\n"
+                + "	balance DOUBLE NOT NULL,\n"
+                + "account_type ENUM('TRADE', 'OPTIONS') NOT NULL,\n"
+                + "	FOREIGN KEY (user_name) REFERENCES users (name)\n"
                 + ");";
 
         String stocksTable = "CREATE TABLE IF NOT EXISTS stocks (\n"
-                + "	id integer PRIMARY KEY,\n"
-                + "	name text NOT NULL,\n"
-                + "	symbol text NOT NULL,\n"
-                + "	price real NOT NULL\n"
+                + "	name VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,\n"
+                + "	companyName VARCHAR(255) NOT NULL,\n"
+                + "	currentPrice DOUBLE NOT NULL,\n"
+                + "lastClosingPrice DOUBLE NOT NULL,\n"
+                + "	highestPrice DOUBLE NOT NULL,\n"
+                + "	lowestPrice DOUBLE NOT NULL,\n"
+                + "	dividend INTEGER NOT NULL\n"
                 + ");";
 
+        // stock can be duplicated in customer_stocks table
         String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
-                + "	account_number integer NOT NULL,\n"
-                + "	symbol text NOT NULL,\n"
-                + "	quantity integer NOT NULL,\n"
-                + "	PRIMARY KEY (account_number, symbol),\n"
-                + "	FOREIGN KEY (account_number) REFERENCES users (account_number),\n"
-                + "	FOREIGN KEY (symbol) REFERENCES stocks (symbol)\n"
+                + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
+                + "	account_number INTEGER NOT NULL,\n"
+                + "	stock VARCHAR(255) NOT NULL,\n"
+                + "price_bought DOUBLE NOT NULL,\n"
+                + "FOREIGN KEY (account_number) REFERENCES accounts (account_number),\n"
+                + "FOREIGN KEY (stock) REFERENCES stocks (name),\n"
+                + "	quantity INTEGER NOT NULL\n"
                 + ");";
 
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
+        try (Statement stmt = conn.createStatement()) {
             stmt.execute(usersTable);
             stmt.execute(accountsTable);
             stmt.execute(stocksTable);
@@ -63,104 +97,238 @@ public class Database {
         }
     }
 
-    public static Client authenticate(String username, String password) {
-        String query = "SELECT * FROM users WHERE username = ? AND password = ?;";
-        Client user = null;
+    public static boolean checkLogin(String name, String password) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM users WHERE name = ? AND password = ?");
+                statement.setString(1, name);
+                statement.setString(2, password);
 
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    user = new Client(rs.getString("username"), rs.getString("password"),
-                            rs.getLong("account_number"), rs.getString("account_type"));
-                }
+                ResultSet resultSet = statement.executeQuery();
+                return resultSet.next();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return false;
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
-        return user;
     }
 
-    public static TradingAccount getTradingAccount(long accountNumber) {
-        String query = "SELECT * FROM accounts WHERE user_id = ?;";
-        TradingAccount tradingAccount = null;
+    public static boolean registerUser(String name, String password, UserType account_type, int accountNumber) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO users (name, password, account_type, account_number) VALUES (?, ?, ?, ?)");
+                statement.setString(1, name);
+                statement.setString(2, password);
+                statement.setString(3, account_type.name());
+                statement.setInt(4, accountNumber);
 
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setLong(1, accountNumber);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    String ownerName = rs.getString("owner_name");
-                    double balance = rs.getDouble("balance");
-                    CustomerStocks customerStocks = getCustomerStocks(accountNumber);
-                    tradingAccount = new TradingAccount(ownerName, customerStocks, balance);
-                }
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
-        return tradingAccount;
     }
 
-    public static CustomerStocks getCustomerStocks(long accountNumber) {
-        String query = "SELECT * FROM customer_stocks WHERE account_number = ?;";
-        CustomerStocks customerStocks = new CustomerStocks();
-
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setLong(1, accountNumber);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    String symbol = rs.getString("symbol");
-                    int quantity = rs.getInt("quantity");
-                    Stock stock = getStock(symbol);
-                    if (stock != null) {
-                        customerStocks.buyStock(stock, quantity);
-                    }
-                }
+    /**
+     String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
+     + "	account_number INTEGER NOT NULL UNIQUE PRIMARY KEY,\n"
+     + "	user_name VARCHAR(255) NOT NULL,\n"
+     + "	balance DOUBLE NOT NULL,\n"
+     + "account_type ENUM('TRADE', 'OPTIONS') NOT NULL,\n"
+     + "	FOREIGN KEY (user_name) REFERENCES users (name)\n"
+     + ");";
+     */
+    public static boolean createTradingAccount(String userName,double balance) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO accounts (user_name, balance, account_type) VALUES (?, ?, ?)");
+                statement.setString(1, userName);
+                statement.setDouble(2, balance);
+                statement.setString(3, "TRADE");
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
-        return customerStocks;
     }
 
-    public static Stock getStock(String symbol) {
-        String query = "SELECT * FROM stocks WHERE symbol = ?;";
+    //get stock
+    public static Stock getStock(String stockName) {
         Stock stock = null;
 
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, symbol);
+        String sql = "SELECT * FROM stocks WHERE name = ?";
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    stock = new Stock(rs.getString("symbol"), rs.getString("name"), rs.getDouble("price"));
-                }
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, stockName);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String companyName = resultSet.getString("companyName");
+                double currentPrice = resultSet.getDouble("currentPrice");
+                double lastClosingPrice = resultSet.getDouble("lastClosingPrice");
+                double highestPrice = resultSet.getDouble("highestPrice");
+                double lowestPrice = resultSet.getDouble("lowestPrice");
+                int dividend = resultSet.getInt("dividend");
+
+                stock = StockFactory.createStock(name, companyName, currentPrice,lastClosingPrice, highestPrice, lowestPrice, dividend);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
+
         return stock;
     }
 
-    public static void addStock(Stock stock) {
-        String query = "INSERT INTO stocks (name, symbol, price) VALUES (?, ?, ?);";
 
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, stock.getName());
-            pstmt.setString(2, stock.getSymbol());
-            pstmt.setDouble(3, stock.getCurrentPrice());
-            pstmt.executeUpdate();
+    //get CustomerStocks
+    public static CustomerStocks getCustomerStocks(int accountNumber) {
+        CustomerStocks cs=new CustomerStocks(accountNumber);
+        HashMap<Stock, Integer> stocksAndQuantity = new HashMap<>();
+        String sql = "SELECT stock, quantity,price_bought FROM customer_stocks WHERE account_number = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, accountNumber);
+            ResultSet resultSet = pstmt.executeQuery();
+            while (resultSet.next()) {
+                String stockName = resultSet.getString("stock");
+                Stock stock = getStock(stockName);
+                if(stock == null) { throw new SQLException("Stock not found"); }
+                int quantity = resultSet.getInt("quantity");
+                stocksAndQuantity.put(stock, quantity);
+            }
+            cs.setStocks(stocksAndQuantity);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
+        return cs;
+    }
+    public static boolean setCustomerStocks(int accountNumber, String stockName, int quantity, double transactionPrice, boolean isBuy) {
+        boolean success = false;
+        try {
+            if (isBuy) {
+                // Buy stocks
+                String buySql = "INSERT INTO customer_stocks (account_number, stock, quantity, price_bought) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(buySql)) {
+                    pstmt.setInt(1, accountNumber);
+                    pstmt.setString(2, stockName);
+                    pstmt.setInt(3, quantity);
+                    pstmt.setDouble(4, transactionPrice);
+                    int rowsAffected = pstmt.executeUpdate();
+                    success = rowsAffected > 0;
+                }
+            } else {
+                // Sell stocks
+                String sellSql = "SELECT id, quantity, price_bought FROM customer_stocks WHERE account_number = ? AND stock = ? ORDER BY price_bought ASC";
+                try (PreparedStatement pstmt = conn.prepareStatement(sellSql)) {
+                    pstmt.setInt(1, accountNumber);
+                    pstmt.setString(2, stockName);
+                    ResultSet resultSet = pstmt.executeQuery();
+
+                    int remainingQuantityToSell = quantity;
+                    while (resultSet.next() && remainingQuantityToSell > 0) {
+                        int stockId = resultSet.getInt("id");
+                        int stockQuantity = resultSet.getInt("quantity");
+                        int newQuantity = Math.max(0, stockQuantity - remainingQuantityToSell);
+
+                        String updateSql = "UPDATE customer_stocks SET quantity = ? WHERE id = ?";
+                        try (PreparedStatement updatePstmt = conn.prepareStatement(updateSql)) {
+                            updatePstmt.setInt(1, newQuantity);
+                            updatePstmt.setInt(2, stockId);
+                            updatePstmt.executeUpdate();
+                        }
+
+                        if (newQuantity == 0) {
+                            String deleteSql = "DELETE FROM customer_stocks WHERE id = ?";
+                            try (PreparedStatement deletePstmt = conn.prepareStatement(deleteSql)) {
+                                deletePstmt.setInt(1, stockId);
+                                deletePstmt.executeUpdate();
+                            }
+                        }
+
+                        remainingQuantityToSell -= (stockQuantity - newQuantity);
+                    }
+
+                    success = remainingQuantityToSell == 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return success;
+    }
+
+
+    //get a TradingAccount
+    public static TradingAccount getTraddingAccount(int account_number) {
+        TradingAccount tradingAccount = null;
+
+        String sql = "SELECT * FROM accounts WHERE account_number = ? AND account_type = 'TRADE';";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, account_number);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                int accountNumber = resultSet.getInt("account_number");
+                String userName = resultSet.getString("user_name");
+                double balance = resultSet.getDouble("balance");
+                CustomerStocks cs=getCustomerStocks(accountNumber);
+                tradingAccount = TradingAccountFactory.createTradingAccount(userName,cs,balance,account_number);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tradingAccount;
+    }
+
+    //get all TradingAccount
+    public static List<TradingAccount> getTradingAccountsForUser(String userName) {
+        List<TradingAccount> tradingAccounts = new ArrayList<>();
+
+        String sql = "SELECT * FROM accounts WHERE user_name = ? AND account_type = 'TRADE';";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userName);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                int accountNumber = resultSet.getInt("account_number");
+                double balance = resultSet.getDouble("balance");
+                CustomerStocks cs=getCustomerStocks(accountNumber);
+                TradingAccount tradingAccount = TradingAccountFactory.createTradingAccount(userName,cs,balance,accountNumber);
+                tradingAccounts.add(tradingAccount);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tradingAccounts;
+    }
+    //get all OptionsAccount
+    public static List<OptionsAccount> getOptionsAccountForUser(String userName) {
+        List<OptionsAccount> tradingAccounts = new ArrayList<>();
+
+        String sql = "SELECT * FROM accounts WHERE user_name = ? AND account_type = 'OPTIONS';";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userName);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                int accountNumber = resultSet.getInt("account_number");
+                double balance = resultSet.getDouble("balance");
+                CustomerStocks cs=getCustomerStocks(accountNumber);
+                OptionsAccount tradingAccount = TradingAccountFactory.createOptionsAccount(userName,cs,balance,accountNumber);
+                tradingAccounts.add(tradingAccount);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tradingAccounts;
     }
 
 }

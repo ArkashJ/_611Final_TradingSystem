@@ -5,6 +5,11 @@ public class Profit_Loss {
     private Stock stock;
     private double profitLoss;
 
+    public Profit_Loss() {
+        this.stock = null;
+        this.profitLoss = 0;
+    }
+
     public Profit_Loss(Stock stock, double profitLoss) {
         this.stock = stock;
         this.profitLoss = profitLoss;

@@ -1,4 +1,10 @@
-package main.Stocks;
+package main.Accounts;
+
+import main.Stocks.Market;
+import main.Stocks.Stock;
+import main.Utils.Notify;
+
+import java.util.List;
 
 /**
  * @Description: This class represents trading between customers and the market, a singleton class
@@ -10,12 +16,11 @@ public class Trading {
     private Trading() {}
     private static Trading trading = new Trading();
     
-    public static boolean trade(CustomerStocks cs,Stock stock, int num, String way) {
+    public static boolean trade(TradingAccount tradingAccount,Stock stock, int num, String way) {
         if(way.equals("buy")) {
             try {
                 Market.sellStocks(stock, num);
-                cs.buyStock(stock, num);
-                return true;
+                tradingAccount.buyStock(stock, num);
             }
             catch(Exception e) {
                 System.out.println(e.getMessage());
@@ -25,8 +30,7 @@ public class Trading {
         else if(way.equals("sell")) {
             try {
                 Market.buyStocks(stock, num);
-                cs.sellStock(stock, num);
-                return true;
+                tradingAccount.sellStock(stock, num);
             }
             catch(Exception e) {
                 System.out.println(e.getMessage());
@@ -36,5 +40,9 @@ public class Trading {
         else {
             throw new RuntimeException("way must be buy or sell");
         }
+        if(num>=10000) {
+            Notify.toAll("A trade over 10k is made");
+        }
+        return true;
     }
 }

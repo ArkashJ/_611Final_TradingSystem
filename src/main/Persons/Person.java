@@ -1,8 +1,8 @@
 package main.Persons;
 
 public class Person implements IPerson {
-    private String userName;
-    private String password;
+    protected String userName;
+    protected String password;
 
     public Person(String userName, String password) {
         this.userName = userName;
@@ -21,15 +21,6 @@ public class Person implements IPerson {
         this.password = password;
     }
 
-    @Override
-    public boolean deposit(double amount) {
-        return false;
-    }
-
-    @Override
-    public boolean withdraw(double amount) {
-        return false;
-    }
 
     @Override
     public boolean transfer(double amount, String accountNumber) {
