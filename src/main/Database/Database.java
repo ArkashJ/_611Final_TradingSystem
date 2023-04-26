@@ -92,7 +92,8 @@ public class Database {
         String market="CREATE TABLE IF NOT EXISTS market (\n"
                 + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
                 + "stock VARCHAR(255) NOT NULL,\n"
-                + "quantity INTEGER NOT NULL\n"
+                + "quantity INTEGER NOT NULL,\n"
+                + "FOREIGN KEY (stock) REFERENCES stocks (name)\n"
                 + ");";
 
         String log="CREATE TABLE IF NOT EXISTS log (\n"

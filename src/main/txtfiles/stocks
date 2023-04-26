@@ -1,0 +1,53 @@
+AAPL,Apple Inc.,170.50,170.00,171.00,169.00,1
+MSFT,Microsoft Corporation,260.00,259.00,261.00,258.00,2
+GOOGL,Alphabet Inc.,2200.00,2190.00,2210.00,2180.00,3
+AMZN,Amazon.com Inc.,3300.00,3290.00,3310.00,3280.00,4
+TSLA,Tesla Inc.,680.00,678.00,684.00,674.00,5
+NVDA,NVIDIA Corporation,540.00,538.00,542.00,536.00,6
+FB,Facebook Inc.,310.00,308.00,312.00,306.00,7
+JPM,JPMorgan Chase & Co.,155.00,154.00,156.00,153.00,8
+V,VISA Inc.,230.00,229.00,231.00,228.00,9
+BRK-B,Berkshire Hathaway Inc.,265.00,263.00,267.00,262.00,10
+JNJ,Johnson & Johnson,170.00,169.00,171.00,168.00,11
+BAC,Bank of America Corp.,40.00,39.00,41.00,38.00,12
+UNH,UnitedHealth Group Inc.,400.00,398.00,402.00,396.00,13
+PYPL,PayPal Holdings Inc.,260.00,259.00,261.00,258.00,14
+PG,Procter & Gamble Co.,138.00,137.00,139.00,136.00,15
+MA,Mastercard Inc.,360.00,358.00,362.00,356.00,16
+HD,The Home Depot Inc.,300.00,298.00,302.00,296.00,17
+DIS,Walt Disney Co (The),170.00,169.00,171.00,168.00,18
+XOM,Exxon Mobil Corp.,50.00,49.00,51.00,48.00,19
+CMCSA,Comcast Corporation,55.00,54.00,56.00,53.00,20
+KO,Coca-Cola Co (The),55.00,54.00,56.00,53.00,21
+VZ,Verizon Communications Inc.,58.00,57.00,59.00,56.00,22
+PFE,Pfizer Inc.,40.00,39.00,41.00,38.00,23
+MRK,Merck & Co Inc.,75.00,74.00,76.00,73.00,24
+T,AT&T Inc.,30.00,29.00,31.00,28.00,25
+NFLX,Netflix Inc.,540.00,538.00,542.00,536.00,26
+ABT,Abbott Laboratories,120.00,119.00,121.00,118.00,27
+INTC,Intel Corporation,60.00,59.00,61.00,58.00,28
+CSCO,Cisco Systems Inc.,50.00,49.00,51.00,48.00,29
+NKE,Nike Inc.,140.00,139.00,141.00,138.00,30
+WMT,Walmart Inc.,140.00,139.00,141.00,138.00,31
+CRM,Salesforce.com Inc.,240.00,239.00,241.00,238.00,32
+PEP,PepsiCo Inc.,140.00,139.00,141.00,138.00,33
+AVGO,Broadcom Inc.,450.00,448.00,452.00,446.00,34
+ABBV,AbbVie Inc.,110.00,109.00,111.00,108.00,35
+TMO,Thermo Fisher Scientific Inc.,500.00,498.00,502.00,496.00,36
+COST,Costco Wholesale Corporation,380.00,378.00,382.00,376.00,37
+MCD,McDonald's Corporation,230.00,229.00,231.00,228.00,38
+TXN,Texas Instruments Incorporated,180.00,179.00,181.00,178.00,39
+ADBE,Adobe Inc.,500.00,498.00,502.00,496.00,40
+NVS,Novartis AG,90.00,89.00,91.00,88.00,41
+UNP,Union Pacific Corporation,220.00,219.00,221.00,218.00,42
+HON,Honeywell International Inc.,210.00,209.00,211.00,208.00,43
+NEE,NextEra Energy Inc.,80.00,79.00,81.00,78.00,44
+LLY,Eli Lilly and Company,200.00,199.00,201.00,198.00,45
+ASML,ASML Holding N.V.,600.00,598.00,602.00,596.00,46
+PM,Philip Morris International Inc.,90.00,89.00,91.00,88.00,47
+BMY,Bristol-Myers Squibb Company,65.00,64.00,66.00,63.00,48
+ORCL,Oracle Corporation,80.00,79.00,81.00,78.00,49
+DHR,Danaher Corporation,250.00,249.00,251.00,248.00,50
+AMGN,Amgen Inc.,250.00,249.00,251.00,248.00,51
+IBM,International Business Machines Corporation,130.00,129.00,131.00,128.00,52
+LIN,Linde plc,300.00,298.00,302.00,296.00,53

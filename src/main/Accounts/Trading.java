@@ -179,35 +179,4 @@ public class Trading {
     }
 
 
-//    public static boolean trade(TradingAccount tradingAccount,Stock stock, int num, String way) {
-//        if(way.equals("buy")) {
-//            try {
-//                Market.sellStocks(stock, num);
-//                tradingAccount.buyStock(stock, num);
-//                //todo :
-//                // log.add("buy "+num+" "+stock.getName()+" stocks");
-//            }
-//            catch(Exception e) {
-//                System.out.println(e.getMessage());
-//                return false;
-//            }
-//        }
-//        else if(way.equals("sell")) {
-//            try {
-//                Market.buyStocks(stock, num);
-//                tradingAccount.sellStock(stock, num);
-//            }
-//            catch(Exception e) {
-//                System.out.println(e.getMessage());
-//                return false;
-//            }
-//        }
-//        else {
-//            throw new RuntimeException("way must be buy or sell");
-//        }
-//        if(num>=10000) {
-//            Notify.toAll("A trade over 10k is made");
-//        }
-//        return true;
-//    }
 }
