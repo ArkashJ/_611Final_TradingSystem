@@ -28,6 +28,9 @@ public class Database {
     public static synchronized Database getInstance() {
         return dbInstance;
     }
+    public static Connection getConnection() {
+        return conn;
+    }
 
     public static Connection connect() {
         Connection conn = null;
@@ -40,7 +43,7 @@ public class Database {
     }
 
     public static void deleteAllTables() {
-        String sql = "DROP TABLE IF EXISTS users, accounts, stocks, customer_stocks";
+        String sql = "DROP TABLE IF EXISTS users, accounts, stocks, customer_stocks,market,log";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -78,12 +81,30 @@ public class Database {
         // stock can be duplicated in customer_stocks table
         String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
                 + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
-                + "	account_number INTEGER NOT NULL,\n"
-                + "	stock VARCHAR(255) NOT NULL,\n"
+                + "account_number INTEGER NOT NULL,\n"
+                + "stock VARCHAR(255) NOT NULL,\n"
                 + "price_bought DOUBLE NOT NULL,\n"
                 + "FOREIGN KEY (account_number) REFERENCES accounts (account_number),\n"
                 + "FOREIGN KEY (stock) REFERENCES stocks (name),\n"
                 + "	quantity INTEGER NOT NULL\n"
+                + ");";
+
+        String market="CREATE TABLE IF NOT EXISTS market (\n"
+                + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
+                + "stock VARCHAR(255) NOT NULL,\n"
+                + "quantity INTEGER NOT NULL\n"
+                + ");";
+
+        String log="CREATE TABLE IF NOT EXISTS log (\n"
+                + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
+                + "account_number INTEGER NOT NULL,\n"
+                + "stock VARCHAR(255) NOT NULL,\n"
+                + "price DOUBLE NOT NULL,\n"
+                + "quantity INTEGER NOT NULL,\n"
+                + "type ENUM('BUY', 'SELL') NOT NULL,\n"
+                + "time TIMESTAMP NOT NULL,\n"
+                + "FOREIGN KEY (account_number) REFERENCES accounts (account_number),\n"
+                + "FOREIGN KEY (stock) REFERENCES stocks (name)\n"
                 + ");";
 
         try (Statement stmt = conn.createStatement()) {
@@ -91,6 +112,8 @@ public class Database {
             stmt.execute(accountsTable);
             stmt.execute(stocksTable);
             stmt.execute(customerStocksTable);
+            stmt.execute(market);
+            stmt.execute(log);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -155,7 +178,7 @@ public class Database {
         }
     }
 
-    //get stock
+    //get stock from stock table
     public static Stock getStock(String stockName) {
         Stock stock = null;
 
@@ -183,11 +206,10 @@ public class Database {
         return stock;
     }
 
-
     //get CustomerStocks
+    //to get user's certain stock, first get its CustomerStocks, then get its stock by the hashmap
     public static CustomerStocks getCustomerStocks(int accountNumber) {
         CustomerStocks cs=new CustomerStocks(accountNumber);
-        HashMap<Stock, Integer> stocksAndQuantity = new HashMap<>();
         String sql = "SELECT stock, quantity,price_bought FROM customer_stocks WHERE account_number = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -195,12 +217,10 @@ public class Database {
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
                 String stockName = resultSet.getString("stock");
-                Stock stock = getStock(stockName);
-                if(stock == null) { throw new SQLException("Stock not found"); }
                 int quantity = resultSet.getInt("quantity");
-                stocksAndQuantity.put(stock, quantity);
+                double price_bought = resultSet.getDouble("price_bought");
+                cs.add(stockName,quantity,price_bought);
             }
-            cs.setStocks(stocksAndQuantity);
         } catch (SQLException e) {
             e.printStackTrace();
         }
