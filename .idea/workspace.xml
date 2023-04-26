@@ -5,11 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c131795-afd8-4ad7-8e25-9f6d01fa23c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/Initiator/Initiator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/txtfiles/stocks" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/txtfiles/accounts.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/txtfiles/customer_stocks.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/txtfiles/users.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Database/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/FrontEnd/StockPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/FrontEnd/StockPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Initiator/Initiator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Initiator/Initiator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Stocks/CustomerStocks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Stocks/CustomerStocks.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Stocks/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Stocks/Market.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/txtfiles/stocks" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/txtfiles/stocks.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +80,7 @@
       <workItem from="1682102266567" duration="14683000" />
       <workItem from="1682205224744" duration="13756000" />
       <workItem from="1682434124199" duration="17926000" />
-      <workItem from="1682513346534" duration="1505000" />
+      <workItem from="1682513346534" duration="6079000" />
     </task>
     <servers />
   </component>
@@ -91,5 +97,12 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="((Head)lines).parallel" custom="java.util.stream.ReferencePipeline.Head" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

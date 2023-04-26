@@ -13,8 +13,8 @@
 //import java.util.Map;
 //
 ///**
-// * @Description: show the customerStock of a user, and user can go to the Market to buy stocks
-// * stocks with detail: name, currentprice, quantity, highest price, lowest price, profit/loss
+// * @Description: show the customerStock of a user, and user can go to the Market to buy stocks.txt
+// * stocks.txt with detail: name, currentprice, quantity, highest price, lowest price, profit/loss
 // */
 //public class StockPage {
 //    private int accountNumber;

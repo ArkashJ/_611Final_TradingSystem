@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /**
  * @Description: This class represents the market, a singleton class
- * TODO: Add functions for time. You can place order for stocks but can only buy or sell them when the market is open
+ * TODO: Add functions for time. You can place order for stocks.txt but can only buy or sell them when the market is open
  */
 
 public class Market {
@@ -12,7 +12,7 @@ public class Market {
     private static Market market;
     private String closingTime;
     private String openingTime;
-    // stocks: key -> stock, value -> number of stocks
+    // stocks.txt: key -> stock, value -> number of stocks.txt
     private static HashMap<Stock, Integer> stocks;
     private Market() {
         market = new Market();

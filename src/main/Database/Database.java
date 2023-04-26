@@ -231,7 +231,7 @@ public class Database {
         boolean success = false;
         try {
             if (isBuy) {
-                // Buy stocks
+                // Buy stocks.txt
                 String buySql = "INSERT INTO customer_stocks (account_number, stock, quantity, price_bought) VALUES (?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(buySql)) {
                     pstmt.setInt(1, accountNumber);
@@ -242,7 +242,7 @@ public class Database {
                     success = rowsAffected > 0;
                 }
             } else {
-                // Sell stocks
+                // Sell stocks.txt
                 String sellSql = "SELECT id, quantity, price_bought FROM customer_stocks WHERE account_number = ? AND stock = ? ORDER BY price_bought ASC";
                 try (PreparedStatement pstmt = conn.prepareStatement(sellSql)) {
                     pstmt.setInt(1, accountNumber);
@@ -282,7 +282,6 @@ public class Database {
 
         return success;
     }
-
 
     //get a TradingAccount
     public static TradingAccount getTraddingAccount(int account_number) {

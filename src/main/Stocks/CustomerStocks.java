@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Description: This class represents a customer's stocks. like a bag
- * @Methods: getStock(Stock) if a stock name is given, return all stocks with the same name
+ * @Description: This class represents a customer's stocks.txt. like a bag
+ * @Methods: getStock(Stock) if a stock name is given, return all stocks.txt with the same name
  */
 
 public class CustomerStocks {
