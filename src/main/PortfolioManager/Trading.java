@@ -1,13 +1,11 @@
-package main.Accounts;
+package main.PortfolioManager;
 
 import main.Database.Database;
-import main.Stocks.Market;
-import main.Stocks.Stock;
-import main.Utils.Notify;
 import main.log.logSystem;
 
 import java.sql.*;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -177,6 +175,5 @@ public class Trading {
 
         return true;
     }
-
 
 }

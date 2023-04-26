@@ -1,12 +1,14 @@
 package main.PortfolioManager;
 
 import main.Database.Database;
+import main.Stocks.Stock;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BankManager {
@@ -109,8 +111,6 @@ public class BankManager {
         return profits;
     }
 
-
-
     /**
      * @Description: Update the stock price in the database
      * @param stockName
@@ -137,4 +137,5 @@ public class BankManager {
             return false;
         }
     }
+
 }

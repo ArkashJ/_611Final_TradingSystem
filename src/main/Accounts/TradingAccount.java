@@ -2,6 +2,7 @@ package main.Accounts;
 
 import main.Database.Database;
 import main.PortfolioManager.BankManager;
+import main.Stocks.CustomerStock;
 import main.Stocks.CustomerStocks;
 import main.Stocks.Stock;
 import main.Stocks.StockFactory;
@@ -76,6 +77,10 @@ public class TradingAccount extends Account implements ITrading{
     //See personal realized and unrealized profits
     public Map<String, Double> calculateProfits() {
         return BankManager.calculateProfits(accountNumber);
+    }
+
+    public List<CustomerStock> getHoldings() {
+        return customerStocks.getStocks();
     }
 
 

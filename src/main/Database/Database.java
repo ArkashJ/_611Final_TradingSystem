@@ -4,9 +4,7 @@ import main.Accounts.OptionsAccount;
 import main.Accounts.TradingAccount;
 import main.Accounts.TradingAccountFactory;
 import main.Enums.UserType;
-import main.Stocks.CustomerStocks;
-import main.Stocks.Stock;
-import main.Stocks.StockFactory;
+import main.Stocks.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -155,13 +153,7 @@ public class Database {
     }
 
     /**
-     String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
-     + "	account_number INTEGER NOT NULL UNIQUE PRIMARY KEY,\n"
-     + "	user_name VARCHAR(255) NOT NULL,\n"
-     + "	balance DOUBLE NOT NULL,\n"
-     + "account_type ENUM('TRADE', 'OPTIONS') NOT NULL,\n"
-     + "	FOREIGN KEY (user_name) REFERENCES users (name)\n"
-     + ");";
+     * get
      */
     public static boolean createTradingAccount(String userName,double balance) {
         synchronized (conn) {
@@ -208,7 +200,6 @@ public class Database {
     }
 
     //get CustomerStocks
-    //to get user's certain stock, first get its CustomerStocks, then get its stock by the hashmap
     public static CustomerStocks getCustomerStocks(int accountNumber) {
         CustomerStocks cs=new CustomerStocks(accountNumber);
         String sql = "SELECT stock, quantity,price_bought FROM customer_stocks WHERE account_number = ?";
@@ -227,64 +218,28 @@ public class Database {
         }
         return cs;
     }
-    public static boolean setCustomerStocks(int accountNumber, String stockName, int quantity, double transactionPrice, boolean isBuy) {
-        boolean success = false;
-        try {
-            if (isBuy) {
-                // Buy stocks.txt
-                String buySql = "INSERT INTO customer_stocks (account_number, stock, quantity, price_bought) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement pstmt = conn.prepareStatement(buySql)) {
-                    pstmt.setInt(1, accountNumber);
-                    pstmt.setString(2, stockName);
-                    pstmt.setInt(3, quantity);
-                    pstmt.setDouble(4, transactionPrice);
-                    int rowsAffected = pstmt.executeUpdate();
-                    success = rowsAffected > 0;
-                }
-            } else {
-                // Sell stocks.txt
-                String sellSql = "SELECT id, quantity, price_bought FROM customer_stocks WHERE account_number = ? AND stock = ? ORDER BY price_bought ASC";
-                try (PreparedStatement pstmt = conn.prepareStatement(sellSql)) {
-                    pstmt.setInt(1, accountNumber);
-                    pstmt.setString(2, stockName);
-                    ResultSet resultSet = pstmt.executeQuery();
 
-                    int remainingQuantityToSell = quantity;
-                    while (resultSet.next() && remainingQuantityToSell > 0) {
-                        int stockId = resultSet.getInt("id");
-                        int stockQuantity = resultSet.getInt("quantity");
-                        int newQuantity = Math.max(0, stockQuantity - remainingQuantityToSell);
+    //get all Market Stocks
+    public static void setMarketStocks() {
+        String sql = "SELECT stock, quantity FROM market";
 
-                        String updateSql = "UPDATE customer_stocks SET quantity = ? WHERE id = ?";
-                        try (PreparedStatement updatePstmt = conn.prepareStatement(updateSql)) {
-                            updatePstmt.setInt(1, newQuantity);
-                            updatePstmt.setInt(2, stockId);
-                            updatePstmt.executeUpdate();
-                        }
-
-                        if (newQuantity == 0) {
-                            String deleteSql = "DELETE FROM customer_stocks WHERE id = ?";
-                            try (PreparedStatement deletePstmt = conn.prepareStatement(deleteSql)) {
-                                deletePstmt.setInt(1, stockId);
-                                deletePstmt.executeUpdate();
-                            }
-                        }
-
-                        remainingQuantityToSell -= (stockQuantity - newQuantity);
-                    }
-
-                    success = remainingQuantityToSell == 0;
-                }
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            List<MarketStock> marketStocks = new ArrayList<>();
+            ResultSet resultSet = pstmt.executeQuery();
+            while (resultSet.next()) {
+                String stockName = resultSet.getString("stock");
+                int quantity = resultSet.getInt("quantity");
+                MarketStock stock = new MarketStock(stockName,quantity);
+                marketStocks.add(stock);
             }
+            Market.setStocks(marketStocks);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return success;
     }
 
     //get a TradingAccount
-    public static TradingAccount getTraddingAccount(int account_number) {
+    public static TradingAccount getTradingAccount(int account_number) {
         TradingAccount tradingAccount = null;
 
         String sql = "SELECT * FROM accounts WHERE account_number = ? AND account_type = 'TRADE';";
@@ -351,7 +306,7 @@ public class Database {
     }
 
     /**
-     * insert
+     * put
      */
     public static void insertStock(String stockName, String companyName, double currentPrice, double lastClosingPrice, double highestPrice, double lowestPrice, int dividend) {
         String sql = "INSERT INTO stocks (name, companyName, currentPrice, lastClosingPrice, highestPrice, lowestPrice, dividend) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -441,15 +396,5 @@ public class Database {
         }
     }
 
-
-    String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
-            + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
-            + "account_number INTEGER NOT NULL,\n"
-            + "stock VARCHAR(255) NOT NULL,\n"
-            + "price_bought DOUBLE NOT NULL,\n"
-            + "FOREIGN KEY (account_number) REFERENCES accounts (account_number),\n"
-            + "FOREIGN KEY (stock) REFERENCES stocks (name),\n"
-            + "	quantity INTEGER NOT NULL\n"
-            + ");";
 
 }

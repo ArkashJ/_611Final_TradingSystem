@@ -34,7 +34,6 @@ public class Initiator {
 
             //2. market
             insertMarketData();
-//            System.out.println(Database.getConnection().isValid(2));
 
             //3. load users
             loadUsersFromFile(dir_path + "users.txt");
