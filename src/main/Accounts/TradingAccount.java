@@ -1,12 +1,18 @@
 package main.Accounts;
 
+import main.Database.Database;
+import main.PortfolioManager.BankManager;
 import main.Stocks.CustomerStocks;
 import main.Stocks.Stock;
 import main.Stocks.StockFactory;
 import main.Utils.Profit_Loss;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 //Create a trading account for a customer
 
@@ -21,16 +27,12 @@ public class TradingAccount extends Account implements ITrading{
     private CustomerStocks customerStocks;
     private double balance;
 
-    // profit_loss is a class that stores the profit and loss of each possible trade
-//    private Profit profit;
 
 
     public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, int accountNumber) {
         this.ownerName = ownerName;
         this.customerStocks = customerStocks;
         this.balance = balance;
-//        this.stockMap = new HashMap<>();
-//        this.profit=new Profit();
         this.accountNumber = accountNumber;
         this.accountType = "Trading";
     }
@@ -44,77 +46,38 @@ public class TradingAccount extends Account implements ITrading{
 
     public boolean deposit(double amount) {
         balance += amount;
+        updateBalance(balance);
         return true;
     };
     public boolean withdraw(double amount) {
         if(balance<amount) {return false;}
         else {
             balance -= amount;
+            updateBalance(balance);
             return true;
         }
     };
 
-    /**
-     * @Description: buy stocks:
-     */
-
-    //todo : update in database
-
-    public void buyStock(Stock stock, int num) {
-//        if(num<=0) {
-//            throw new RuntimeException("nums must be larger than 0");
-//        }
-//        else{
-//            if(balance < stock.getCurrentPrice()*num) {
-//                throw new RuntimeException("You don't have enough money to buy this stock");
-//            }
-////            Stock stock=StockFactory.copyStock_withPriceBoughtAt(stock_origin, stock_origin.getCurrentPrice());
-//            this.customerStocks.add(stock, num);
-//            this.updateBalance(stock.getCurrentPrice()*num,"b");
-////            stockMap.put(stock, stock_origin);
-//            this.profit.buyStock(stock, num);
-//        }
+    //update from database
+    public boolean updateBalance(double balance) {
+        Connection conn= Database.getConnection();
+        String sql = "UPDATE accounts SET balance = ? WHERE account_number = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, balance);
+            pstmt.setInt(2, accountNumber);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
-
-    public void sellStock(Stock stock_origin, int num) {
-//        if(num<=0) {
-//            throw new RuntimeException("nums must be larger than 0");
-//        } else {
-//            int wholeNum= customerStocks.getOriginalStockNum(stock_origin);
-//            if(wholeNum < num) {
-//                throw new RuntimeException("You only have " + wholeNum + " stocks of this type");
-//            }
-//            List<Stock> stocks = customerStocks.getStocks(stock_origin);
-//            // remove every stock in the list until the num is 0
-//            HashMap<Stock, Integer> stockNumMap = customerStocks.getStocks();
-//            for(Stock stock: stocks) {
-//                if(num==0) {
-//                    break;
-//                }
-//                int stockNum = stockNumMap.get(stock);
-//                if(stockNum <= num) {
-//                    customerStocks.remove(stock,num);
-//                    num -= stockNum;
-//                }
-//                else {
-//                    customerStocks.remove(stock, num);
-//                    num = 0;
-//                }
-//            }
-//            // update the balance
-//            this.updateBalance(stock_origin.getCurrentPrice()*num,"s");
-//            this.profit.sellStock(stock_origin, num);
-//        }
+    //See personal realized and unrealized profits
+    public Map<String, Double> calculateProfits() {
+        return BankManager.calculateProfits(accountNumber);
     }
 
-    //to show profit
-//    public double getRealizedProfit(){
-//        return this.profit.get_realizedProfit();
-//    }
-//    public double getUnrealizedProfit(){
-//        return this.profit.get_unrealizedProfit(customerStocks);
-//    }
 
     /**
      * By Jianxiao : checkBalance(optionsAccounts.size()) why check Accounts size?

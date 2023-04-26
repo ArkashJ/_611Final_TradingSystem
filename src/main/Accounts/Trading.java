@@ -4,9 +4,11 @@ import main.Database.Database;
 import main.Stocks.Market;
 import main.Stocks.Stock;
 import main.Utils.Notify;
+import main.log.logSystem;
 
 import java.sql.*;
 import java.util.List;
+
 
 /**
  * @Description: This class represents trading between customers and the market, a singleton class
@@ -103,7 +105,7 @@ public class Trading {
         }
 
         // 5. Get the log system (Implement your own logging system here)
-        logTransaction(accountNumber, stockName, stockPrice, quantity, "BUY");
+        logSystem.logTransaction(accountNumber, stockName, stockPrice, quantity, "BUY");
 
         return true;
     }
@@ -168,7 +170,7 @@ public class Trading {
         }
 
         // 4. Log the transaction in the log table
-        boolean isLogged = logTransaction(accountNumber, stockName, stockPrice, quantity, "SELL");
+        boolean isLogged = logSystem.logTransaction(accountNumber, stockName, stockPrice, quantity, "SELL");
         if (!isLogged) {
             return false;
         }
@@ -176,24 +178,6 @@ public class Trading {
         return true;
     }
 
-    //log
-    public static boolean logTransaction(int accountNumber, String stockName, double stockPrice, int quantity, String type) {
-        //todo: if the amount is over 10k, inform everyone
-        String sql = "INSERT INTO log (account_number, stock, price, quantity, type, time) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, accountNumber);
-            pstmt.setString(2, stockName);
-            pstmt.setDouble(3, stockPrice);
-            pstmt.setInt(4, quantity);
-            pstmt.setString(5, type);
-            pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
 
 //    public static boolean trade(TradingAccount tradingAccount,Stock stock, int num, String way) {
 //        if(way.equals("buy")) {
