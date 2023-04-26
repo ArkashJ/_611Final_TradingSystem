@@ -350,4 +350,106 @@ public class Database {
         return tradingAccounts;
     }
 
+    /**
+     * insert
+     */
+    public static void insertStock(String stockName, String companyName, double currentPrice, double lastClosingPrice, double highestPrice, double lowestPrice, int dividend) {
+        String sql = "INSERT INTO stocks (name, companyName, currentPrice, lastClosingPrice, highestPrice, lowestPrice, dividend) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // dont put conn in try-with-resources, otherwise it will be closed before we can use it
+        Connection conn = Database.getConnection();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, stockName);
+            pstmt.setString(2, companyName);
+            pstmt.setDouble(3, currentPrice);
+            pstmt.setDouble(4, lastClosingPrice);
+            pstmt.setDouble(5, highestPrice);
+            pstmt.setDouble(6, lowestPrice);
+            pstmt.setInt(7, dividend);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void insertUsers(String userName,String password,int account_number,String accountType) {
+        String sql= "INSERT INTO users (name, password, account_number, account_type) VALUES (?, ?, ?, ?)";
+        Connection conn = Database.getConnection();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userName);
+            pstmt.setString(2, password);
+            pstmt.setInt(3, account_number);
+            pstmt.setString(4, accountType);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void insertAccounts(int account_number, String userName, double balance,String accountType) {
+        String sql = "INSERT INTO accounts (account_number, user_name, balance, account_type) VALUES (?, ?, ?, ?)";
+        Connection conn = Database.getConnection();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, account_number);
+            pstmt.setString(2, userName);
+            pstmt.setDouble(3, balance);
+            pstmt.setString(4, accountType);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void insertStockIntoMarket(String stockName, int quantity) {
+        String checkStockSql = "SELECT * FROM market WHERE stock = ?";
+        String updateQuantitySql = "UPDATE market SET quantity = quantity + ? WHERE stock = ?";
+        String insertStockSql = "INSERT INTO market (stock, quantity) VALUES (?, ?)";
+
+        Connection conn = Database.getConnection();
+
+        try (PreparedStatement checkStockStmt = conn.prepareStatement(checkStockSql);
+             PreparedStatement updateQuantityStmt = conn.prepareStatement(updateQuantitySql);
+             PreparedStatement insertStockStmt = conn.prepareStatement(insertStockSql)) {
+
+            // Check if the stock exists in the market
+            checkStockStmt.setString(1, stockName);
+            ResultSet rs = checkStockStmt.executeQuery();
+
+            if (rs.next()) {
+                // If stock exists, update the quantity
+                updateQuantityStmt.setInt(1, quantity);
+                updateQuantityStmt.setString(2, stockName);
+                updateQuantityStmt.executeUpdate();
+            } else {
+                // If stock doesn't exist, insert a new record
+                insertStockStmt.setString(1, stockName);
+                insertStockStmt.setInt(2, quantity);
+                insertStockStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void insertStockIntoCustomerStocks(int account_number,String stockName,double price_bought, int quantity) {
+        String sql= "INSERT INTO customer_stocks (account_number, stock, price_bought, quantity) VALUES (?, ?, ?, ?)";
+        Connection conn = Database.getConnection();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, account_number);
+            pstmt.setString(2, stockName);
+            pstmt.setDouble(3, price_bought);
+            pstmt.setInt(4, quantity);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    String customerStocksTable = "CREATE TABLE IF NOT EXISTS customer_stocks (\n"
+            + "id INT AUTO_INCREMENT PRIMARY KEY,\n"
+            + "account_number INTEGER NOT NULL,\n"
+            + "stock VARCHAR(255) NOT NULL,\n"
+            + "price_bought DOUBLE NOT NULL,\n"
+            + "FOREIGN KEY (account_number) REFERENCES accounts (account_number),\n"
+            + "FOREIGN KEY (stock) REFERENCES stocks (name),\n"
+            + "	quantity INTEGER NOT NULL\n"
+            + ");";
+
 }

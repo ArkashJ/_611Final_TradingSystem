@@ -19,6 +19,34 @@ public class Initiator {
     public static Initiator getInstance() {
         return initiator;
     }
+
+    public static void initiateAll() {
+        boolean reset = true;
+
+        String dir_path = "src/main/txtfiles/";
+
+        if(reset) {
+            Database.deleteAllTables();
+            Database.createTables();
+            //initialize the database
+            //1. stocks.txt
+            loadStocksFromFile(dir_path + "stocks.txt");
+
+            //2. market
+            insertMarketData();
+//            System.out.println(Database.getConnection().isValid(2));
+
+            //3. load users
+            loadUsersFromFile(dir_path + "users.txt");
+
+            //3. load accounts
+            loadAccountsFromFile(dir_path + "accounts.txt");
+
+            //4. load CustomerStocks
+            loadCustomerStocksFromFile(dir_path + "customer_stocks.txt");
+        }
+    }
+
     public static void loadStocksFromFile(String filePath) {
         Path file = Paths.get(filePath);
         try (Stream<String> lines = Files.lines(file)) {
@@ -31,46 +59,22 @@ public class Initiator {
                 double highestPrice = Double.parseDouble(stockData[4]);
                 double lowestPrice = Double.parseDouble(stockData[5]);
                 int dividend = Integer.parseInt(stockData[6]);
-                insertStock(stockName, companyName, currentPrice, lastClosingPrice, highestPrice, lowestPrice, dividend);
+                Database.insertStock(stockName, companyName, currentPrice, lastClosingPrice, highestPrice, lowestPrice, dividend);
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static void insertStock(String stockName, String companyName, double currentPrice, double lastClosingPrice, double highestPrice, double lowestPrice, int dividend) {
-        String sql = "INSERT INTO stocks (name, companyName, currentPrice, lastClosingPrice, highestPrice, lowestPrice, dividend) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        // dont put conn in try-with-resources, otherwise it will be closed before we can use it
-        Connection conn = Database.getConnection();
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, stockName);
-            pstmt.setString(2, companyName);
-            pstmt.setDouble(3, currentPrice);
-            pstmt.setDouble(4, lastClosingPrice);
-            pstmt.setDouble(5, highestPrice);
-            pstmt.setDouble(6, lowestPrice);
-            pstmt.setInt(7, dividend);
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
     public static void insertMarketData() {
         String selectStocksSql = "SELECT name FROM stocks";
-        String marketInsertSql = "INSERT INTO market (stock, quantity) VALUES (?, ?)";
         Connection conn = Database.getConnection();
-        try (PreparedStatement selectStocksStmt = conn.prepareStatement(selectStocksSql);
-             PreparedStatement marketStmt = conn.prepareStatement(marketInsertSql)) {
-
+        try (PreparedStatement selectStocksStmt = conn.prepareStatement(selectStocksSql)) {
             ResultSet rs = selectStocksStmt.executeQuery();
 
             while (rs.next()) {
                 String stockName = rs.getString("name");
-
                 // Insert stock data into market table
-                marketStmt.setString(1, stockName);
-                marketStmt.setInt(2, 1000); // Set initial quantity to 1000 shares
-                marketStmt.executeUpdate();
+                Database.insertStockIntoMarket(stockName,1000);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -86,24 +90,10 @@ public class Initiator {
                 String userName = data[1];
                 double balance = Double.parseDouble(data[2]);
                 String accountType = data[3];
-                insertAccounts(account_number, userName, balance, accountType);
+                Database.insertAccounts(account_number, userName, balance, accountType);
             });
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void insertAccounts(int account_number, String userName, double balance,String accountType) {
-        String sql = "INSERT INTO accounts (account_number, user_name, balance, account_type) VALUES (?, ?, ?, ?)";
-        Connection conn = Database.getConnection();
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, account_number);
-            pstmt.setString(2, userName);
-            pstmt.setDouble(3, balance);
-            pstmt.setString(4, accountType);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -116,23 +106,26 @@ public class Initiator {
                 String password = data[2];
                 int account_number = Integer.parseInt(data[3]);
                 String accountType = data[4];
-                insertUsers(userName, password, account_number, accountType);
+                Database.insertUsers(userName, password, account_number, accountType);
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static void insertUsers(String userName,String password,int account_number,String accountType) {
-        String sql= "INSERT INTO users (name, password, account_number, account_type) VALUES (?, ?, ?, ?)";
-        Connection conn = Database.getConnection();
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, userName);
-            pstmt.setString(2, password);
-            pstmt.setInt(3, account_number);
-            pstmt.setString(4, accountType);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
+    public static void loadCustomerStocksFromFile(String filePath) {
+        Path file = Paths.get(filePath);
+        try (Stream<String> lines = Files.lines(file)) {
+            lines.forEach(line -> {
+                String[] data = line.split(",");
+                int account_number = Integer.parseInt(data[1]);
+                String stockName = data[2];
+                double price = Double.parseDouble(data[3]);
+                int quantity = Integer.parseInt(data[4]);
+                Database.insertStockIntoCustomerStocks(account_number, stockName,price, quantity);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
