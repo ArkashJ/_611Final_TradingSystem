@@ -75,14 +75,18 @@ public class TradingAccount extends Account implements ITrading{
     }
 
     //See personal realized and unrealized profits
-    public Map<String, Double> calculateProfits() {
+    public Map<String, Double> getProfitsForAccount() {
         return BankManager.calculateProfits(accountNumber);
     }
+
 
     public List<CustomerStock> getHoldings() {
         return customerStocks.getStocks();
     }
 
+    public double getProfitForStock(String StockName) {
+        return BankManager.getTotalProfitForStock(accountNumber, StockName);
+    }
 
     /**
      * By Jianxiao : checkBalance(optionsAccounts.size()) why check Accounts size?

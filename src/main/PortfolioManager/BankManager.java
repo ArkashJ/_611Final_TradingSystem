@@ -138,4 +138,34 @@ public class BankManager {
         }
     }
 
+    /**
+     * @Description: Calculate profits for a stock in a specific account
+     * @return double profit
+     */
+    public static double getTotalProfitForStock(int accountNumber, String stockName) {
+        String query = "SELECT price_bought, quantity FROM customer_stocks WHERE account_number = ? AND stock = ?";
+        double totalProfit = 0;
+        Connection connection= Database.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, accountNumber);
+            preparedStatement.setString(2, stockName);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                Stock stock = Database.getStock(stockName);
+                double currentPrice = stock.getCurrentPrice();
+
+                while (resultSet.next()) {
+                    double boughtPrice = resultSet.getDouble("price_bought");
+                    int quantity = resultSet.getInt("quantity");
+                    totalProfit += (currentPrice - boughtPrice) * quantity;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalProfit;
+    }
+
 }

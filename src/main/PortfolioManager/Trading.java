@@ -4,7 +4,9 @@ import main.Database.Database;
 import main.log.logSystem;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -108,36 +110,71 @@ public class Trading {
         return true;
     }
     public static boolean sellStock(int accountNumber, String stockName, int quantity) {
-        // 1. Get the stock of that account in customer_stocks table, add them all up
+        // 1. Get the stock of that account in customer_stocks table,按照stockName和accountNumber获取对应的所有行的信息
+        //    check if the whole quantity is enough
         int totalQuantityOwned = 0;
-        double stockPrice = 0;
-        String sql = "SELECT SUM(quantity) as total, price_bought FROM customer_stocks WHERE account_number = ? AND stock = ? GROUP BY stock";
+        String sql = "SELECT id, account_number, stock, price_bought, quantity FROM customer_stocks WHERE account_number = ? AND stock = ? ORDER BY id";
+        List<Integer> stockIds = new ArrayList<>();
+        List<Integer> stockQuantities = new ArrayList<>();
+        List<Double> stockPrices = new ArrayList<>();
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, accountNumber);
             pstmt.setString(2, stockName);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                totalQuantityOwned = rs.getInt("total");
-                stockPrice = rs.getDouble("price_bought");
-            } else {
-                return false; // No stock found for the given accountNumber and stockName
+            while (rs.next()) {
+                totalQuantityOwned += rs.getInt("quantity");
+                stockIds.add(rs.getInt("id"));
+                stockQuantities.add(rs.getInt("quantity"));
+                stockPrices.add(rs.getDouble("price_bought"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
         }
 
-        // Check if the stock of that quantity is enough
         if (totalQuantityOwned < quantity) {
             return false; // Not enough stock to sell
         }
 
-        // 2. Update the accounts' balance in accounts table and customer_stocks table
-        // by deleting the stock from customer_stocks table until the quantity is enough
-        double totalAmount = stockPrice * quantity;
+        // 2. 将股票按照顺序卖出股票，直到卖出的股票数量达到quantity
+        // 当customer_stocks表中的某行股票数量减到0时，删除该条记录
+        double currentPrice = Database.getStock(stockName).getCurrentPrice();
+        double profit = 0;
+        int remainingQuantityToSell = quantity;
+
+        for (int i = 0; i < stockIds.size() && remainingQuantityToSell > 0; i++) {
+            int stockId = stockIds.get(i);
+            int stockQuantity = stockQuantities.get(i);
+            double priceBought = stockPrices.get(i);
+
+            int quantityToSell = Math.min(stockQuantity, remainingQuantityToSell);
+            profit += (currentPrice - priceBought) * quantityToSell;
+            remainingQuantityToSell -= quantityToSell;
+
+            if (quantityToSell == stockQuantity) {
+                sql = "DELETE FROM customer_stocks WHERE id = ?";
+            } else {
+                sql = "UPDATE customer_stocks SET quantity = quantity - ? WHERE id = ?";
+            }
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, quantityToSell);
+                if (quantityToSell != stockQuantity) {
+                    pstmt.setInt(2, stockId);
+                }
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                return false;
+            }
+        }
+
+        // 3. 在对每行做操作的时候顺便记录profit，假设customer_stocks的某行卖出了n个，那么profit就加上stockName对应的（currenPrice - price_bought） * n
+        // 最后将profit加到account的balance上
         sql = "UPDATE accounts SET balance = balance + ? WHERE account_number = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setDouble(1, totalAmount);
+            pstmt.setDouble(1, profit);
             pstmt.setInt(2, accountNumber);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -145,18 +182,7 @@ public class Trading {
             return false;
         }
 
-        sql = "UPDATE customer_stocks SET quantity = quantity - ? WHERE account_number = ? AND stock = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, quantity);
-            pstmt.setInt(2, accountNumber);
-            pstmt.setString(3, stockName);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-
-        // 3. Update the stock's quantity in the market
+        // 4. 在Market中加这个份额
         sql = "UPDATE market SET quantity = quantity + ? WHERE stock = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, quantity);
@@ -166,14 +192,11 @@ public class Trading {
             System.out.println(e.getMessage());
             return false;
         }
-
-        // 4. Log the transaction in the log table
-        boolean isLogged = logSystem.logTransaction(accountNumber, stockName, stockPrice, quantity, "SELL");
+        boolean isLogged = logSystem.logTransaction(accountNumber, stockName, currentPrice, quantity, "SELL");
         if (!isLogged) {
             return false;
         }
 
         return true;
     }
-
 }

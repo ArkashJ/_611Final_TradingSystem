@@ -1,5 +1,7 @@
 package main.Stocks;
 
+import main.Database.Database;
+
 public class CustomerStock {
     private String stockName;
     private int stockNumber;
@@ -21,5 +23,12 @@ public class CustomerStock {
 
     public double getStockBoughtPrice() {
         return stockBoughtPrice;
+    }
+
+    public double getProfit() {
+        Stock stock = Database.getStock(stockName);
+        double currentPrice = stock.getCurrentPrice();
+        double profit = (currentPrice - stockBoughtPrice) * stockNumber;
+        return profit;
     }
 }

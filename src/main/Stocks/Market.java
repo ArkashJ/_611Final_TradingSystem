@@ -1,5 +1,7 @@
 package main.Stocks;
 
+import main.Database.Database;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,11 @@ public class Market {
     }
 
     public static List<MarketStock> getStocks() {
+        if (stocks == null) {
+            stocks = new ArrayList<>();
+        }
+        stocks.clear();
+        Database.setMarketStocks();
         return stocks;
     }
 
