@@ -19,11 +19,9 @@ import java.util.Map;
 public class StockPage {
     private int accountNumber;
     private JFrame frame;
-    private AccountPage accountPage;
 
-    public StockPage(int accountNumber, AccountPage accountPage) {
+    public StockPage(int accountNumber) {
         this.accountNumber = accountNumber;
-        this.accountPage = accountPage;
     }
 
     public void run() {
@@ -35,6 +33,17 @@ public class StockPage {
 
         frame.add(stockPanel, BorderLayout.CENTER);
 
+        JButton enterMarketButton = new JButton("Enter market");
+        enterMarketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MarketPage marketPage = new MarketPage();
+                marketPage.run();
+            }
+        });
+
+        frame.add(enterMarketButton, BorderLayout.SOUTH);
+
         frame.setVisible(true);
     }
 
@@ -44,17 +53,6 @@ public class StockPage {
         JPanel panel = new JPanel(new BorderLayout());
         JPanel stockListPanel = new JPanel();
         stockListPanel.setLayout(new BoxLayout(stockListPanel, BoxLayout.Y_AXIS));
-
-        JButton enterMarketButton = new JButton("Enter Trading Market");
-//        enterMarketButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                StockPage stockPage = new StockPage(account.getAccountNumber(), AccountPage.this);
-//                stockPage.run();
-//            }
-//        });
-
-        panel.add(enterMarketButton, BorderLayout.CENTER);
 
         int size = customerStocks.getStockNames().size();
         if(size==0){
