@@ -34,10 +34,17 @@ public class StockPage {
         // Get account information
         String ownerName = tradingAccount.getOwnerName();
         double balance = tradingAccount.getBalance();
+        Map<String,Double> profit = tradingAccount.getProfitsForAccount();
 
         // Create account info panel
         JPanel accountInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel accountInfoLabel = new JLabel("Name: " + ownerName + " | Account: " + accountNumber + " | Balance: " + balance);
+        JLabel accountInfoLabel = new JLabel(
+                "Name: " + ownerName
+                        + " | Account: " + accountNumber
+                        + " | Balance: " + balance
+                        + " | Profit: " + profit.get("realized")
+                        + " ( expect:  " + profit.get("unrealized") + " )"
+                );
         accountInfoPanel.add(accountInfoLabel);
 
         // Create main panel with BorderLayout
