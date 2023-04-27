@@ -1,5 +1,6 @@
 package main.PortfolioManager;
 
+import main.Accounts.TradingAccount;
 import main.Database.Database;
 import main.log.logSystem;
 
@@ -196,6 +197,15 @@ public class Trading {
         if (!isLogged) {
             return false;
         }
+
+        //
+        TradingAccount tradingAccount=Database.getTradingAccount(accountNumber);
+        boolean makeTradingAccount= tradingAccount.isEligibleForOptionsAcc();
+        if (makeTradingAccount == true) {
+            System.out.println("Congratulations, we have added an options account for you!");
+
+        }
+
 
         return true;
     }

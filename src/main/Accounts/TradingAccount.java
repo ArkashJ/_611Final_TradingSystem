@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import static main.Database.Database.insertAccounts;
 //Create a trading account for a customer
 
 /**
@@ -27,8 +29,7 @@ public class TradingAccount extends Account implements ITrading{
     private String accountType;
     private CustomerStocks customerStocks;
     private double balance;
-
-
+    private final int realizedProfitThreshold = 10000;
 
     public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, int accountNumber) {
         this.ownerName = ownerName;
@@ -92,35 +93,27 @@ public class TradingAccount extends Account implements ITrading{
      * By Jianxiao : checkBalance(optionsAccounts.size()) why check Accounts size?
      * @param optionsAccounts : if a customer has gained more than 10k, he can open an options account
      */
-    public void createOptionsAccount(List<OptionsAccount> optionsAccounts){
-        if(checkBalance(optionsAccounts.size())){
-            System.out.println("You can open an Options Account. Would you like to do so? (y/n)");
+    public boolean isEligibleForOptionsAcc(){
+        // call the getProfitsForAccount() method to get the profits for the account
+        Map<String, Double> profits = getProfitsForAccount();
+        double unRealizedProfit = profits.get("realized");
+        if (unRealizedProfit >= realizedProfitThreshold){
+            System.out.println("You are eligible for an options account. Would you like to open one? (y/n)");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
             if(input.equals("y")){
-//                OptionsAccount newAccount = new OptionsAccount();
-//                optionsAccounts.add(newAccount);
+                // create an options account
                 System.out.println("Options Account created");
+                OptionsAccount optionsAccount = new OptionsAccount(ownerName, customerStocks, balance, accountNumber);
+                // add the options account to the list of accounts
+                insertAccounts(accountNumber, ownerName, balance, "Options");
+                return true;
             }
             else{
                 System.out.println("Options Account not created");
-            }
-
-        }
-    }
-
-    public boolean checkBalance(double numOptions){
-        if(numOptions==0){
-            if(this.balance>=10000){
-                return true;
+                return false;
             }
         }
-        else{
-            if(this.balance>=numOptions*10000){
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean checkBalance(Stock stock,int num) {

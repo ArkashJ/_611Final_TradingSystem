@@ -106,6 +106,8 @@ public class Database {
                 + "FOREIGN KEY (stock) REFERENCES stocks (name)\n"
                 + ");";
 
+
+
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(usersTable);
             stmt.execute(accountsTable);
