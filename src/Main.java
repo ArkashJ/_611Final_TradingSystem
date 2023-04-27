@@ -1,4 +1,5 @@
 import main.Database.Database;
+import main.FrontEnd.ManagerPage;
 import main.FrontEnd.UserLoginRegistration;
 import main.Initiator.Initiator;
 import main.Stocks.Market;
@@ -12,8 +13,11 @@ public class Main {
 
 //        Initiator.initiateAll();
 
+        //build the ManagerPage
+
         SwingUtilities.invokeLater(() -> {
-            new UserLoginRegistration().run();
+//            new UserLoginRegistration().run();
+            new ManagerPage().run();
         });
     }
 }

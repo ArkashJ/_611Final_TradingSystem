@@ -262,7 +262,7 @@ public class Database {
         return tradingAccount;
     }
 
-    //get all TradingAccount
+    //get all TradingAccount given a userName
     public static List<TradingAccount> getTradingAccountsForUser(String userName) {
         List<TradingAccount> tradingAccounts = new ArrayList<>();
 
@@ -283,6 +283,7 @@ public class Database {
         }
         return tradingAccounts;
     }
+
     //get all OptionsAccount
     public static List<OptionsAccount> getOptionsAccountForUser(String userName) {
         List<OptionsAccount> tradingAccounts = new ArrayList<>();
