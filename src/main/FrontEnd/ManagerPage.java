@@ -47,6 +47,20 @@ public class ManagerPage {
         JScrollPane logScrollPane = createLogScrollPane(); // Add log panel
         mainPanel.add(logScrollPane, BorderLayout.EAST);
 
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton reviewRequestsButton = new JButton("Review Requests");
+        buttonPanel.add(reviewRequestsButton);
+        mainPanel.add(buttonPanel, BorderLayout.NORTH);
+
+        // Add an ActionListener to open the RequestReviewPage
+        reviewRequestsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RequestReviewPage requestReviewPage = new RequestReviewPage();
+                requestReviewPage.run();
+            }
+        });
+
         frame.add(mainPanel);
         frame.setVisible(true);
     }

@@ -95,8 +95,8 @@ public class AccountPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double initialBalance = Double.parseDouble(balanceField.getText());
-                if (Database.createTradingAccount(userName, initialBalance)) {
-                    JOptionPane.showMessageDialog(null, "New trading account created!");
+                if (Database.submitAccountRequest(userName, initialBalance,"TRADE")) {
+                    JOptionPane.showMessageDialog(null, "Trading account creation request submitted!");
                     refreshViewAccountsPanel();
                 } else {
                     JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");

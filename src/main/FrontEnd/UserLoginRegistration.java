@@ -12,6 +12,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * todo : Add a authentication system for Manager to approve them to create a account
+ *        give two login page to demonstrate the difference between Manager and User
+ */
+
 public class UserLoginRegistration {
     private JFrame frame;
     public void run() {

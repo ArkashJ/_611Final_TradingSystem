@@ -41,7 +41,7 @@ public class Database {
     }
 
     public static void deleteAllTables() {
-        String sql = "DROP TABLE IF EXISTS users, accounts, stocks, customer_stocks,market,log";
+        String sql = "DROP TABLE IF EXISTS users, accounts, stocks, customer_stocks,market,log,account_requests";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -106,6 +106,14 @@ public class Database {
                 + "FOREIGN KEY (stock) REFERENCES stocks (name)\n"
                 + ");";
 
+        String accountRequestsTable = "CREATE TABLE IF NOT EXISTS account_requests ("
+                + "id INT AUTO_INCREMENT PRIMARY KEY,"
+                + "user_name VARCHAR(255) NOT NULL,"
+                + "initial_balance DOUBLE NOT NULL,"
+                + "account_type ENUM('TRADE', 'OPTIONS') NOT NULL,"
+                + "FOREIGN KEY (user_name) REFERENCES users(name) ON DELETE CASCADE)";
+
+
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(usersTable);
             stmt.execute(accountsTable);
@@ -113,6 +121,7 @@ public class Database {
             stmt.execute(customerStocksTable);
             stmt.execute(market);
             stmt.execute(log);
+            stmt.execute(accountRequestsTable);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -416,4 +425,39 @@ public class Database {
     }
 
 
+    /**
+     *  submit request to request table
+     */
+    public static boolean submitAccountRequest(String userName, double initialBalance, String type) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO account_requests (user_name, initial_balance,account_type) VALUES (?, ?,?)");
+                statement.setString(1, userName);
+                statement.setDouble(2, initialBalance);
+                statement.setString(3, type);
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected == 1;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    /**
+     *  remove request by id
+     */
+    public static boolean removeAccountRequest(int id) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("DELETE FROM account_requests WHERE id = ?");
+                statement.setInt(1, id);
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected == 1;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
+    }
 }
