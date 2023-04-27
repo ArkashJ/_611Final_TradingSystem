@@ -114,6 +114,7 @@ public class TradingAccount extends Account implements ITrading{
                 return false;
             }
         }
+        return false;
     }
 
     public boolean checkBalance(Stock stock,int num) {
