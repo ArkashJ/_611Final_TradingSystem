@@ -16,8 +16,7 @@ public class Main {
         //build the ManagerPage
 
         SwingUtilities.invokeLater(() -> {
-//            new UserLoginRegistration().run();
-            new ManagerPage().run();
+            new UserLoginRegistration().run();
         });
     }
 }

@@ -118,7 +118,7 @@ public class Database {
         }
     }
 
-    public static boolean checkLogin(String name, String password) {
+    public static boolean checkLogin1(String name, String password) {
         synchronized (conn) {
             try {
                 PreparedStatement statement = conn.prepareStatement("SELECT * FROM users WHERE name = ? AND password = ?");
@@ -130,6 +130,24 @@ public class Database {
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 return false;
+            }
+        }
+    }
+    public static UserType checkLogin(String name, String password) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM users WHERE name = ? AND password = ?");
+                statement.setString(1, name);
+                statement.setString(2, password);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return UserType.valueOf(resultSet.getString("account_type").toUpperCase());
+                }
+                return null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return null;
             }
         }
     }

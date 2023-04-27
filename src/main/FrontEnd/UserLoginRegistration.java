@@ -60,9 +60,17 @@ public class UserLoginRegistration {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String password = String.valueOf(passwordField.getPassword());
-                if (Database.checkLogin(name, password)) {
+                UserType userType = Database.checkLogin(name, password);
+                if (userType != null) {
                     JOptionPane.showMessageDialog(null, "Login successful!");
-                    switchToAccountPage(name);
+                    switch (userType) {
+                        case ADMIN:
+                            switchToManagerPage(name);
+                            break;
+                        case USER:
+                            switchToAccountPage(name);
+                            break;
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Login failed. Please check your credentials.");
                 }
@@ -133,6 +141,9 @@ public class UserLoginRegistration {
         frame.dispose();
         new AccountPage(ownerName,this).run();
     }
-
+    public void switchToManagerPage(String adminName) {
+        frame.dispose();
+        new ManagerPage(adminName).run();
+    }
 }
 

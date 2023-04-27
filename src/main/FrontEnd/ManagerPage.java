@@ -15,18 +15,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
 public class ManagerPage {
     private JFrame frame;
+    private String AdminName;
 
-    public ManagerPage() {}
+    public ManagerPage(String AdminName) {
+        this.AdminName = AdminName;
+    }
 
     public void run() {
         frame = new JFrame("Manager Page");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1200, 600);
+        frame.setSize(1600, 600); // Increase width
 
         // Create main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -38,6 +42,10 @@ public class ManagerPage {
         // Market stocks panel
         JScrollPane marketStocksScrollPane = createMarketStocksScrollPane();
         mainPanel.add(marketStocksScrollPane, BorderLayout.CENTER);
+
+        // Log panel
+        JScrollPane logScrollPane = createLogScrollPane(); // Add log panel
+        mainPanel.add(logScrollPane, BorderLayout.EAST);
 
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -120,6 +128,42 @@ public class ManagerPage {
         }
 
         JScrollPane scrollPane = new JScrollPane(marketStocksPanel);
+        return scrollPane;
+    }
+
+    private JScrollPane createLogScrollPane() {
+        JPanel logPanel = new JPanel();
+        logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.Y_AXIS));
+
+        String sql = "SELECT * FROM log ORDER BY time DESC;";
+        Connection conn = Database.getConnection();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet resultSet = pstmt.executeQuery();
+            while (resultSet.next()) {
+                int accountNumber = resultSet.getInt("account_number");
+                String stock = resultSet.getString("stock");
+                double price = resultSet.getDouble("price");
+                int quantity = resultSet.getInt("quantity");
+                String time = sdf.format(resultSet.getTimestamp("time"));
+
+                JPanel logEntryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                JLabel logEntryLabel = new JLabel(
+                        "Account: " + accountNumber
+                                + " | Stock: " + stock
+                                + " | Price: " + price
+                                + " | Quantity: " + quantity
+                                + " | Time: " + time
+                );
+                logEntryPanel.add(logEntryLabel);
+                logPanel.add(logEntryPanel);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        JScrollPane scrollPane = new JScrollPane(logPanel);
         return scrollPane;
     }
 
