@@ -45,4 +45,8 @@ public class Market {
         }
     }
 
+    public HashMap<Stock, Integer> getStocks() {
+        return this.stocks;
+    }
+
 }
