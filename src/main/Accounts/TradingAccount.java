@@ -106,7 +106,7 @@ public class TradingAccount extends Account implements ITrading{
                 System.out.println("Options Account created");
                 OptionsAccount optionsAccount = new OptionsAccount(ownerName, customerStocks, balance, accountNumber);
                 // add the options account to the list of accounts
-                insertAccounts(accountNumber, ownerName, balance, "Options");
+                // ASK BANK MANAGER to approve - done in getProfitStock function in BankManager.java
                 return true;
             }
             else{

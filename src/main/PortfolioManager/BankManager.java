@@ -1,5 +1,6 @@
 package main.PortfolioManager;
 
+import main.Accounts.TradingAccount;
 import main.Database.Database;
 import main.Stocks.Stock;
 
@@ -10,6 +11,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static main.Database.Database.insertAccounts;
 
 public class BankManager {
     // make this a singleton
@@ -159,6 +162,18 @@ public class BankManager {
                     double boughtPrice = resultSet.getDouble("price_bought");
                     int quantity = resultSet.getInt("quantity");
                     totalProfit += (currentPrice - boughtPrice) * quantity;
+                    TradingAccount tradingAccount = Database.getTradingAccount(accountNumber);
+                    if (tradingAccount.isEligibleForOptionsAcc() == true){
+                        System.out.println("Congratulations, you have been approved for an options account");
+                        String ownerName = tradingAccount.getOwnerName();
+                        double balance = tradingAccount.getBalance();
+
+                        // TODO: make a request to the Request Table, when the manager
+                        // IDEA: We make a requests for the manager table, it should have
+                        // 1) Id for Primary Key, automatically increase 2) UseName 3) Account Type 4) Account Number
+
+                        insertAccounts(accountNumber, ownerName, balance, "Options");
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -167,5 +182,9 @@ public class BankManager {
 
         return totalProfit;
     }
+
+    /**
+     *
+     */
 
 }

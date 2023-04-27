@@ -7,6 +7,8 @@
     <list default="true" id="3c131795-afd8-4ad7-8e25-9f6d01fa23c6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Accounts/TradingAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Accounts/TradingAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/PortfolioManager/BankManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/PortfolioManager/BankManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/PortfolioManager/Trading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/PortfolioManager/Trading.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +74,7 @@
       <workItem from="1682205224744" duration="13756000" />
       <workItem from="1682434124199" duration="17926000" />
       <workItem from="1682513346534" duration="29129000" />
-      <workItem from="1682608773085" duration="2249000" />
+      <workItem from="1682608773085" duration="3584000" />
     </task>
     <servers />
   </component>
