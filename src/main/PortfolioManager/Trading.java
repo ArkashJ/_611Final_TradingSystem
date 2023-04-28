@@ -159,8 +159,9 @@ public class Trading {
             }
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setInt(1, quantityToSell);
+                pstmt.setInt(1, stockId);
                 if (quantityToSell != stockQuantity) {
+                    pstmt.setInt(1, quantityToSell);
                     pstmt.setInt(2, stockId);
                 }
                 pstmt.executeUpdate();

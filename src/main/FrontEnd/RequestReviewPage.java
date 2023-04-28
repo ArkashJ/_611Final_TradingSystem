@@ -90,8 +90,9 @@ public class RequestReviewPage {
                 int id = resultSet.getInt("id");
                 String userName = resultSet.getString("user_name");
                 double initialBalance = resultSet.getDouble("initial_balance");
+                String type=resultSet.getString("account_type");
 
-                tableModel.addRow(new Object[]{id, userName, initialBalance});
+                tableModel.addRow(new Object[]{id, userName, initialBalance,type});
             }
         } catch (SQLException e) {
             e.printStackTrace();
