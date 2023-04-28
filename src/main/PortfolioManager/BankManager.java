@@ -54,12 +54,13 @@ public class BankManager {
                 }
 
                 if (type.equals("BUY")) {
-                    double unrealizedProfit = (currentPrice - price) * quantity;
-                    profits.get(accountNumber).put("unrealized", profits.get(accountNumber).get("unrealized") + unrealizedProfit);
+//                    double unrealizedProfit = (currentPrice - price) * quantity;
+                    profits.get(accountNumber).put("unrealized", profits.get(accountNumber).get("unrealized") + currentPrice * quantity);
+                    profits.get(accountNumber).put("realized", profits.get(accountNumber).get("realized") - price * quantity);
                 } else if (type.equals("SELL")) {
                     double realizedProfit = (price - currentPrice) * quantity;
-                    profits.get(accountNumber).put("realized", profits.get(accountNumber).get("realized") + realizedProfit);
-                    profits.get(accountNumber).put("unrealized", profits.get(accountNumber).get("unrealized") - realizedProfit);
+                    profits.get(accountNumber).put("realized", profits.get(accountNumber).get("realized") + currentPrice * quantity);
+                    profits.get(accountNumber).put("unrealized", profits.get(accountNumber).get("unrealized") - currentPrice * quantity);
                 }
             }
         } catch (SQLException e) {
@@ -101,7 +102,7 @@ public class BankManager {
                     profits.put("realized", profits.get("realized") - price * quantity);
                 } else if (type.equals("SELL")) {
 //                    double realizedProfit = (currentPrice - price) * quantity;
-                    profits.put("realized", profits.get("realized") + price * quantity);
+                    profits.put("realized", profits.get("realized") + currentPrice * quantity);
                     profits.put("unrealized", profits.get("unrealized") - currentPrice * quantity);
                 }
             }
