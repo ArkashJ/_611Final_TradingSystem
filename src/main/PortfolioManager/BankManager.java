@@ -96,12 +96,13 @@ public class BankManager {
                 double currentPrice = rs.getDouble("currentPrice");
 
                 if (type.equals("BUY")) {
-                    double unrealizedProfit = (currentPrice - price) * quantity;
-                    profits.put("unrealized", profits.get("unrealized") + unrealizedProfit);
+//                    double unrealizedProfit = (currentPrice - price) * quantity;
+                    profits.put("unrealized", profits.get("unrealized") + currentPrice * quantity);
+                    profits.put("realized", profits.get("realized") - price * quantity);
                 } else if (type.equals("SELL")) {
-                    double realizedProfit = (currentPrice - price) * quantity;
-                    profits.put("realized", profits.get("realized") + realizedProfit);
-                    profits.put("unrealized", profits.get("unrealized") - realizedProfit);
+//                    double realizedProfit = (currentPrice - price) * quantity;
+                    profits.put("realized", profits.get("realized") + price * quantity);
+                    profits.put("unrealized", profits.get("unrealized") - currentPrice * quantity);
                 }
             }
         } catch (SQLException e) {
