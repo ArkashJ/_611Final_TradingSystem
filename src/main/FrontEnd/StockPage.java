@@ -56,7 +56,7 @@ public class StockPage {
         enterMarketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MarketPage marketPage = new MarketPage();
+                MarketPage marketPage = new MarketPage(accountNumber);
                 marketPage.run();
             }
         });

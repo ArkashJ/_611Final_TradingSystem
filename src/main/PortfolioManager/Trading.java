@@ -3,6 +3,7 @@ package main.PortfolioManager;
 import main.Database.Database;
 import main.log.logSystem;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class Trading {
                 stockPrice = rs.getDouble("currentPrice");
                 availableQuantity = rs.getInt("quantity");
             } else {
+                JOptionPane.showMessageDialog(null, "Stock not available in the market!");
                 return false; // Stock not found
             }
         } catch (SQLException e) {
@@ -40,6 +42,7 @@ public class Trading {
         }
 
         if (quantity > availableQuantity) {
+            JOptionPane.showMessageDialog(null, "Stock not available in the market!");
             return false; // Not enough stock available in the market
         }
 
@@ -52,6 +55,7 @@ public class Trading {
             if (rs.next()) {
                 accountBalance = rs.getDouble("balance");
             } else {
+                JOptionPane.showMessageDialog(null, "Account not found!");
                 return false; // Account not found
             }
         } catch (SQLException e) {
@@ -61,6 +65,7 @@ public class Trading {
 
         double totalCost = stockPrice * quantity;
         if (accountBalance < totalCost) {
+            JOptionPane.showMessageDialog(null, "Not enough balance in account.");
             return false; // Insufficient balance
         }
 
@@ -134,6 +139,7 @@ public class Trading {
         }
 
         if (totalQuantityOwned < quantity) {
+            JOptionPane.showMessageDialog(null, "Not enough stocks available in the market!");
             return false; // Not enough stock to sell
         }
 
