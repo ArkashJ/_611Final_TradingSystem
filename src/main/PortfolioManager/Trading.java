@@ -29,15 +29,22 @@ public class Trading {
     // The trading is a singleton class
     private Trading() {}
     private static Connection conn = Database.getConnection();
+    // ----------------- Singleton -----------------
     private static Trading trading = new Trading();
+
+    // ----------------- Buy stock -----------------
     public static boolean buyStock(int accountNumber, String stockName, int quantity) {
         // 1. Get the price of the stock and check if there's enough quantity in the market
         double stockPrice = 0;
         int availableQuantity = 0;
+
+        // sql query to get the stock information: name, currentPrice
         String sql = "SELECT s.currentPrice, m.quantity FROM stocks s JOIN market m ON s.name = m.stock WHERE s.name = ?";
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, stockName);
             ResultSet rs = pstmt.executeQuery();
+            // Get the variables from the database
             if (rs.next()) {
                 stockPrice = rs.getDouble("currentPrice");
                 availableQuantity = rs.getInt("quantity");
@@ -49,8 +56,9 @@ public class Trading {
             return false;
         }
 
+        // Check if there is enough quantity in the market
         if (quantity > availableQuantity) {
-            return false; // Not enough stock available in the market
+            return false;
         }
 
         // 2. Check if the account's balance is enough
@@ -70,8 +78,9 @@ public class Trading {
         }
 
         double totalCost = stockPrice * quantity;
+        // Insufficient balance
         if (accountBalance < totalCost) {
-            return false; // Insufficient balance
+            return false;
         }
 
         // 3. Update the accounts' balance in accounts table and customer_stocks table
@@ -83,7 +92,7 @@ public class Trading {
                 pstmt.setInt(2, accountNumber);
                 pstmt.executeUpdate();
             }
-
+            // Insert the stock into customer_stocks table
             sql = "INSERT INTO customer_stocks (account_number, stock, price_bought, quantity) VALUES (?, ?, ?, ?) ";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, accountNumber);
@@ -100,15 +109,16 @@ public class Trading {
                 pstmt.setString(2, stockName);
                 pstmt.executeUpdate();
             }
-
             conn.commit();
             conn.setAutoCommit(true);
         } catch (SQLException e) {
+            // Rollback the transaction
             System.out.println(e.getMessage());
             try {
                 conn.rollback();
                 conn.setAutoCommit(true);
             } catch (SQLException ex) {
+                // Rollback failed
                 System.out.println(ex.getMessage());
             }
             return false;
@@ -116,18 +126,22 @@ public class Trading {
 
         // 5. Get the log system (Implement your own logging system here)
         logSystem.logTransaction(accountNumber, stockName, stockPrice, quantity, "BUY");
-
+        // 6. Return true if the transaction is successful
         return true;
     }
+
+    // ----------------- sellStock -----------------
     public static boolean sellStock(int accountNumber, String stockName, int quantity) {
-        // 1. Get the stock of that account in customer_stocks table,按照stockName和accountNumber获取对应的所有行的信息
+        // 1. Get the stock's quantity owned by the customer
         //    check if the whole quantity is enough
         int totalQuantityOwned = 0;
+        // sql query to get the stock information: id, account_number, stock, price_bought, quantity
         String sql = "SELECT id, account_number, stock, price_bought, quantity FROM customer_stocks WHERE account_number = ? AND stock = ? ORDER BY id";
         List<Integer> stockIds = new ArrayList<>();
         List<Integer> stockQuantities = new ArrayList<>();
         List<Double> stockPrices = new ArrayList<>();
 
+        // Get the variables from the database
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, accountNumber);
             pstmt.setString(2, stockName);
@@ -147,27 +161,30 @@ public class Trading {
             return false; // Not enough stock to sell
         }
 
-        // 2. 将股票按照顺序卖出股票，直到卖出的股票数量达到quantity
-        // 当customer_stocks表中的某行股票数量减到0时，删除该条记录
+        // 2. Update the accounts' balance in accounts table and customer_stocks table
         double currentPrice = Database.getStock(stockName).getCurrentPrice();
         double profit = 0;
         int remainingQuantityToSell = quantity;
 
+        // Loop through all the stocks owned by the customer
         for (int i = 0; i < stockIds.size() && remainingQuantityToSell > 0; i++) {
+            // Get the stock information
             int stockId = stockIds.get(i);
             int stockQuantity = stockQuantities.get(i);
             double priceBought = stockPrices.get(i);
 
+            // Sell the minimum of the remaining quantity to sell and the quantity of the current stock
             int quantityToSell = Math.min(stockQuantity, remainingQuantityToSell);
             profit += (currentPrice - priceBought) * quantityToSell;
             remainingQuantityToSell -= quantityToSell;
 
+            // Delete the row if there is sufficient stocks to sell
             if (quantityToSell == stockQuantity) {
                 sql = "DELETE FROM customer_stocks WHERE id = ?";
             } else {
                 sql = "UPDATE customer_stocks SET quantity = quantity - ? WHERE id = ?";
             }
-
+            // Update customer_stocks table
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, stockId);
                 if (quantityToSell != stockQuantity) {
@@ -176,13 +193,13 @@ public class Trading {
                 }
                 pstmt.executeUpdate();
             } catch (SQLException e) {
+                // Throw exception to rollback
                 System.out.println(e.getMessage());
                 return false;
             }
         }
 
-        // 3. 在对每行做操作的时候顺便记录profit，假设customer_stocks的某行卖出了n个，那么profit就加上stockName对应的（currenPrice - price_bought） * n
-        // 最后将profit加到account的balance上
+        // 3. Update the accounts' balance in accounts table
         sql = "UPDATE accounts SET balance = balance + ? WHERE account_number = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setDouble(1, profit);
@@ -193,7 +210,7 @@ public class Trading {
             return false;
         }
 
-        // 4. 在Market中加这个份额
+        // 4. Market
         sql = "UPDATE market SET quantity = quantity + ? WHERE stock = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, quantity);
@@ -203,11 +220,14 @@ public class Trading {
             System.out.println(e.getMessage());
             return false;
         }
+
+        // 5. Get the log system (Implement your own logging system here)
         boolean isLogged = logSystem.logTransaction(accountNumber, stockName, currentPrice, quantity, "SELL");
         if (!isLogged) {
             return false;
         }
-
+        // 6. Return true if the transaction is successful
         return true;
     }
 }
+// ----------------- end of Trading.java -----------------
