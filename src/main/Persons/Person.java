@@ -35,7 +35,7 @@ public class Person implements IPerson {
     public boolean transfer(double amount, String accountNumber) {
         return false;
     }
-    
+
     public boolean authenticate(String userName, String password) {
         return this.userName.equals(userName) && this.password.equals(password);
     }

@@ -7,6 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/*
+    * @Description: This class represents a log system, a singleton class
+    * @Methods: logTransaction(int accountNumber, String stockName, double stockPrice, int quantity, String type) : log a transaction
+ */
+
 public class logSystem {
     //singleton
     private static logSystem instance = new logSystem();
