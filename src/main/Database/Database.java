@@ -14,7 +14,7 @@ import java.util.List;
 public class Database {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/trading_system";
     private static final String uname = "root";
-    private static final String upassword = "distinctive0930";
+    private static final String upassword = "0123456789";
 
     private static Database dbInstance = new Database();
     private static Connection conn;
@@ -201,6 +201,8 @@ public class Database {
     //get stock from stock table
     public static Stock getStock(String stockName) {
         Stock stock = null;
+
+        if (stockName.equals(null)) return null;
 
         String sql = "SELECT * FROM stocks WHERE name = ?";
 

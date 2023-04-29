@@ -6,6 +6,7 @@ import main.PortfolioManager.Trading;
 import main.Stocks.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +38,7 @@ public class StockPage {
         Map<String,Double> profit = tradingAccount.getProfitsForAccount();
 
         // Create account info panel
-        JPanel accountInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel accountInfoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel accountInfoLabel = new JLabel(
                 "Name: " + ownerName
                         + " | Account: " + accountNumber
@@ -51,14 +52,25 @@ public class StockPage {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(accountInfoPanel, BorderLayout.NORTH);
 
+        JButton enterMarketButton = new JButton("Enter market");
+        enterMarketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MarketPage marketPage = new MarketPage();
+                marketPage.run();
+            }
+        });
+
+        mainPanel.add(enterMarketButton, BorderLayout.SOUTH);
+
         JScrollPane userStocksScrollPane = createStockListScrollPane(true);
-        JScrollPane marketStocksScrollPane = createStockListScrollPane(false);
+//        JScrollPane marketStocksScrollPane = createStockListScrollPane(false);
 
         JPanel stockListPanel = new JPanel(new GridLayout(1, 2));
         stockListPanel.add(userStocksScrollPane);
-        stockListPanel.add(marketStocksScrollPane);
+//        stockListPanel.add(marketStocksScrollPane);
 
-        mainPanel.add(stockListPanel, BorderLayout.CENTER);
+        mainPanel.add(stockListPanel, BorderLayout.EAST);
 
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -89,11 +101,11 @@ public class StockPage {
                 stockListPanel.add(stockPanel);
             }
         } else {
-            for (MarketStock stock : marketStocks) {
-                // Market stock list, no profit display
-                JPanel stockPanel = createMarketStockPanel(stock);
-                stockListPanel.add(stockPanel);
-            }
+//            for (MarketStock stock : marketStocks) {
+//                // Market stock list, no profit display
+//                JPanel stockPanel = createMarketStockPanel(stock);
+//                stockListPanel.add(stockPanel);
+//            }
         }
 
         JScrollPane scrollPane = new JScrollPane(stockListPanel);
@@ -142,43 +154,6 @@ public class StockPage {
             }
         });
         stockPanel.add(sellButton);
-
-        return stockPanel;
-    }
-
-    private JPanel createMarketStockPanel(MarketStock stock) {
-        JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        String stockName = stock.getStockName();
-        Stock stock_orgin=Database.getStock(stockName);
-
-        JLabel stockLabel = new JLabel(stockName+" | Quantity: " + stock.getQuantity() + " | Price: " + stock_orgin.getCurrentPrice());
-        stockPanel.add(stockLabel);
-
-        JTextField buyQuantityField = new JTextField(5);
-        stockPanel.add(buyQuantityField);
-
-        JButton buyButton = new JButton("Buy");
-        buyButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int quantityToBuy;
-                try {
-                    quantityToBuy = Integer.parseInt(buyQuantityField.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Invalid quantity entered.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                boolean success = Trading.buyStock(accountNumber, stockName, quantityToBuy);
-                if (success) {
-                    JOptionPane.showMessageDialog(frame, "Stock purchased successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    refresh();
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Stock purchase failed. Check if you have sufficient balance or if there's enough stock available.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        stockPanel.add(buyButton);
 
         return stockPanel;
     }

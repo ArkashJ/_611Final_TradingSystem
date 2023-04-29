@@ -31,4 +31,12 @@ public class CustomerStock {
         double profit = (currentPrice - stockBoughtPrice) * stockNumber;
         return profit;
     }
+
+    public void setStockNumber(int stockNumber) {
+        this.stockNumber = stockNumber;
+    }
+
+    public void setStockBoughtPrice(double stockBoughtPrice) {
+        this.stockBoughtPrice = stockBoughtPrice;
+    }
 }

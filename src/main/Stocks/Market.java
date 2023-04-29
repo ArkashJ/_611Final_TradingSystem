@@ -50,4 +50,23 @@ public class Market {
     public static void setStocks(List<MarketStock> stocks) {
         Market.stocks = stocks;
     }
+
+    public static void removeStock(String stockName) {
+        for (MarketStock stock : stocks) {
+            if (stock.getStockName().equals(stockName)) {
+                stocks.remove(stock);
+                break;
+            }
+        }
+    }
+
+    public static void addStock(String stockName, int quantity) {
+        for (MarketStock stock : stocks) {
+            if (stock.getStockName().equals(stockName)) {
+                stock.setQuantity(stock.getQuantity() + quantity);
+                break;
+            }
+        }
+        stocks.add(new MarketStock(stockName, quantity));
+    }
 }
