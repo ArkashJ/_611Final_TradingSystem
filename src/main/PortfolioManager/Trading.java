@@ -13,7 +13,17 @@ import java.util.Map;
 /**
  * @Description: This class represents trading between customers and the market, a singleton class
  * @Methods: buyStock(int accountNumber, String stockName, int quantity) buy a stock
- *          sellStock(int accountNumber, String stockName, int quantity) sell a stock
+                - Check if the stock is available in the market from the market table
+                - Establish database connection and the currentstock price and quantity from the stocks table
+                - Check if there is available stocks, get the account balance from the accounts table
+                - Check if the account balance is enough to buy the stock
+                - Update the accounts table and customer_stocks table
+                - Log the transaction
+             sellStock(int accountNumber, String stockName, int quantity) sell a stock
+               - Check if the stock is available in the customer_stocks table
+               - Establish database connection and the current stock price from the stocks table
+               - Check if there is enough stocks to sell
+               - Loop through the stocks list and sell the stocks
  */
 public class Trading {
     // The trading is a singleton class
