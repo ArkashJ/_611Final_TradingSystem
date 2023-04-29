@@ -2,7 +2,6 @@ package main.PortfolioManager;
 
 import main.Database.Database;
 import main.Stocks.Stock;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +9,20 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/*
+    * @Description: This class represents the bank manager, a singleton class that manages the bank. The bank manager can see the users, accounts and trades made
+    * This class connencts to the sql database to display the table data
+    * Constructor: BankManager() - initializes the singleton class if there is no existing one otherwise returns the existing one
+    * calculateProfits_ALL() -
+        - calculates the profits for all accounts
+        - returns a map of account numbers to a map of realized and unrealized profits
+        - The key is the account number and the value is a map of realized and unrealized profits
+        - We generate a sql query to get the account number, stock, price, quantity, type, and current price
+        - Then we connect to the database
+        - In a loop, we store the variables from the query into the variables. If there is no profit initialized for this current account, we initialize it as 0 for both realized and unrealized
+        - Depending on the conditions, we calculate the unrealized and realized profits and store it in the map
+ */
 
 public class BankManager {
     // make this a singleton
@@ -40,6 +53,7 @@ public class BankManager {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
+                // initializing the variables for the sql table
                 int accountNumber = rs.getInt("account_number");
                 String stock = rs.getString("stock");
                 double price = rs.getDouble("price");
@@ -47,23 +61,27 @@ public class BankManager {
                 String type = rs.getString("type");
                 double currentPrice = rs.getDouble("currentPrice");
 
+                // if there's no profit associated with the account number, we initialize the realized and unrealized profits as 0
                 if (!profits.containsKey(accountNumber)) {
                     profits.put(accountNumber, new HashMap<>());
                     profits.get(accountNumber).put("unrealized", 0.0);
                     profits.get(accountNumber).put("realized", 0.0);
                 }
 
+                // if the user buys a stock, we calculate the unrealized and realized profits and store it in the map
                 if (type.equals("BUY")) {
 //                    double unrealizedProfit = (currentPrice - price) * quantity;
                     profits.get(accountNumber).put("unrealized", profits.get(accountNumber).get("unrealized") + currentPrice * quantity);
                     profits.get(accountNumber).put("realized", profits.get(accountNumber).get("realized") - price * quantity);
                 } else if (type.equals("SELL")) {
+                    // if the user sells a stock, we calculate the unrealized and realized profits (the formulae are switched from above)
                     double realizedProfit = (price - currentPrice) * quantity;
                     profits.get(accountNumber).put("realized", profits.get(accountNumber).get("realized") + currentPrice * quantity);
                     profits.get(accountNumber).put("unrealized", profits.get(accountNumber).get("unrealized") - currentPrice * quantity);
                 }
             }
         } catch (SQLException e) {
+            // throw an error if there is an error establishing a connection with the db, or reading or initializing the variables
             System.out.println(e.getMessage());
         }
 
@@ -119,6 +137,7 @@ public class BankManager {
      * @param currentPrice
      * @return true if the stock price is updated successfully
      */
+
     public static boolean updateStockPrice(String stockName, double currentPrice) {
         String sql = "UPDATE stocks "
                 + "SET currentPrice = ?, "
