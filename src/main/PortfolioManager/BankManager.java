@@ -22,6 +22,17 @@ import java.util.Map;
         - Then we connect to the database
         - In a loop, we store the variables from the query into the variables. If there is no profit initialized for this current account, we initialize it as 0 for both realized and unrealized
         - Depending on the conditions, we calculate the unrealized and realized profits and store it in the map
+    * updateMarket() -
+        - updates the market
+        - returns true if the market was updated successfully
+        - We generate a sql query to get the stock name, current price, and quantity
+        - Then we connect to the database
+        - In a loop, we store the variables from the query into the variables. If there is no profit initialized for this current account, we initialize it as 0 for both realized and unrealized
+        - Depending on the conditions, we calculate the unrealized and realized profits and store it in the map
+    * getTotalProfitForStock(int accountNumber, String stockName) -
+        - calculates profit for a specific stock given an account number
+        - queries the customer_stocks table from the database and establishes a connection
+        - Then it finds the price at which the stock was bought at and generates the profit
  */
 
 public class BankManager {
@@ -37,6 +48,7 @@ public class BankManager {
         return instance;
     }
 
+    // ----------------- Calculate Profit For All Account -----------------
     /**
      * @Description: Calculate the unrealized and realized profits for each account
      * @return account_number -> (if realized -> profit)
@@ -88,6 +100,7 @@ public class BankManager {
         return profits;
     }
 
+    // ------------------------ Calculate Profit for Specific User ------------------------
     /**
      * @Description: Calculate the unrealized and realized profits for a specific account
      * @return (if realized -> profit)
@@ -131,6 +144,7 @@ public class BankManager {
         return profits;
     }
 
+    // ------------------------ Update Stock Price ------------------------
     /**
      * @Description: Update the stock price in the database
      * @param stockName
@@ -159,13 +173,16 @@ public class BankManager {
         }
     }
 
+    // ----------- Profit For Specific Stock -------------
     /**
      * @Description: Calculate profits for a stock in a specific account
      * @return double profit
      */
     public static double getTotalProfitForStock(int accountNumber, String stockName) {
+        // qeury customer stocks table to get the price bought and quantity
         String query = "SELECT price_bought, quantity FROM customer_stocks WHERE account_number = ? AND stock = ?";
         double totalProfit = 0;
+        // establish connection
         Connection connection= Database.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -173,9 +190,10 @@ public class BankManager {
             preparedStatement.setString(2, stockName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                // get the current price of the stock
                 Stock stock = Database.getStock(stockName);
                 double currentPrice = stock.getCurrentPrice();
-
+                // calculate the total profit
                 while (resultSet.next()) {
                     double boughtPrice = resultSet.getDouble("price_bought");
                     int quantity = resultSet.getInt("quantity");
@@ -183,6 +201,7 @@ public class BankManager {
                 }
             }
         } catch (SQLException e) {
+            // throw an error if there is an error establishing a connection with the db, or reading or initializing the variables
             e.printStackTrace();
         }
 
