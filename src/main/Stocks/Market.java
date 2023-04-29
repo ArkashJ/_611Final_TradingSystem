@@ -9,6 +9,17 @@ import java.util.List;
 /**
  * @Description: This class represents the market, a singleton class
  * TODO: Add functions for time. You can place order for stocks.txt but can only buy or sell them when the market is open
+ * Constructor:
+    * Market() - initializes the market. This is a singleton class so that there is only one market
+
+ * getStocks() - returns the list of stocks in the market defined in the marketStock file
+     * setStocks(List<MarketStock> stocks) - sets the list of in the market
+     * removeStock(String stockName) - removes a stock from the market
+     * addStock(String stockName, int quantity) - adds a stock to the market
+ * getClosingTime() - returns the closing time of the market
+ * getOpeningTime() - returns the opening time of the market
+ * setClosingTime(String closingTime) - sets the closing time of the market
+ * setOpeningTime(String openingTime) - sets the opening time of the market
  */
 
 public class Market {
