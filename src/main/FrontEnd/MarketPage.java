@@ -17,7 +17,7 @@ import java.util.Map;
 public class MarketPage {
 
     private JFrame frame;
-    //TODO: Create market table in the database
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private Market market;
     private int accountNumber;
     private TradingAccount tradingAccount;
@@ -30,7 +30,7 @@ public class MarketPage {
     public void run() {
         frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(screenSize.width, screenSize.height);
 
         JPanel stockPanel = createMarketPanel();
 

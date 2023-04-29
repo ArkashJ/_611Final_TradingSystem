@@ -15,6 +15,7 @@ import java.util.List;
 public class AccountPage {
     private String userName;
     private JFrame frame;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private JPanel viewAccountsPanel;
     private UserLoginRegistration loginPage;
 
@@ -26,7 +27,7 @@ public class AccountPage {
     public void run() {
         frame = new JFrame("Account Management");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(screenSize.width, screenSize.height);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         viewAccountsPanel = createViewAccountsPanel();

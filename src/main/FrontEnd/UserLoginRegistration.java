@@ -19,10 +19,12 @@ import java.sql.ResultSet;
 
 public class UserLoginRegistration {
     private JFrame frame;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     public void run() {
+
         frame = new JFrame("User Login & Registration");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(screenSize.width, screenSize.height);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         JPanel loginPanel = createLoginPanel();

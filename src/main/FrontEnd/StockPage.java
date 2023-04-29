@@ -18,6 +18,7 @@ public class StockPage {
     private int accountNumber;
     private AccountPage accountPage;
     private JFrame frame;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     private TradingAccount tradingAccount;
 
@@ -30,7 +31,7 @@ public class StockPage {
     public void run() {
         frame = new JFrame("Stock Management");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(screenSize.width, screenSize.height);
 
         // Get account information
         String ownerName = tradingAccount.getOwnerName();
