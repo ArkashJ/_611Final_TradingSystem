@@ -5,12 +5,33 @@ import main.Accounts.TradingAccount;
 import main.Accounts.TradingAccountFactory;
 import main.Enums.UserType;
 import main.Stocks.*;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+    * @Description: This class is used to connect to the database and perform operations on it
+        * Singleton class
+        * Has a static method getInstance() which returns the instance of the class
+    * Has a static method getConnection() which returns the connection to the database
+    * @Methods:
+    * connect() - connects to the database
+    * deleteAllTables() - deletes all the tables in the database
+    * createTables() - creates all the tables in the database
+    * checkLogin(String username, String password) - checks if the username and password are correct
+    * registerUser(String username, String password, UserType userType) - registers a new user
+    * getAccountNumber(String username) - returns the account number of the user
+    * getTradingAccountsForUser(String username) - returns a list of trading accounts for the user
+    * getOptionsAccountsForUser(String username) - returns a list of options accounts for the user
+    * getStocksForUser(String username) - returns a list of stocks for the user
+    * insertStock(Stock stock) - inserts a stock into the database
+    * insertAccounts(int account_number, String userName, double balance,String accountType) - inserts an account into the database
+    * insertStockIntoMarket(String stockName, int quantity) - inserts a stock into the market
+    * insertStockIntoCustomerStocks(int account_number,String stockName,double price_bought, int quantity) - inserts a stock into the customer stocks
+    * submitAccountRequest(String username, String accountType) - submits an account request'
+    * removeAccountRequest(int id) - removes an account request
+ */
 public class Database {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/trading_system";
     private static final String uname = "root";
