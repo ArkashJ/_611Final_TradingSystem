@@ -27,9 +27,7 @@ public class TradingAccount extends Account implements ITrading{
     private String accountType;
     private CustomerStocks customerStocks;
     private double balance;
-
-
-
+    
     public TradingAccount(String ownerName, CustomerStocks customerStocks, double balance, int accountNumber) {
         this.ownerName = ownerName;
         this.customerStocks = customerStocks;

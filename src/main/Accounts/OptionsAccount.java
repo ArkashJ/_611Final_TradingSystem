@@ -2,9 +2,12 @@ package main.Accounts;
 
 import main.Stocks.CustomerStocks;
 //import main.Utils.Profit;
-
 import java.util.Scanner;
 
+/*
+    * @Description: This class is used to create an Options Account
+    * The user is promopted to make this account if they have more than 10k in realized gains
+ */
 public class OptionsAccount extends Account{
     private String ownerName;
     private int accountNumber;
