@@ -43,7 +43,7 @@ public class AccountPage {
     }
 
     private JPanel createViewAccountsPanel() {
-        JPanel panel = new JPanel(nsew BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
 
         JPanel accountListPanel = new JPanel();
