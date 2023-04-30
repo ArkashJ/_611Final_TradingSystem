@@ -18,7 +18,7 @@ import java.util.Scanner;
 //Create a trading account for a customer
 
 /**
- *
+ * @Description: This class is used to create a Trading Account
  */
 
 public class TradingAccount extends Account implements ITrading{

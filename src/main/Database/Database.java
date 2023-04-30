@@ -33,7 +33,8 @@ import java.util.List;
     * removeAccountRequest(int id) - removes an account request
  */
 public class Database {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/trading_system";
+//    private static final String DB_URL = "jdbc:mysql://localhost:3306/trading_system";
+    private static final String DB_URL = "jdbc:sqlite:src/main/Database/trading_system.db";
     private static final String uname = "root";
     private static final String upassword = "0123456789";
 
