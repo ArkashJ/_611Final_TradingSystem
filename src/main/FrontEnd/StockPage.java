@@ -17,15 +17,17 @@ import java.util.Map;
 public class StockPage {
     private int accountNumber;
     private AccountPage accountPage;
+    private UserLoginRegistration loginPage;
     private JFrame frame;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     private TradingAccount tradingAccount;
 
-    public StockPage(int accountNumber, AccountPage accountPage) {
+    public StockPage(int accountNumber, AccountPage accountPage, UserLoginRegistration loginPage) {
         this.accountNumber = accountNumber;
         this.tradingAccount = Database.getTradingAccount(accountNumber);
         this.accountPage = accountPage;
+        this.loginPage = loginPage;
     }
 
     public void run() {
@@ -55,8 +57,9 @@ public class StockPage {
         enterMarketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MarketPage marketPage = new MarketPage(accountNumber);
+                MarketPage marketPage = new MarketPage(accountNumber, accountPage, StockPage.this, loginPage);
                 marketPage.run();
+                frame.dispose();
             }
         });
 
@@ -68,9 +71,12 @@ public class StockPage {
         JPanel stockListPanel = new JPanel(new GridLayout(1, 2));
         stockListPanel.add(userStocksScrollPane);
 
+//        JPanel exitButtonPanel = createExitPanel();
+
         frame.add(accountInfoPanel, BorderLayout.NORTH);
         frame.add(marketButtonPanel, BorderLayout.SOUTH);
         frame.add(stockListPanel, BorderLayout.CENTER);
+//        frame.add(exitButtonPanel, BorderLayout.NORTH);
         frame.setVisible(true);
     }
 
@@ -116,5 +122,32 @@ public class StockPage {
 
         return stockPanel;
     }
+
+    private JPanel createExitPanel() {
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                loginPage.run();
+            }
+        });
+
+        JButton accountButton = new JButton("Go to account page");
+        accountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                accountPage.run();
+                frame.dispose();
+            }
+        });
+
+        buttonPanel.add(accountButton);
+        buttonPanel.add(logoutButton);
+
+        return buttonPanel;
+    }
+
 
 }

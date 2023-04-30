@@ -18,16 +18,23 @@ public class MarketPage {
 
     private JFrame frame;
     private JPanel marketPanel;
+
+    private AccountPage accountPage;
+    private StockPage stockPage;
+    private UserLoginRegistration loginPage;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private Market market;
     private int accountNumber;
     private TradingAccount tradingAccount;
     private Trading trading;
 
-    public MarketPage(int accountNumber) {
+    public MarketPage(int accountNumber,AccountPage accountPage, StockPage stockPage, UserLoginRegistration loginPage) {
         this.accountNumber = accountNumber;
         this.tradingAccount = Database.getTradingAccount(accountNumber);
         this.marketPanel = createMarketPanel();
+        this.accountPage = accountPage;
+        this.stockPage = stockPage;
+        this.loginPage = loginPage;
     }
     public void run() {
         frame = new JFrame("Stock Market");
@@ -35,8 +42,10 @@ public class MarketPage {
         frame.setSize(screenSize.width, screenSize.height);
 
         frame.add(this.marketPanel, BorderLayout.CENTER);
-        JPanel topPanel = buyStockPanel(this.accountNumber, this.tradingAccount, this.trading);
+        JPanel topPanel = tradeStockPanel(this.accountNumber, this.tradingAccount, this.trading);
         frame.add(topPanel, BorderLayout.NORTH);
+        JPanel buttonPanel = createExitPanel();
+        frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 
@@ -75,7 +84,7 @@ public class MarketPage {
         return stockPanel;
     }
 
-    private JPanel buyStockPanel(int accountNumber, TradingAccount tradingAccount, Trading trading){
+    private JPanel tradeStockPanel(int accountNumber, TradingAccount tradingAccount, Trading trading){
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -154,7 +163,43 @@ public class MarketPage {
 //        marketPanel.revalidate();
 //        marketPanel.repaint();
         frame.dispose();
-        new MarketPage(accountNumber).run();
+        new MarketPage(accountNumber, accountPage, stockPage, loginPage).run();
+    }
+
+    private JPanel createExitPanel() {
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                loginPage.run();
+            }
+        });
+
+        JButton accountButton = new JButton("Go to account page");
+        accountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                accountPage.run();
+                frame.dispose();
+            }
+        });
+
+        JButton stockButton = new JButton("View stocks in account");
+        stockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stockPage.run();
+                frame.dispose();
+            }
+        });
+
+        buttonPanel.add(accountButton);
+        buttonPanel.add(stockButton);
+        buttonPanel.add(logoutButton);
+
+        return buttonPanel;
     }
 
 }

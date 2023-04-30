@@ -59,8 +59,9 @@ public class AccountPage {
             enterButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    StockPage stockPage = new StockPage(account.getAccountNumber(), AccountPage.this);
+                    StockPage stockPage = new StockPage(account.getAccountNumber(), AccountPage.this, loginPage);
                     stockPage.run();
+                    frame.dispose();
                 }
             });
             accountPanel.add(enterButton);
