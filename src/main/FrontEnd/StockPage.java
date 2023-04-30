@@ -50,8 +50,6 @@ public class StockPage {
         accountInfoPanel.add(accountInfoLabel);
 
         // Create main panel with BorderLayout
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(accountInfoPanel, BorderLayout.NORTH);
 
         JButton enterMarketButton = new JButton("Enter market");
         enterMarketButton.addActionListener(new ActionListener() {
@@ -62,18 +60,17 @@ public class StockPage {
             }
         });
 
-        mainPanel.add(enterMarketButton, BorderLayout.SOUTH);
+        JPanel marketButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        marketButtonPanel.add(enterMarketButton);
 
         JScrollPane userStocksScrollPane = createStockListScrollPane(true);
-//        JScrollPane marketStocksScrollPane = createStockListScrollPane(false);
 
         JPanel stockListPanel = new JPanel(new GridLayout(1, 2));
         stockListPanel.add(userStocksScrollPane);
-//        stockListPanel.add(marketStocksScrollPane);
 
-        mainPanel.add(stockListPanel, BorderLayout.EAST);
-
-        frame.add(mainPanel);
+        frame.add(accountInfoPanel, BorderLayout.NORTH);
+        frame.add(marketButtonPanel, BorderLayout.SOUTH);
+        frame.add(stockListPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
 
@@ -101,12 +98,6 @@ public class StockPage {
                 JPanel stockPanel = createUserStockPanel(holding);
                 stockListPanel.add(stockPanel);
             }
-        } else {
-//            for (MarketStock stock : marketStocks) {
-//                // Market stock list, no profit display
-//                JPanel stockPanel = createMarketStockPanel(stock);
-//                stockListPanel.add(stockPanel);
-//            }
         }
 
         JScrollPane scrollPane = new JScrollPane(stockListPanel);
@@ -114,7 +105,7 @@ public class StockPage {
     }
 
     private JPanel createUserStockPanel(CustomerStock holding) {
-        JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         String stockName = holding.getStockName();
         int stockNumber = holding.getStockNumber();
         double boughtPrice = holding.getStockBoughtPrice();
@@ -123,46 +114,7 @@ public class StockPage {
         JLabel stockLabel = new JLabel(stockName + " | Quantity: " + stockNumber + " | Profit: " + profit);
         stockPanel.add(stockLabel);
 
-        JTextField sellQuantityField = new JTextField(5);
-        stockPanel.add(sellQuantityField);
-
-        JButton sellButton = new JButton("Sell");
-        sellButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int sellQuantity;
-                try {
-                    sellQuantity = Integer.parseInt(sellQuantityField.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Invalid quantity. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (sellQuantity <= 0) {
-                    JOptionPane.showMessageDialog(frame, "Invalid quantity. Please enter a positive number.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                boolean success = Trading.sellStock(accountNumber, stockName, sellQuantity);
-
-                if (success) {
-                    JOptionPane.showMessageDialog(frame, "Successfully sold " + sellQuantity + " of " + stockName, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    // Refresh user stocks and market stocks panels
-                    refresh();
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Failed to sell " + sellQuantity + " of " + stockName, "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        stockPanel.add(sellButton);
-
         return stockPanel;
-    }
-
-    public void refresh() {
-        frame.dispose();
-        tradingAccount = Database.getTradingAccount(accountNumber);
-        run();
     }
 
 }

@@ -9,7 +9,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/FrontEnd/AccountPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/FrontEnd/AccountPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/FrontEnd/MarketPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/FrontEnd/MarketPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/FrontEnd/StockPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/FrontEnd/StockPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/FrontEnd/UserLoginRegistration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/FrontEnd/UserLoginRegistration.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +76,7 @@
       <workItem from="1682434124199" duration="17926000" />
       <workItem from="1682513346534" duration="39892000" />
       <workItem from="1682693918514" duration="1246000" />
-      <workItem from="1682779317673" duration="19096000" />
+      <workItem from="1682779317673" duration="26516000" />
     </task>
     <servers />
   </component>

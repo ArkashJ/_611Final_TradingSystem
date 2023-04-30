@@ -17,6 +17,7 @@ import java.util.Map;
 public class MarketPage {
 
     private JFrame frame;
+    private JPanel marketPanel;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private Market market;
     private int accountNumber;
@@ -26,15 +27,14 @@ public class MarketPage {
     public MarketPage(int accountNumber) {
         this.accountNumber = accountNumber;
         this.tradingAccount = Database.getTradingAccount(accountNumber);
+        this.marketPanel = createMarketPanel();
     }
     public void run() {
         frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(screenSize.width, screenSize.height);
 
-        JPanel stockPanel = createMarketPanel();
-
-        frame.add(stockPanel, BorderLayout.CENTER);
+        frame.add(this.marketPanel, BorderLayout.CENTER);
         JPanel topPanel = buyStockPanel(this.accountNumber, this.tradingAccount, this.trading);
         frame.add(topPanel, BorderLayout.NORTH);
         frame.setVisible(true);
@@ -44,13 +44,13 @@ public class MarketPage {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        JScrollPane marketStocksScrollPane = createStockListScrollPane(true);
+        JScrollPane marketStocksScrollPane = createStockListScrollPane();
         panel.add(marketStocksScrollPane);
 
         return panel;
     }
 
-    private JScrollPane createStockListScrollPane(boolean isUserStocks) {
+    private JScrollPane createStockListScrollPane() {
         List<MarketStock> marketStocks = Market.getStocks();
 
         JPanel stockListPanel = new JPanel();
@@ -117,6 +117,10 @@ public class MarketPage {
                     String name = stockName.getText();
                     int quantity = Integer.parseInt(stockQuantity.getText());
                     Boolean result = trading.buyStock(accountNumber, name, quantity);
+                    if(result){
+                        JOptionPane.showMessageDialog(null, "You have successfully bought " + quantity + " " + name + " stocks");
+                        refreshMarketPanel();
+                    }
                 } catch (NumberFormatException exception) {
                     JOptionPane.showMessageDialog(null, "Invalid quantity");
                 }
@@ -130,6 +134,10 @@ public class MarketPage {
                     String name = stockName.getText();
                     int quantity = Integer.parseInt(stockQuantity.getText());
                     Boolean result = trading.sellStock(accountNumber, name, quantity);
+                    if(result){
+                        JOptionPane.showMessageDialog(null, "You have successfully sold " + quantity + " " + name + " stocks");
+                        refreshMarketPanel();
+                    }
                 } catch (NumberFormatException exception) {
                     JOptionPane.showMessageDialog(null, "Invalid quantity");
                 }
@@ -137,6 +145,16 @@ public class MarketPage {
         });
 
         return panel;
+    }
+
+    private void refreshMarketPanel() {
+//        JPanel newViewAccountsPanel = createMarketPanel();
+//        marketPanel.removeAll();
+//        marketPanel.add(newViewAccountsPanel, BorderLayout.CENTER);
+//        marketPanel.revalidate();
+//        marketPanel.repaint();
+        frame.dispose();
+        new MarketPage(accountNumber).run();
     }
 
 }
