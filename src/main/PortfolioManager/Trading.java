@@ -3,6 +3,7 @@ package main.PortfolioManager;
 import main.Database.Database;
 import main.log.logSystem;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ public class Trading {
                 stockPrice = rs.getDouble("currentPrice");
                 availableQuantity = rs.getInt("quantity");
             } else {
+                JOptionPane.showMessageDialog(null, "Stock not available in the market!");
                 return false; // Stock not found
             }
         } catch (SQLException e) {
@@ -58,7 +60,9 @@ public class Trading {
 
         // Check if there is enough quantity in the market
         if (quantity > availableQuantity) {
-            return false;
+//            return false;
+            JOptionPane.showMessageDialog(null, "Stock not available in the market!");
+            return false; // Not enough stock available in the market
         }
 
         // 2. Check if the account's balance is enough
@@ -70,6 +74,7 @@ public class Trading {
             if (rs.next()) {
                 accountBalance = rs.getDouble("balance");
             } else {
+                JOptionPane.showMessageDialog(null, "Account not found!");
                 return false; // Account not found
             }
         } catch (SQLException e) {
@@ -80,7 +85,9 @@ public class Trading {
         double totalCost = stockPrice * quantity;
         // Insufficient balance
         if (accountBalance < totalCost) {
-            return false;
+//            return false;
+            JOptionPane.showMessageDialog(null, "Not enough balance in account.");
+            return false; // Insufficient balance
         }
 
         // 3. Update the accounts' balance in accounts table and customer_stocks table
@@ -158,6 +165,7 @@ public class Trading {
         }
 
         if (totalQuantityOwned < quantity) {
+            JOptionPane.showMessageDialog(null, "Not enough stocks available in the market!");
             return false; // Not enough stock to sell
         }
 

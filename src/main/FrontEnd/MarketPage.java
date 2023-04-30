@@ -2,9 +2,11 @@ package main.FrontEnd;
 
 import main.Accounts.TradingAccount;
 import main.Database.Database;
+import main.PortfolioManager.Trading;
 import main.Stocks.*;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,23 +17,35 @@ import java.util.Map;
 public class MarketPage {
 
     private JFrame frame;
-    //TODO: Create market table in the database
+    private JPanel marketPanel;
+
+    private AccountPage accountPage;
+    private StockPage stockPage;
+    private UserLoginRegistration loginPage;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private Market market;
     private int accountNumber;
     private TradingAccount tradingAccount;
+    private Trading trading;
 
+    public MarketPage(int accountNumber,AccountPage accountPage, StockPage stockPage, UserLoginRegistration loginPage) {
+        this.accountNumber = accountNumber;
+        this.tradingAccount = Database.getTradingAccount(accountNumber);
+        this.marketPanel = createMarketPanel();
+        this.accountPage = accountPage;
+        this.stockPage = stockPage;
+        this.loginPage = loginPage;
+    }
     public void run() {
         frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(screenSize.width, screenSize.height);
 
-        JPanel stockPanel = createMarketPanel();
-
-        frame.add(stockPanel, BorderLayout.CENTER);
-        JPanel topPanel = buyStockPanel(this.accountNumber, this.tradingAccount);
+        frame.add(this.marketPanel, BorderLayout.CENTER);
+        JPanel topPanel = tradeStockPanel(this.accountNumber, this.tradingAccount, this.trading);
         frame.add(topPanel, BorderLayout.NORTH);
-//        JPanel midPanel = createMarketPanel();
-//        frame.add(midPanel, BorderLayout.WEST);
+        JPanel buttonPanel = createExitPanel();
+        frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 
@@ -39,13 +53,13 @@ public class MarketPage {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        JScrollPane marketStocksScrollPane = createStockListScrollPane(true);
+        JScrollPane marketStocksScrollPane = createStockListScrollPane();
         panel.add(marketStocksScrollPane);
 
         return panel;
     }
 
-    private JScrollPane createStockListScrollPane(boolean isUserStocks) {
+    private JScrollPane createStockListScrollPane() {
         List<MarketStock> marketStocks = Market.getStocks();
 
         JPanel stockListPanel = new JPanel();
@@ -70,7 +84,7 @@ public class MarketPage {
         return stockPanel;
     }
 
-    private JPanel buyStockPanel(int accountNumber, TradingAccount tradingAccount){
+    private JPanel tradeStockPanel(int accountNumber, TradingAccount tradingAccount, Trading trading){
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -108,35 +122,16 @@ public class MarketPage {
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = stockName.getText();
-                if(Database.getStock(name) != null){
-                    try{
-                        int quantity = Integer.parseInt(stockQuantity.getText());
-                        Stock bought = Database.getStock(name);
-                        //TODO: Unable to insert stock into customer stocks
-                        Database.insertStockIntoCustomerStocks(accountNumber, name,bought.getPriceBoughtAt(),quantity); //Add bought stock to customer database
-                        tradingAccount.getCustomerStocks().add(name,quantity,bought.getPriceBoughtAt()); //Add bought stock to trading account
-                        tradingAccount.setBalance(tradingAccount.getBalance()-(bought.getPriceBoughtAt()*quantity)); //Update balance in trading account
-
-                        List<MarketStock> marketStocks = Market.getStocks();
-                        for (MarketStock stock : marketStocks) { //Update quantity of stock in market
-                            if(stock.getStockName().equals(name)){
-                                stock.setQuantity(stock.getQuantity()-quantity);
-                                if(stock.getQuantity()==0){
-                                    Market.removeStock(name);
-                                }
-                            }
-                        }
-                        Database.setMarketStocks();
-                        JOptionPane.showMessageDialog(null, "You have successfully bought "+quantity+" of "+name);
+                try {
+                    String name = stockName.getText();
+                    int quantity = Integer.parseInt(stockQuantity.getText());
+                    Boolean result = trading.buyStock(accountNumber, name, quantity);
+                    if(result){
+                        JOptionPane.showMessageDialog(null, "You have successfully bought " + quantity + " " + name + " stocks");
+                        refreshMarketPanel();
                     }
-                    catch (NumberFormatException ex){
-                        JOptionPane.showMessageDialog(null, "Please enter a valid quantity");
-                    }
-
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "Stock does not exist");
+                } catch (NumberFormatException exception) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity");
                 }
             }
         });
@@ -144,29 +139,67 @@ public class MarketPage {
         sellButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = stockName.getText();
-                if(Database.getCustomerStocks(accountNumber).getStock(name)!=null){
-                    try{
-                        int quantity = Integer.parseInt(stockQuantity.getText());
-                        CustomerStock sold = Database.getCustomerStocks(accountNumber).getStock(name);
-                        tradingAccount.getCustomerStocks().remove(name,quantity); //Remove sold stock from trading account
-                        tradingAccount.setBalance(tradingAccount.getBalance()+(sold.getStockBoughtPrice()*quantity)); //Update balance in trading account
-                        Market.addStock(name,quantity); //Add sold stock to market
-                        Database.setMarketStocks(); //Update market stocks in database
-                        JOptionPane.showMessageDialog(null, "You have successfully sold "+quantity+" of "+name);
+                try{
+                    String name = stockName.getText();
+                    int quantity = Integer.parseInt(stockQuantity.getText());
+                    Boolean result = trading.sellStock(accountNumber, name, quantity);
+                    if(result){
+                        JOptionPane.showMessageDialog(null, "You have successfully sold " + quantity + " " + name + " stocks");
+                        refreshMarketPanel();
                     }
-                    catch (NumberFormatException ex){
-                        JOptionPane.showMessageDialog(null, "Please enter a valid quantity");
-                    }
-
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "Stock does not exist");
+                } catch (NumberFormatException exception) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity");
                 }
             }
         });
 
         return panel;
+    }
+
+    private void refreshMarketPanel() {
+//        JPanel newViewAccountsPanel = createMarketPanel();
+//        marketPanel.removeAll();
+//        marketPanel.add(newViewAccountsPanel, BorderLayout.CENTER);
+//        marketPanel.revalidate();
+//        marketPanel.repaint();
+        frame.dispose();
+        new MarketPage(accountNumber, accountPage, stockPage, loginPage).run();
+    }
+
+    private JPanel createExitPanel() {
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                loginPage.run();
+            }
+        });
+
+        JButton accountButton = new JButton("Go to account page");
+        accountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                accountPage.run();
+                frame.dispose();
+            }
+        });
+
+        JButton stockButton = new JButton("View stocks in account");
+        stockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stockPage.run();
+                frame.dispose();
+            }
+        });
+
+        buttonPanel.add(accountButton);
+        buttonPanel.add(stockButton);
+        buttonPanel.add(logoutButton);
+
+        return buttonPanel;
     }
 
 }

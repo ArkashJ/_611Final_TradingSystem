@@ -15,25 +15,27 @@ import java.util.List;
 public class AccountPage {
     private String userName;
     private JFrame frame;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private JPanel viewAccountsPanel;
+    private JPanel createCreateAccountPanel;
     private UserLoginRegistration loginPage;
 
     public AccountPage(String userName,UserLoginRegistration us) {
         this.userName = userName;
         this.loginPage=us;
+        this.viewAccountsPanel = createViewAccountsPanel();
+        this.createCreateAccountPanel = createCreateAccountPanel();
     }
 
     public void run() {
         frame = new JFrame("Account Management");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(screenSize.width, screenSize.height);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        viewAccountsPanel = createViewAccountsPanel();
-        JPanel createAccountPanel = createCreateAccountPanel();
 
-        tabbedPane.addTab("View Accounts", viewAccountsPanel);
-        tabbedPane.addTab("Create Account", createAccountPanel);
+        tabbedPane.addTab("View Accounts", this.viewAccountsPanel);
+        tabbedPane.addTab("Create Account", this.createCreateAccountPanel);
         frame.add(tabbedPane,BorderLayout.CENTER);
         frame.add(createLogoutPanel(), BorderLayout.NORTH);
 
@@ -57,8 +59,9 @@ public class AccountPage {
             enterButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    StockPage stockPage = new StockPage(account.getAccountNumber(), AccountPage.this);
+                    StockPage stockPage = new StockPage(account.getAccountNumber(), AccountPage.this, loginPage);
                     stockPage.run();
+                    frame.dispose();
                 }
             });
             accountPanel.add(enterButton);
@@ -97,7 +100,7 @@ public class AccountPage {
                 double initialBalance = Double.parseDouble(balanceField.getText());
                 if (Database.submitAccountRequest(userName, initialBalance,"TRADE")) {
                     JOptionPane.showMessageDialog(null, "Trading account creation request submitted!");
-                    refreshViewAccountsPanel();
+                    refreshCreateCreateAccountsPanel();
                 } else {
                     JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
                 }
@@ -106,19 +109,13 @@ public class AccountPage {
 
         return panel;
     }
-//    private void refreshAccountList() {
-//        List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
-//        listModel.clear();
-//        for (TradingAccount account : accounts) {
-//            listModel.addElement("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
-//        }
-//    }
-    private void refreshViewAccountsPanel() {
-        JPanel newViewAccountsPanel = createViewAccountsPanel();
-        viewAccountsPanel.removeAll();
-        viewAccountsPanel.add(newViewAccountsPanel, BorderLayout.CENTER);
-        viewAccountsPanel.revalidate();
-        viewAccountsPanel.repaint();
+
+    private void refreshCreateCreateAccountsPanel() {
+        JPanel newViewAccountsPanel = createCreateAccountPanel();
+        this.createCreateAccountPanel.removeAll();
+        this.createCreateAccountPanel.add(newViewAccountsPanel);
+        this.createCreateAccountPanel.revalidate();
+        this.createCreateAccountPanel.repaint();
     }
 
     private JPanel createLogoutPanel() {
