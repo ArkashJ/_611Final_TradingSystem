@@ -42,6 +42,7 @@ yangjx@bu.edu
         |> UserType.java
     -> ModifiedFrontend
         |> AccManagement.java
+        |> Explanations.md
         |> AccountPage.java
         |> CreateAcc.java
         |> OptionsAccount.java
@@ -58,8 +59,113 @@ yangjx@bu.edu
         |> Person.java
         |> Manager.java
         |> IPerson.java
+     -> PotfolioManager
+        |> BankManager.java
+        |> Trading.java
+     -> Stocks
+        |> CustomerStock.java
+        |> CustomerStocks.java
+        |> Market.java
+        |> MarketStock.java
+        |> Stock.java
+        |> StockFactory.java
+     -> txtFiles
+        |> accounts.txt
+        |> stocks.txt
+        |> users.txt
+        |> customer_stocks.txt
+        |> Description.md
+     -> Utils
+        |> Profit_Loss.java
+        |> Notify.java
+    -> Main.java
 
 ### main
+This folder contains all the java files for the project
+## Accounts
+1. ITrading.java - Interface for trading. It has methods for depositing and withdrawing money
+
+2. OptionsAccount.java - class makes the options account for the users 
+   - including ownername, 
+   - customerStocks, 
+   - balance, 
+   - and accountNumber
+
+3. TradingAccount.java - class makes the trading account. 
+   - It implements the ITrading interface and allows users to handle their money including:
+   - deposits, 
+   - withdrawals, 
+   - finding profits, 
+   - updating and checking their account balance 
+   - and getting account details
+
+4. TradingAccountFactory.java - Factory class for creating trading and options accounts
+
+## Database
+1. Database.java - class for reading and writing to the database. 
+   - It initializes the connection string and test username and password,
+   - makes a singleton class and 
+   - creates tables for 
+     - users, 
+     - accounts, 
+     - customerstocks, 
+     - market 
+     - and the log. 
+   - Furthermore, it has functions for 
+     - logging in, 
+     - registering users, 
+     - making a trading account, 
+     - getting stocks, 
+     - getting customer stocks 
+     - and options accounts.
+   - We can call this class to insert data into tables as well
+
+## Enums
+1. UserType.java - enum for the different types of users
+   - ADMIN,
+   - USER
+
+## ModifiedFrontend
+1. AccManagement.java - class for managing accounts. 
+   - Page to view accounts or create an account
+2. AccountPage.java - class for logging in and registering users
+3. CreateAcc.java - extension for create AccManagement, to create an account and let the user choose their initial balance
+4. OptionsAccount.java - class for creating options accounts. 
+   - Display the name of the owner,
+   - and the profit made
+5. RegisterPage.java - class for registering users. 
+   - It has a page for the user to enter their name, 
+   - username, 
+   - password, 
+   - type of account they want to create
+   - and monthly income
+6. StockMarket.java - class for displaying the stock market. allows users to buy and sell stocks by entering the name and quantity
+7. StockPage.java - class for displaying the stock page. 
+   - It has a page for the user to view their balance, account number and profit
+
+## Initiator
+1. initiator.java - singleton class for:
+- getting the path of the database and insert
+- loading data into the db
+- inserting market data
+
+## Log
+1. LogSystem.java - class for logging the trades made by the users
+
+## Persons
+1. Client.java - class for creating clients. 
+   - It has a page for the user to create their account
+   - display account
+   - transfer money 
+   - return all trading and options accounts
+2. CustomerFactory.java - Factory class for creating customers
+3. IPerson.java - interface for the person class to transfer money and get authentication
+4. Person.java - class for creating a person. 
+   - It has a page for getting username, password
+   - setting password
+5. Manager.java - extends the person class and defines the portfolio manager
+
+## PotfolioManager
 
 ## Scalability and extensibility
 
@@ -79,7 +185,7 @@ We have implemented the following bonus features:
 
 We have used the following design patterns:
 
-1. Abstract Factory - 
+1. Singleton - 
 2. Factory Method -
 3. Strategy Pattern - 
 

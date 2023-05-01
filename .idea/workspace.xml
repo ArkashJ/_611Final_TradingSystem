@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c131795-afd8-4ad7-8e25-9f6d01fa23c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/UML.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Database/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Persons/IPerson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Persons/IPerson.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +88,7 @@
       <workItem from="1682885534299" duration="2794000" />
       <workItem from="1682903942409" duration="2689000" />
       <workItem from="1682949513049" duration="1439000" />
-      <workItem from="1682951288915" duration="2173000" />
+      <workItem from="1682951288915" duration="4965000" />
     </task>
     <servers />
   </component>
@@ -113,6 +110,15 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/Initiator/Initiator.java</url>
+          <line>101</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="((Head)lines).parallel" custom="java.util.stream.ReferencePipeline.Head" />
