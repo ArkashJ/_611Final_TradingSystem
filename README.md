@@ -191,6 +191,18 @@ This folder contains all the java files for the project
    - high price, low price, divident and price it was bought at
 6. StockFactory.java - Factory class for creating stocks
 
+
+## txtFiles
+1. accounts.txt - text file for storing the accounts
+2. stocks.txt - text file for storing the stocks
+3. users.txt - text file for storing the users
+4. customer_stocks.txt - text file for storing the customer stocks
+5. Description.md - description of the project
+
+## Utils
+1. Profit_Loss.java - class for calculating the profit or loss made by the user
+2. Notify.java - class for notifying the user if they are eligible for an options account
+
 ## Scalability and extensibility
 
 The game is easily scalable and extensible:
