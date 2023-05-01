@@ -229,5 +229,6 @@ javac -cp . -d bin main/*.java
 java -cp bin main.Main
 ```
 
+<img width="1061" alt="UML" src="https://user-images.githubusercontent.com/86805856/235495321-e508ad66-e6ca-4f8d-b340-a286f986a4d4.png">
 
 
