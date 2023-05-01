@@ -22,7 +22,6 @@ public class Person implements IPerson {
     public String getUserName() {
         return userName;
     }
-
     public String getPassword() {
         return password;
     }

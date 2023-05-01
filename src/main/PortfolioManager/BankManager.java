@@ -129,6 +129,10 @@ public class BankManager {
 
                 if (type.equals("BUY")) {
 //                    double unrealizedProfit = (currentPrice - price) * quantity;
+                    boolean isProfit = profits.get("realized") - price * quantity > 100000;
+
+                    // TODO: if isProfit, then call event listener in UI, ask user if they want to open an options account
+
                     profits.put("unrealized", profits.get("unrealized") + currentPrice * quantity);
                     profits.put("realized", profits.get("realized") - price * quantity);
                 } else if (type.equals("SELL")) {
