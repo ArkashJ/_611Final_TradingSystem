@@ -166,6 +166,30 @@ This folder contains all the java files for the project
 5. Manager.java - extends the person class and defines the portfolio manager
 
 ## PotfolioManager
+1. BankManager.java - singleton class for managing the bank. 
+   - Map of a map Calculates profits for all users
+   - map to find a single users profits
+   - update stock prices
+   - get profit for a user
+2. Trading.java - singleton class to update the sql table whenever a stock is bought or sold
+
+## Stocks
+1. CustomerStock.java - class for creating customer stocks. 
+   - Stores the stock name, number of stocks, and the price at which the stocks were bought. 
+   - Method to calculate the profit made by the customer on the stocks. 
+   - Method to set the number of stocks and the price at which the stocks were bought.
+2. CustomerStocks.java - initializes an account number and makes a list of stocks for the customer. It can add and remove stocks from the list
+3. Market.java - This class represents the market, a singleton class
+   - it can get all the stocks in the market
+   - set, add or remove them
+   - get the closing time, opening time and set them
+4. MarketStock.java - singleton class for creating market stocks by calling the market class
+5. Stock.java - class for creating stocks. The stock class initializes the basic element for a stock, including:
+   - name, 
+   - quantity, 
+   - time at which the stock was bought
+   - high price, low price, divident and price it was bought at
+6. StockFactory.java - Factory class for creating stocks
 
 ## Scalability and extensibility
 
