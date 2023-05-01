@@ -28,6 +28,36 @@ Jianxio Yang
 yangjx@bu.edu
 
 ## Files
+|
+| > main
+    -> Accounts
+        |> Account.java
+        |> ITrading.java
+        |> OptionsAccount.java
+        |> TradingAccount.java
+        |> TradingAccountFactory.java
+    -> Database
+        |> Database.java
+    -> Enums
+        |> UserType.java
+    -> ModifiedFrontend
+        |> AccManagement.java
+        |> AccountPage.java
+        |> CreateAcc.java
+        |> OptionsAccount.java
+        |> RegisterPage.java
+        |> StockMarket.java
+        |> StockPage.java
+     -> Initiator
+        |> Initiator.java
+     -> Log
+        |> logSystem.java
+     -> Persons
+        |> Client.java
+        |> CustomerFactory.java
+        |> Person.java
+        |> Manager.java
+        |> IPerson.java
 
 ### main
 

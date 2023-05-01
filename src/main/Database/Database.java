@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/*
+/**
     * @Description: This class is used to connect to the database and perform operations on it
         * Singleton class
         * Has a static method getInstance() which returns the instance of the class
@@ -45,6 +45,7 @@ public class Database {
     // ------------------ Constructor ------------------
     private Database() {
         conn = connect();
+        // create a database connection
     }
 
     public static synchronized Database getInstance() {
