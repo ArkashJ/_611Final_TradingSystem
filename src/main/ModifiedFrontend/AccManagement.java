@@ -2,11 +2,34 @@ package main.ModifiedFrontend;
 
 //package com.mycompany.mavenproject1;
 
+import main.Database.Database;
+import main.Accounts.TradingAccount;
+import main.FrontEnd.UserLoginRegistration;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 /**
  *
  * @author arkashjain
  */
 public class AccManagement extends javax.swing.JPanel {
+    private String userName;
+    private UserLoginRegistration loginPage;
+    private JFrame frame;
+
+    public AccManagement(String userName, UserLoginRegistration loginPage) {
+        this.userName = userName;
+        this.loginPage = loginPage;
+        initComponents();
+    }
+
+    public void setFrame(JFrame frame) {
+        this.frame = frame;
+    }
+
 
     /**
      * Creates new form AccManagement
@@ -61,6 +84,45 @@ public class AccManagement extends javax.swing.JPanel {
             }
         });
 
+        // -------- Evemt Listeners ------------
+        // Add action listeners to the buttons
+        jButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                loginPage.run();
+            }
+        });
+
+        jButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add functionality for viewing accounts
+                List<TradingAccount> accounts = Database.getTradingAccountsForUser(userName);
+                if (!accounts.isEmpty()) {
+                    TradingAccount account = accounts.get(0);
+                    jLabel5.setText("Acc. #: " + account.getAccountNumber());
+                    jLabel2.setText("Balance: " + account.getBalance());
+                } else {
+                    jLabel5.setText("No account found");
+                    jLabel2.setText("");
+                }
+            }
+        });
+
+        jButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add functionality for creating an account
+                double initialBalance = 0.0; // You may want to request this value from the user
+                if (Database.submitAccountRequest(userName, initialBalance, "TRADE")) {
+                    JOptionPane.showMessageDialog(null, "Trading account creation request submitted!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
+                }
+            }
+        });
+        // ------------------------------------
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(

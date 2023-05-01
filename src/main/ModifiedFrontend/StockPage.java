@@ -1,12 +1,82 @@
 package main.ModifiedFrontend;
 
 //package com.mycompany.mavenproject1;
+import main.Accounts.TradingAccount;
+import main.Database.Database;
+import main.FrontEnd.MarketPage;
+import main.FrontEnd.UserLoginRegistration;
+import main.PortfolioManager.Trading;
+import main.Stocks.CustomerStock;
+import main.Stocks.MarketStock;
+import main.Stocks.Market;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author arkashjain
  */
 public class StockPage extends javax.swing.JPanel {
+    private int accountNumber;
+    private AccountPage accountPage;
+    private UserLoginRegistration loginPage;
+    private JFrame frame;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+    private TradingAccount tradingAccount;
+
+    public StockPage(int accountNumber, AccountPage accountPage, UserLoginRegistration loginPage) {
+        this.accountNumber = accountNumber;
+        this.tradingAccount = Database.getTradingAccount(accountNumber);
+        this.accountPage = accountPage;
+        this.loginPage = loginPage;
+        initComponents();
+    }
+
+    public void run() {
+        frame = new JFrame("Stock Management");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(screenSize.width, screenSize.height);
+
+        // Get account information
+        String ownerName = tradingAccount.getOwnerName();
+        double balance = tradingAccount.getBalance();
+        Map<String,Double> profit = tradingAccount.getProfitsForAccount();
+
+        // Set account info labels and text fields
+        jTextField2.setText(ownerName);
+        jTextField3.setText(String.valueOf(accountNumber));
+        jTextField4.setText(String.valueOf(balance));
+        jTextField5.setText(profit.get("realized") + " ( expect:  " + profit.get("unrealized") + " )");
+
+        // Set button actions
+        jButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                loginPage.run();
+            }
+        });
+
+        jButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO FIX LOGIC
+                MarketPage marketPage = new MarketPage(accountNumber, accountPage, StockPage.this, loginPage);
+                marketPage.run();
+                frame.dispose();
+            }
+        });
+
+        frame.add(this);
+        frame.setVisible(true);
+    }
 
     /**
      * Creates new form StockPage
