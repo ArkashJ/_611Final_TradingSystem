@@ -70,6 +70,7 @@ Head to the root directory of this project (where this README is located) and ru
 javac -cp . -d bin main/*.java
 java -cp bin main.Main
 ```
+<img width="1061" alt="UML" src="https://user-images.githubusercontent.com/86805856/235495230-9057c899-74e0-4025-8ad3-d7fc2a97daa2.png">
 
 
 
