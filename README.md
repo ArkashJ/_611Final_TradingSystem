@@ -203,27 +203,13 @@ This folder contains all the java files for the project
 1. Profit_Loss.java - class for calculating the profit or loss made by the user
 2. Notify.java - class for notifying the user if they are eligible for an options account
 
-## Scalability and extensibility
-
-The game is easily scalable and extensible:
-
-1. Adding new Entities: 
-
-## Features
-
-We have implemented the following bonus features:
-
-1. Sounds -
-2. Colors - 
-3. ASCII art - we have added ASCII art for starting the game, battles etc.
-
 ## Design Patterns
 
 We have used the following design patterns:
 
-1. Singleton - 
-2. Factory Method -
-3. Strategy Pattern - 
+1. Singleton -  Database, initiator, protfolio manager, market, market stock, bank manager, trading account factory, customer factory
+2. Factory Method - Trading account factory, customer factory, stock factory
+3. Strategy Pattern - Person and Trading interfaces are examples of horizontal inheritance
 
 
 ## How to compile and run
