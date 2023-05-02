@@ -70,9 +70,7 @@ public class StockPage {
 
         JPanel stockListPanel = new JPanel(new GridLayout(1, 2));
         stockListPanel.add(userStocksScrollPane);
-
 //        JPanel exitButtonPanel = createExitPanel();
-
         frame.add(accountInfoPanel, BorderLayout.NORTH);
         frame.add(marketButtonPanel, BorderLayout.SOUTH);
         frame.add(stockListPanel, BorderLayout.CENTER);
@@ -149,5 +147,9 @@ public class StockPage {
         return buttonPanel;
     }
 
-
+    public void refresh() {
+        this.tradingAccount = Database.getTradingAccount(accountNumber);
+        frame.dispose();
+        run();
+    }
 }

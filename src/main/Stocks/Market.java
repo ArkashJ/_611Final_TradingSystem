@@ -47,6 +47,16 @@ public class Market {
         return stocks;
     }
 
+    public static List<MarketStock> getStocks(String keyword) {
+        List<MarketStock> stocks = getStocks();
+        for (MarketStock stock : Market.getStocks()) {
+            if (stock.getStockName().contains(keyword)) {
+                stocks.add(stock);
+            }
+        }
+        return stocks;
+    }
+
     public static void setStocks(List<MarketStock> stocks) {
         Market.stocks = stocks;
     }

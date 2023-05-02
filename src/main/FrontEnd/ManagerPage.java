@@ -22,6 +22,12 @@ import java.util.Map;
 public class ManagerPage {
     private JFrame frame;
     private String AdminName;
+    private boolean accountsInfoVisible = true;
+    private boolean marketStocksVisible = true;
+    private boolean logVisible = true;
+    private JScrollPane accountsInfoScrollPane;
+    private JScrollPane marketStocksScrollPane;
+    private JScrollPane logScrollPane;
 
     public ManagerPage(String AdminName) {
         this.AdminName = AdminName;
@@ -30,29 +36,65 @@ public class ManagerPage {
     public void run() {
         frame = new JFrame("Manager Page");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1600, 600); // Increase width
+        frame.setSize(1600, 600);
 
         // Create main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
 
+        // Add the Review Requests button back
+        JButton reviewRequestsButton = new JButton("Review Requests");
+
         // Accounts info and profits panel
-        JScrollPane accountsInfoScrollPane = createAccountsInfoScrollPane();
+        accountsInfoScrollPane = createAccountsInfoScrollPane();
         mainPanel.add(accountsInfoScrollPane, BorderLayout.WEST);
 
         // Market stocks panel
-        JScrollPane marketStocksScrollPane = createMarketStocksScrollPane();
+        marketStocksScrollPane = createMarketStocksScrollPane();
         mainPanel.add(marketStocksScrollPane, BorderLayout.CENTER);
 
         // Log panel
-        JScrollPane logScrollPane = createLogScrollPane(); // Add log panel
+        logScrollPane = createLogScrollPane();
         mainPanel.add(logScrollPane, BorderLayout.EAST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton reviewRequestsButton = new JButton("Review Requests");
+        JButton toggleAccountsButton = new JButton("Toggle Accounts");
+        buttonPanel.add(toggleAccountsButton);
+        JButton toggleMarketButton = new JButton("Toggle Market");
+        buttonPanel.add(toggleMarketButton);
+        JButton toggleLogButton = new JButton("Toggle Log");
+        buttonPanel.add(toggleLogButton);
         buttonPanel.add(reviewRequestsButton);
         mainPanel.add(buttonPanel, BorderLayout.NORTH);
 
-        // Add an ActionListener to open the RequestReviewPage
+        // Add an ActionListener to toggle the visibility of each section
+        toggleAccountsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                accountsInfoVisible = !accountsInfoVisible;
+                accountsInfoScrollPane.setVisible(accountsInfoVisible);
+                refreshSize();
+            }
+        });
+
+        toggleMarketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                marketStocksVisible = !marketStocksVisible;
+                marketStocksScrollPane.setVisible(marketStocksVisible);
+                refreshSize();
+            }
+        });
+
+        toggleLogButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logVisible = !logVisible;
+                logScrollPane.setVisible(logVisible);
+                refreshSize();
+            }
+        });
+
+        // Add the ActionListener for the Review Requests button back
         reviewRequestsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -63,6 +105,11 @@ public class ManagerPage {
 
         frame.add(mainPanel);
         frame.setVisible(true);
+    }
+
+    public void refreshSize() {
+        frame.pack();
+        frame.repaint();
     }
 
     private JScrollPane createAccountsInfoScrollPane() {

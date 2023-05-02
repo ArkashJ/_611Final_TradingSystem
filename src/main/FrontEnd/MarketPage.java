@@ -26,7 +26,6 @@ public class MarketPage {
     private Market market;
     private int accountNumber;
     private TradingAccount tradingAccount;
-    private Trading trading;
 
     public MarketPage(int accountNumber,AccountPage accountPage, StockPage stockPage, UserLoginRegistration loginPage) {
         this.accountNumber = accountNumber;
@@ -42,11 +41,13 @@ public class MarketPage {
         frame.setSize(screenSize.width, screenSize.height);
 
         frame.add(this.marketPanel, BorderLayout.CENTER);
-        JPanel topPanel = tradeStockPanel(this.accountNumber, this.tradingAccount, this.trading);
+        JPanel topPanel = tradeStockPanel(this.accountNumber, this.tradingAccount);
         frame.add(topPanel, BorderLayout.NORTH);
         JPanel buttonPanel = createExitPanel();
         frame.add(buttonPanel, BorderLayout.SOUTH);
+
         frame.setVisible(true);
+
     }
 
     private JPanel createMarketPanel() {
@@ -73,7 +74,7 @@ public class MarketPage {
         return scrollPane;
     }
 
-        private JPanel createMarketStockPanel(MarketStock stock) {
+    private JPanel createMarketStockPanel(MarketStock stock) {
         JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         String stockName = stock.getStockName();
         Stock stock_orgin=Database.getStock(stockName);
@@ -84,7 +85,7 @@ public class MarketPage {
         return stockPanel;
     }
 
-    private JPanel tradeStockPanel(int accountNumber, TradingAccount tradingAccount, Trading trading){
+    private JPanel tradeStockPanel(int accountNumber, TradingAccount tradingAccount){
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -119,13 +120,26 @@ public class MarketPage {
         panel.add(sellButton, gbc);
 
 
+        JLabel searchLabel = new JLabel("Search");
+        JTextField searchField = new JTextField(15);
+        JButton searchButton = new JButton("Search");
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        panel.add(searchLabel, gbc);
+        gbc.gridy = 1;
+        panel.add(searchField, gbc);
+        gbc.gridy = 2;
+        panel.add(searchButton, gbc);
+
+
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     String name = stockName.getText();
                     int quantity = Integer.parseInt(stockQuantity.getText());
-                    Boolean result = trading.buyStock(accountNumber, name, quantity);
+                    Boolean result = Trading.buyStock(accountNumber, name, quantity);
                     if(result){
                         JOptionPane.showMessageDialog(null, "You have successfully bought " + quantity + " " + name + " stocks");
                         refreshMarketPanel();
@@ -142,7 +156,7 @@ public class MarketPage {
                 try{
                     String name = stockName.getText();
                     int quantity = Integer.parseInt(stockQuantity.getText());
-                    Boolean result = trading.sellStock(accountNumber, name, quantity);
+                    Boolean result = Trading.sellStock(accountNumber, name, quantity);
                     if(result){
                         JOptionPane.showMessageDialog(null, "You have successfully sold " + quantity + " " + name + " stocks");
                         refreshMarketPanel();
@@ -153,19 +167,33 @@ public class MarketPage {
             }
         });
 
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String keyword = searchField.getText();
+                refreshMarketPanel(keyword);
+            }
+        });
+
         return panel;
     }
 
     private void refreshMarketPanel() {
-//        JPanel newViewAccountsPanel = createMarketPanel();
-//        marketPanel.removeAll();
-//        marketPanel.add(newViewAccountsPanel, BorderLayout.CENTER);
-//        marketPanel.revalidate();
-//        marketPanel.repaint();
         frame.dispose();
         new MarketPage(accountNumber, accountPage, stockPage, loginPage).run();
     }
-
+    private void refreshMarketPanel(String keyword) {
+        for (Component component : marketPanel.getComponents()) {
+            if (BorderLayout.EAST.equals(((BorderLayout) marketPanel.getLayout()).getConstraints(component))) {
+                marketPanel.remove(component);
+                break;
+            }
+        }
+        JScrollPane newStockListScrollPane = createStockListScrollPane(keyword);
+        marketPanel.add(newStockListScrollPane, BorderLayout.EAST);
+        marketPanel.revalidate();
+        marketPanel.repaint();
+    }
     private JPanel createExitPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
         JButton logoutButton = new JButton("Logout");
@@ -190,7 +218,7 @@ public class MarketPage {
         stockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                stockPage.run();
+                stockPage.refresh();
                 frame.dispose();
             }
         });
@@ -200,6 +228,20 @@ public class MarketPage {
         buttonPanel.add(logoutButton);
 
         return buttonPanel;
+    }
+
+    private JScrollPane createStockListScrollPane(String keyword) {
+        List<MarketStock> marketStocks = Market.getStocks(keyword);
+
+        JPanel stockListPanel = new JPanel();
+        stockListPanel.setLayout(new BoxLayout(stockListPanel, BoxLayout.Y_AXIS));
+        for (MarketStock stock : marketStocks) {
+            JPanel stockPanel = createMarketStockPanel(stock);
+            stockListPanel.add(stockPanel);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(stockListPanel);
+        return scrollPane;
     }
 
 }
