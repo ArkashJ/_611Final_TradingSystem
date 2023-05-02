@@ -22,121 +22,81 @@ import java.util.Map;
 public class ManagerPage {
     private JFrame frame;
     private String AdminName;
+    private boolean accountsInfoVisible = true;
+    private boolean marketStocksVisible = true;
+    private boolean logVisible = true;
+    private JScrollPane accountsInfoScrollPane;
+    private JScrollPane marketStocksScrollPane;
+    private JScrollPane logScrollPane;
 
     public ManagerPage(String AdminName) {
         this.AdminName = AdminName;
     }
 
-//    public void run() {
-//        frame = new JFrame("Manager Page");
-//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        frame.setSize(1600, 600); // Increase width
-//
-//        // Create main panel with BorderLayout
-//        JPanel mainPanel = new JPanel(new BorderLayout());
-//
-//        // Accounts info and profits panel
-//        JScrollPane accountsInfoScrollPane = createAccountsInfoScrollPane();
-//        mainPanel.add(accountsInfoScrollPane, BorderLayout.WEST);
-//
-//        // Market stocks panel
-//        JScrollPane marketStocksScrollPane = createMarketStocksScrollPane();
-//        mainPanel.add(marketStocksScrollPane, BorderLayout.CENTER);
-//
-//        // Log panel
-//        JScrollPane logScrollPane = createLogScrollPane(); // Add log panel
-//        mainPanel.add(logScrollPane, BorderLayout.EAST);
-//
-//        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//        JButton reviewRequestsButton = new JButton("Review Requests");
-//        buttonPanel.add(reviewRequestsButton);
-//        mainPanel.add(buttonPanel, BorderLayout.NORTH);
-//
-//        // Add an ActionListener to open the RequestReviewPage
-//        reviewRequestsButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                RequestReviewPage requestReviewPage = new RequestReviewPage();
-//                requestReviewPage.run();
-//            }
-//        });
-//
-//        frame.add(mainPanel);
-//        frame.setVisible(true);
-//    }
-    private CardLayout cardLayout; // Add a CardLayout instance variable
-
     public void run() {
         frame = new JFrame("Manager Page");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1600, 600); // Increase width
+        frame.setSize(1600, 600);
 
-        // Create main panel with CardLayout
-        cardLayout = new CardLayout();
-        JPanel mainPanel = new JPanel(cardLayout);
+        // Create main panel with BorderLayout
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Accounts info and profits panel
-        JPanel accountsInfoPage = new JPanel(new BorderLayout());
-        JScrollPane accountsInfoScrollPane = createAccountsInfoScrollPane();
-        accountsInfoPage.add(accountsInfoScrollPane, BorderLayout.CENTER);
-        mainPanel.add(accountsInfoPage, "AccountsInfo");
+        accountsInfoScrollPane = createAccountsInfoScrollPane();
+        mainPanel.add(accountsInfoScrollPane, BorderLayout.WEST);
 
         // Market stocks panel
-        JPanel marketStocksPage = new JPanel(new BorderLayout());
-        JScrollPane marketStocksScrollPane = createMarketStocksScrollPane();
-        marketStocksPage.add(marketStocksScrollPane, BorderLayout.CENTER);
-        mainPanel.add(marketStocksPage, "MarketStocks");
+        marketStocksScrollPane = createMarketStocksScrollPane();
+        mainPanel.add(marketStocksScrollPane, BorderLayout.CENTER);
 
         // Log panel
-        JPanel logPage = new JPanel(new BorderLayout());
-        JScrollPane logScrollPane = createLogScrollPane(); // Add log panel
-        logPage.add(logScrollPane, BorderLayout.CENTER);
-        mainPanel.add(logPage, "Log");
+        logScrollPane = createLogScrollPane();
+        mainPanel.add(logScrollPane, BorderLayout.EAST);
 
-        // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton accountsInfoButton = new JButton("Accounts Info");
-        JButton marketStocksButton = new JButton("Market Stocks");
-        JButton logButton = new JButton("Log");
+        JButton toggleAccountsButton = new JButton("Toggle Accounts");
+        buttonPanel.add(toggleAccountsButton);
+        JButton toggleMarketButton = new JButton("Toggle Market");
+        buttonPanel.add(toggleMarketButton);
+        JButton toggleLogButton = new JButton("Toggle Log");
+        buttonPanel.add(toggleLogButton);
+        mainPanel.add(buttonPanel, BorderLayout.NORTH);
 
-        buttonPanel.add(accountsInfoButton);
-        buttonPanel.add(marketStocksButton);
-        buttonPanel.add(logButton);
-
-        accountsInfoButton.addActionListener(new ActionListener() {
+        // Add an ActionListener to toggle the visibility of each section
+        toggleAccountsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "AccountsInfo");
+                accountsInfoVisible = !accountsInfoVisible;
+                accountsInfoScrollPane.setVisible(accountsInfoVisible);
+                refreshSize();
             }
         });
 
-        marketStocksButton.addActionListener(new ActionListener() {
+        toggleMarketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "MarketStocks");
+                marketStocksVisible = !marketStocksVisible;
+                marketStocksScrollPane.setVisible(marketStocksVisible);
+                refreshSize();
             }
         });
 
-        logButton.addActionListener(new ActionListener() {
-            private boolean logVisible = true;
-
+        toggleLogButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (logVisible) {
-                    cardLayout.show(mainPanel, "Log");
-                } else {
-                    cardLayout.show(mainPanel, "AccountsInfo");
-                }
                 logVisible = !logVisible;
+                logScrollPane.setVisible(logVisible);
+                refreshSize();
             }
         });
-
-        accountsInfoPage.add(buttonPanel, BorderLayout.NORTH);
-        marketStocksPage.add(buttonPanel, BorderLayout.NORTH);
-        logPage.add(buttonPanel, BorderLayout.NORTH);
 
         frame.add(mainPanel);
         frame.setVisible(true);
+    }
+
+    public void refreshSize() {
+        frame.pack();
+        frame.repaint();
     }
 
     private JScrollPane createAccountsInfoScrollPane() {
