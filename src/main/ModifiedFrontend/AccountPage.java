@@ -19,6 +19,15 @@ public class AccountPage extends javax.swing.JPanel {
     public AccountPage() {
         initComponents();
     }
+    public void run() {
+        JFrame frame = new JFrame("Account Page");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(this);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">

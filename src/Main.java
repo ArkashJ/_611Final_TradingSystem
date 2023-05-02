@@ -7,6 +7,7 @@ import main.Stocks.Market;
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.SQLException;
+import main.ModifiedFrontend.*;
 
 /**
  * todo
@@ -18,13 +19,14 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) throws SQLException {
 
-        Initiator.initiateAll();
+//        Initiator.initiateAll();
 
         //build the ManagerPage
 
         SwingUtilities.invokeLater(() -> {
             new UserLoginRegistration().run();
-            new UserLoginRegistration().run();
+//            new UserLoginRegistration().run();
+//            new AccountPage().run();
         });
     }
 }
