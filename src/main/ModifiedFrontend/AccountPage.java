@@ -4,7 +4,7 @@ package main.ModifiedFrontend;
 
 import main.Database.Database;
 import main.Enums.UserType;
-
+import main.ModifiedFrontend.StockPage;
 import javax.swing.*;
 
 /**
@@ -221,6 +221,7 @@ public class AccountPage extends javax.swing.JPanel {
                     break;
                 case USER:
                     // Call your method to switch to the Stock page.
+                    new StockPage().setVisible(true);
                     break;
             }
         } else {
