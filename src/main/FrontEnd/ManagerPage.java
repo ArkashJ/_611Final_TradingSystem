@@ -41,6 +41,9 @@ public class ManagerPage {
         // Create main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
 
+        // Add the Review Requests button back
+        JButton reviewRequestsButton = new JButton("Review Requests");
+
         // Accounts info and profits panel
         accountsInfoScrollPane = createAccountsInfoScrollPane();
         mainPanel.add(accountsInfoScrollPane, BorderLayout.WEST);
@@ -60,6 +63,7 @@ public class ManagerPage {
         buttonPanel.add(toggleMarketButton);
         JButton toggleLogButton = new JButton("Toggle Log");
         buttonPanel.add(toggleLogButton);
+        buttonPanel.add(reviewRequestsButton);
         mainPanel.add(buttonPanel, BorderLayout.NORTH);
 
         // Add an ActionListener to toggle the visibility of each section
@@ -87,6 +91,15 @@ public class ManagerPage {
                 logVisible = !logVisible;
                 logScrollPane.setVisible(logVisible);
                 refreshSize();
+            }
+        });
+
+        // Add the ActionListener for the Review Requests button back
+        reviewRequestsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RequestReviewPage requestReviewPage = new RequestReviewPage();
+                requestReviewPage.run();
             }
         });
 
