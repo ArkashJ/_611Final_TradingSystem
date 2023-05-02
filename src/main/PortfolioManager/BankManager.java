@@ -102,7 +102,7 @@ public class BankManager {
                     profits.put("realized", profits.get("realized") - price * quantity);
                 } else if (type.equals("SELL")) {
 //                    double realizedProfit = (currentPrice - price) * quantity;
-                    profits.put("realized", profits.get("realized") + currentPrice * quantity);
+                    profits.put("realized", profits.get("realized") + price * quantity);
                     profits.put("unrealized", profits.get("unrealized") - currentPrice * quantity);
                 }
             }

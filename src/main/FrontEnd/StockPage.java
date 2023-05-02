@@ -59,7 +59,7 @@ public class StockPage {
             public void actionPerformed(ActionEvent e) {
                 MarketPage marketPage = new MarketPage(accountNumber, accountPage, StockPage.this, loginPage);
                 marketPage.run();
-//                frame.dispose();
+                frame.dispose();
             }
         });
 

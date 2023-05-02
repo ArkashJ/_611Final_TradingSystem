@@ -178,7 +178,7 @@ public class Trading {
             }
         }
 
-        // 3. 在对每行做操作的时候顺便记录profit，假设customer_stocks的某行卖出了n个，那么profit就加上stockName对应的（currenPrice - price_bought） * n
+        // 3. 在对每行做操作的时候顺便记录profit，假设customer_stocks的某行卖出了n个，那么profit就加上stockName对应的（currenPrice） * n
         // 最后将profit加到account的balance上
         sql = "UPDATE accounts SET balance = balance + ? WHERE account_number = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
