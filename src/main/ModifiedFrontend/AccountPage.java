@@ -2,6 +2,11 @@ package main.ModifiedFrontend;
 
 //package com.mycompany.mavenproject1;
 
+import main.Database.Database;
+import main.Enums.UserType;
+
+import javax.swing.*;
+
 /**
  *
  * @author arkashjain
@@ -47,6 +52,11 @@ public class AccountPage extends javax.swing.JPanel {
 
         jButton2.setFont(new java.awt.Font("Gurmukhi MT", 0, 13)); // NOI18N
         jButton2.setText("***********");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setBackground(new java.awt.Color(83, 216, 251));
         jButton3.setFont(new java.awt.Font("Gurmukhi MT", 0, 36)); // NOI18N
@@ -194,24 +204,43 @@ public class AccountPage extends javax.swing.JPanel {
         );
     }// </editor-fold>
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
+    // login in-> name
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {}
+    //password
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {}
+    // hit login to login page
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        String name = jButton1.getText();
+        String password = jButton2.getText();
+        UserType userType = Database.checkLogin(name, password);
+        if (userType != null) {
+            JOptionPane.showMessageDialog(null, "Login successful!");
+            switch (userType) {
+                case ADMIN:
+                    // Call your method to switch to the Manager page.
+                    break;
+                case USER:
+                    // Call your method to switch to the Stock page.
+                    break;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Login failed. Please check your credentials.");
+        }
     }
 
+    // to the register page
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // router to Register Page
+        new RegisterPage().setVisible(true);
     }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // dummies
     }
+    //password
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // dummies
     }
 
 

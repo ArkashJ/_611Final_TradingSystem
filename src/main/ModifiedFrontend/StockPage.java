@@ -67,10 +67,10 @@ public class StockPage extends javax.swing.JPanel {
         jButton3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO FIX LOGIC
-                MarketPage marketPage = new MarketPage(accountNumber, accountPage, StockPage.this, loginPage);
-                marketPage.run();
-                frame.dispose();
+//                // TODO FIX LOGIC
+//                MarketPage marketPage = new MarketPage(accountNumber, accountPage, StockPage.this, loginPage);
+//                marketPage.run();
+//                frame.dispose();
             }
         });
 
