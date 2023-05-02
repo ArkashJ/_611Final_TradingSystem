@@ -38,7 +38,7 @@ public class MarketPage {
     public void run() {
         frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(screenSize.width, screenSize.height);
+        frame.setSize(screenSize.width/2, screenSize.height);
 
         frame.add(this.marketPanel, BorderLayout.CENTER);
         JPanel topPanel = tradeStockPanel(this.accountNumber, this.tradingAccount);
@@ -178,22 +178,6 @@ public class MarketPage {
         return panel;
     }
 
-    private void refreshMarketPanel() {
-        frame.dispose();
-        new MarketPage(accountNumber, accountPage, stockPage, loginPage).run();
-    }
-    private void refreshMarketPanel(String keyword) {
-        for (Component component : marketPanel.getComponents()) {
-            if (BorderLayout.EAST.equals(((BorderLayout) marketPanel.getLayout()).getConstraints(component))) {
-                marketPanel.remove(component);
-                break;
-            }
-        }
-        JScrollPane newStockListScrollPane = createStockListScrollPane(keyword);
-        marketPanel.add(newStockListScrollPane, BorderLayout.EAST);
-        marketPanel.revalidate();
-        marketPanel.repaint();
-    }
     private JPanel createExitPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
         JButton logoutButton = new JButton("Logout");
@@ -243,5 +227,20 @@ public class MarketPage {
         JScrollPane scrollPane = new JScrollPane(stockListPanel);
         return scrollPane;
     }
-
+    private void refreshMarketPanel() {
+        frame.dispose();
+        new MarketPage(accountNumber, accountPage, stockPage, loginPage).run();
+    }
+    private void refreshMarketPanel(String keyword) {
+        for (Component component : marketPanel.getComponents()) {
+            if (BorderLayout.EAST.equals(((BorderLayout) marketPanel.getLayout()).getConstraints(component))) {
+                marketPanel.remove(component);
+                break;
+            }
+        }
+        JScrollPane newStockListScrollPane = createStockListScrollPane(keyword);
+        marketPanel.add(newStockListScrollPane, BorderLayout.EAST);
+        marketPanel.revalidate();
+        marketPanel.repaint();
+    }
 }

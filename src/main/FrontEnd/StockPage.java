@@ -33,7 +33,7 @@ public class StockPage {
     public void run() {
         frame = new JFrame("Stock Management");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(screenSize.width, screenSize.height);
+        frame.setSize(screenSize.width/2, screenSize.height);
 
         // Get account information
         String ownerName = tradingAccount.getOwnerName();
@@ -59,7 +59,7 @@ public class StockPage {
             public void actionPerformed(ActionEvent e) {
                 MarketPage marketPage = new MarketPage(accountNumber, accountPage, StockPage.this, loginPage);
                 marketPage.run();
-                frame.dispose();
+//                frame.dispose();
             }
         });
 
@@ -70,9 +70,11 @@ public class StockPage {
 
         JPanel stockListPanel = new JPanel(new GridLayout(1, 2));
         stockListPanel.add(userStocksScrollPane);
+        JPanel sellStockPanel = createSellStockPanel();
+        frame.add(sellStockPanel, BorderLayout.SOUTH);
 //        JPanel exitButtonPanel = createExitPanel();
         frame.add(accountInfoPanel, BorderLayout.NORTH);
-        frame.add(marketButtonPanel, BorderLayout.SOUTH);
+        frame.add(marketButtonPanel, BorderLayout.EAST);
         frame.add(stockListPanel, BorderLayout.CENTER);
 //        frame.add(exitButtonPanel, BorderLayout.NORTH);
         frame.setVisible(true);
@@ -146,6 +148,62 @@ public class StockPage {
 
         return buttonPanel;
     }
+
+    private JPanel createSellStockPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(4, 4, 4, 4);
+
+        JLabel stockNameField = new JLabel("Name");
+        JTextField stockName = new JTextField(15);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(stockNameField, gbc);
+        gbc.gridy = 1;
+        panel.add(stockName, gbc);
+
+        JLabel stockQuantityField = new JLabel("Quantity");
+        JTextField stockQuantity = new JTextField(15);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        panel.add(stockQuantityField, gbc);
+        gbc.gridy = 1;
+        panel.add(stockQuantity, gbc);
+
+        JButton sellButton = new JButton("Sell");
+        sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String stockNameInput = stockName.getText();
+                int stockQuantityInput;
+
+                try {
+                    stockQuantityInput = Integer.parseInt(stockQuantity.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid quantity input. Please enter a valid number.");
+                    return;
+                }
+
+                boolean result = Trading.sellStock(tradingAccount.getAccountNumber(), stockNameInput, stockQuantityInput);
+
+                if (result) {
+                    JOptionPane.showMessageDialog(frame, "Stock sold successfully!");
+                    refresh();
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Error selling stock. Please check stock name and quantity.");
+                }
+            }
+        });
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.gridheight = 2;
+        panel.add(sellButton, gbc);
+
+        return panel;
+    }
+
 
     public void refresh() {
         this.tradingAccount = Database.getTradingAccount(accountNumber);
