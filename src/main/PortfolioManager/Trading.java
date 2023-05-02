@@ -155,7 +155,8 @@ public class Trading {
             double priceBought = stockPrices.get(i);
 
             int quantityToSell = Math.min(stockQuantity, remainingQuantityToSell);
-            profit += (currentPrice - priceBought) * quantityToSell;
+//            profit += (currentPrice - priceBought) * quantityToSell;
+            profit+= currentPrice * quantityToSell;
             remainingQuantityToSell -= quantityToSell;
 
             if (quantityToSell == stockQuantity) {
