@@ -27,39 +27,113 @@ public class ManagerPage {
         this.AdminName = AdminName;
     }
 
+//    public void run() {
+//        frame = new JFrame("Manager Page");
+//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        frame.setSize(1600, 600); // Increase width
+//
+//        // Create main panel with BorderLayout
+//        JPanel mainPanel = new JPanel(new BorderLayout());
+//
+//        // Accounts info and profits panel
+//        JScrollPane accountsInfoScrollPane = createAccountsInfoScrollPane();
+//        mainPanel.add(accountsInfoScrollPane, BorderLayout.WEST);
+//
+//        // Market stocks panel
+//        JScrollPane marketStocksScrollPane = createMarketStocksScrollPane();
+//        mainPanel.add(marketStocksScrollPane, BorderLayout.CENTER);
+//
+//        // Log panel
+//        JScrollPane logScrollPane = createLogScrollPane(); // Add log panel
+//        mainPanel.add(logScrollPane, BorderLayout.EAST);
+//
+//        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//        JButton reviewRequestsButton = new JButton("Review Requests");
+//        buttonPanel.add(reviewRequestsButton);
+//        mainPanel.add(buttonPanel, BorderLayout.NORTH);
+//
+//        // Add an ActionListener to open the RequestReviewPage
+//        reviewRequestsButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                RequestReviewPage requestReviewPage = new RequestReviewPage();
+//                requestReviewPage.run();
+//            }
+//        });
+//
+//        frame.add(mainPanel);
+//        frame.setVisible(true);
+//    }
+    private CardLayout cardLayout; // Add a CardLayout instance variable
+
     public void run() {
         frame = new JFrame("Manager Page");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1600, 600); // Increase width
 
-        // Create main panel with BorderLayout
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        // Create main panel with CardLayout
+        cardLayout = new CardLayout();
+        JPanel mainPanel = new JPanel(cardLayout);
 
         // Accounts info and profits panel
+        JPanel accountsInfoPage = new JPanel(new BorderLayout());
         JScrollPane accountsInfoScrollPane = createAccountsInfoScrollPane();
-        mainPanel.add(accountsInfoScrollPane, BorderLayout.WEST);
+        accountsInfoPage.add(accountsInfoScrollPane, BorderLayout.CENTER);
+        mainPanel.add(accountsInfoPage, "AccountsInfo");
 
         // Market stocks panel
+        JPanel marketStocksPage = new JPanel(new BorderLayout());
         JScrollPane marketStocksScrollPane = createMarketStocksScrollPane();
-        mainPanel.add(marketStocksScrollPane, BorderLayout.CENTER);
+        marketStocksPage.add(marketStocksScrollPane, BorderLayout.CENTER);
+        mainPanel.add(marketStocksPage, "MarketStocks");
 
         // Log panel
+        JPanel logPage = new JPanel(new BorderLayout());
         JScrollPane logScrollPane = createLogScrollPane(); // Add log panel
-        mainPanel.add(logScrollPane, BorderLayout.EAST);
+        logPage.add(logScrollPane, BorderLayout.CENTER);
+        mainPanel.add(logPage, "Log");
 
+        // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton reviewRequestsButton = new JButton("Review Requests");
-        buttonPanel.add(reviewRequestsButton);
-        mainPanel.add(buttonPanel, BorderLayout.NORTH);
+        JButton accountsInfoButton = new JButton("Accounts Info");
+        JButton marketStocksButton = new JButton("Market Stocks");
+        JButton logButton = new JButton("Log");
 
-        // Add an ActionListener to open the RequestReviewPage
-        reviewRequestsButton.addActionListener(new ActionListener() {
+        buttonPanel.add(accountsInfoButton);
+        buttonPanel.add(marketStocksButton);
+        buttonPanel.add(logButton);
+
+        accountsInfoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RequestReviewPage requestReviewPage = new RequestReviewPage();
-                requestReviewPage.run();
+                cardLayout.show(mainPanel, "AccountsInfo");
             }
         });
+
+        marketStocksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(mainPanel, "MarketStocks");
+            }
+        });
+
+        logButton.addActionListener(new ActionListener() {
+            private boolean logVisible = true;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (logVisible) {
+                    cardLayout.show(mainPanel, "Log");
+                } else {
+                    cardLayout.show(mainPanel, "AccountsInfo");
+                }
+                logVisible = !logVisible;
+            }
+        });
+
+        accountsInfoPage.add(buttonPanel, BorderLayout.NORTH);
+        marketStocksPage.add(buttonPanel, BorderLayout.NORTH);
+        logPage.add(buttonPanel, BorderLayout.NORTH);
 
         frame.add(mainPanel);
         frame.setVisible(true);
