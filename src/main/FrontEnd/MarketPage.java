@@ -6,6 +6,8 @@ import main.PortfolioManager.Trading;
 import main.Stocks.*;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -38,7 +40,7 @@ public class MarketPage {
     public void run() {
         frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(screenSize.width/2, screenSize.height);
+        frame.setSize(screenSize.width, screenSize.height);
 
         frame.add(this.marketPanel, BorderLayout.CENTER);
         JPanel topPanel = tradeStockPanel(this.accountNumber, this.tradingAccount);
@@ -62,27 +64,40 @@ public class MarketPage {
 
     private JScrollPane createStockListScrollPane() {
         List<MarketStock> marketStocks = Market.getStocks();
+        Object data [][] = new Object[marketStocks.size()][3];
 
         JPanel stockListPanel = new JPanel();
         stockListPanel.setLayout(new BoxLayout(stockListPanel, BoxLayout.Y_AXIS));
             for (MarketStock stock : marketStocks) {
-                JPanel stockPanel = createMarketStockPanel(stock);
-                stockListPanel.add(stockPanel);
+                Object [] items = createMarketStockPanel(stock);
+                data[marketStocks.indexOf(stock)] = items;
             }
 
-        JScrollPane scrollPane = new JScrollPane(stockListPanel);
+        Object[] columnNames = {"Stock Name", "Quantity", "Current Price ($)"};
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+
+
+        // Create the table
+        JTable table = new JTable(model);
+        table.setShowVerticalLines(true);
+        table.setShowHorizontalLines(true);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+
+        // Add the table to a scroll pane
+        JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;
     }
 
-    private JPanel createMarketStockPanel(MarketStock stock) {
+    private Object [] createMarketStockPanel(MarketStock stock) {
         JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         String stockName = stock.getStockName();
         Stock stock_orgin=Database.getStock(stockName);
 
-        JLabel stockLabel = new JLabel(stockName+" | Quantity: " + stock.getQuantity() + " | Price: " + stock_orgin.getCurrentPrice());
-        stockPanel.add(stockLabel);
+        Object [] items = {stockName,stock.getQuantity(),stock_orgin.getCurrentPrice()};
 
-        return stockPanel;
+        return items;
     }
 
     private JPanel tradeStockPanel(int accountNumber, TradingAccount tradingAccount){
@@ -215,16 +230,30 @@ public class MarketPage {
     }
 
     private JScrollPane createStockListScrollPane(String keyword) {
-        List<MarketStock> marketStocks = Market.getStocks(keyword);
+        List<MarketStock> marketStocks = Market.getStocks();
+        Object data [][] = new Object[marketStocks.size()][3];
 
         JPanel stockListPanel = new JPanel();
         stockListPanel.setLayout(new BoxLayout(stockListPanel, BoxLayout.Y_AXIS));
         for (MarketStock stock : marketStocks) {
-            JPanel stockPanel = createMarketStockPanel(stock);
-            stockListPanel.add(stockPanel);
+            Object [] items = createMarketStockPanel(stock);
+            data[marketStocks.indexOf(stock)] = items;
         }
 
-        JScrollPane scrollPane = new JScrollPane(stockListPanel);
+        Object[] columnNames = {"Stock Name", "Quantity", "Current Price ($)"};
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+
+
+        // Create the table
+        JTable table = new JTable(model);
+        table.setShowVerticalLines(true);
+        table.setShowHorizontalLines(true);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+
+        // Add the table to a scroll pane
+        JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;
     }
     private void refreshMarketPanel() {
