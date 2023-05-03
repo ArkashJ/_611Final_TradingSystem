@@ -7,6 +7,8 @@ import main.Stocks.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +35,7 @@ public class StockPage {
     public void run() {
         frame = new JFrame("Stock Management");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(screenSize.width/2, screenSize.height);
+        frame.setSize(screenSize.width, screenSize.height);
 
         // Get account information
         String ownerName = tradingAccount.getOwnerName();
@@ -82,10 +84,10 @@ public class StockPage {
 
     private JScrollPane createStockListScrollPane(boolean isUserStocks) {
         List<CustomerStock> userHoldings = tradingAccount.getHoldings();
-        List<MarketStock> marketStocks = Market.getStocks();
 
         JPanel stockListPanel = new JPanel();
         stockListPanel.setLayout(new BoxLayout(stockListPanel, BoxLayout.Y_AXIS));
+        Object data [][] = new Object[userHoldings.size()][3];
 
         if (isUserStocks) {
             HashMap<String,Integer> stock_numbers = new HashMap<>();
@@ -97,31 +99,46 @@ public class StockPage {
                     stock_numbers.put(stockName, holding.getStockNumber());
                 }
             }
+            int i =0;
             for(Map.Entry<String, Integer> entry : stock_numbers.entrySet()) {
                 String stockName = entry.getKey();
                 int stockNumber = entry.getValue();
                 CustomerStock holding = new CustomerStock(stockName, stockNumber, 0);
-                JPanel stockPanel = createUserStockPanel(holding);
-                stockListPanel.add(stockPanel);
+                Object [] stock = {holding.getStockName(),holding.getStockNumber(),holding.getProfit()};
+                data[i] = stock;
+                i++;
             }
         }
 
-        JScrollPane scrollPane = new JScrollPane(stockListPanel);
+        Object[] columnNames = {"Stock Name", "Quantity", "Price ($)"};
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+
+
+        // Create the table
+        JTable table = new JTable(model);
+        table.setShowVerticalLines(true);
+        table.setShowHorizontalLines(true);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+
+        // Add the table to a scroll pane
+        JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;
     }
 
-    private JPanel createUserStockPanel(CustomerStock holding) {
+    private Object[] createUserStockPanel(CustomerStock holding) {
         JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         String stockName = holding.getStockName();
         int stockNumber = holding.getStockNumber();
         double boughtPrice = holding.getStockBoughtPrice();
         double profit = tradingAccount.getProfitForStock(stockName);
 
-        JLabel stockLabel = new JLabel(stockName + " | Quantity: " + stockNumber + " | Profit: " + profit);
-        stockPanel.add(stockLabel);
+        Object [] items = {stockName,stockNumber,profit};
 
-        return stockPanel;
+        return items;
     }
+
 
     private JPanel createExitPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
