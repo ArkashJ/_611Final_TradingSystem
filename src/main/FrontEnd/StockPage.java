@@ -50,7 +50,7 @@ public class StockPage {
                         + " ( expect:  " + profit.get("unrealized") + " )"
                 );
         accountInfoPanel.add(accountInfoLabel);
-
+        checkAndNotifyOptionalAccountEligibility();  // 在run方法中添加此行
         // Create main panel with BorderLayout
 
         JButton enterMarketButton = new JButton("Enter market");
@@ -204,6 +204,12 @@ public class StockPage {
         return panel;
     }
 
+    private void checkAndNotifyOptionalAccountEligibility() {
+        double profit = tradingAccount.getProfitsForAccount().get("realized");
+        if (profit > 10000) {
+            JOptionPane.showMessageDialog(frame, "Congratulations! Your profit is over 10,000. You are eligible to open an Optional account.");
+        }
+    }
 
     public void refresh() {
         this.tradingAccount = Database.getTradingAccount(accountNumber);

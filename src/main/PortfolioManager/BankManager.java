@@ -1,5 +1,6 @@
 package main.PortfolioManager;
 
+import main.Accounts.TradingAccount;
 import main.Database.Database;
 import main.Stocks.Stock;
 
@@ -70,10 +71,32 @@ public class BankManager {
         return profits;
     }
 
+
+    /**
+     * @Description: Calculate the unrealized and realized profits for a specific user
+     * @return (if realized -> profit)
+     */
+    public static Map<String, Double> calculateProfits(String userName) {
+        List<TradingAccount> accounts = Database.getTradingAccountsForUser(userName);
+        double totalRealizedProfit = 0;
+        double totalUnrealizedProfit = 0;
+        for (TradingAccount account : accounts) {
+            int accountNumber = account.getAccountNumber();
+            Map<String, Double> profit = calculateProfits(accountNumber);
+            totalRealizedProfit += profit.get("realized");
+            totalUnrealizedProfit += profit.get("unrealized");
+        }
+        Map<String, Double> totalProfit = new HashMap<>();
+        totalProfit.put("realized", totalRealizedProfit);
+        totalProfit.put("unrealized", totalUnrealizedProfit);
+
+        return totalProfit;
+    }
     /**
      * @Description: Calculate the unrealized and realized profits for a specific account
      * @return (if realized -> profit)
      */
+
     public static Map<String, Double> calculateProfits(int accountNumber) {
         Map<String, Double> profits = new HashMap<>();
         profits.put("unrealized", 0.0);
