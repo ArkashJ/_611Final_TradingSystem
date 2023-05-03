@@ -19,7 +19,6 @@ public class Main {
     public static void main(String[] args) throws SQLException {
 
 //        Initiator.initiateAll();
-
         //build the ManagerPage
 
         SwingUtilities.invokeLater(() -> {

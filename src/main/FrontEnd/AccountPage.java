@@ -26,12 +26,12 @@ public class AccountPage {
 
     public AccountPage(String userName,UserLoginRegistration us) {
         this.userName = userName;
+        Map<String, Double> profits = BankManager.calculateProfits(userName);
+        double realized_profit=profits.get("realized");
+        if(realized_profit>=10000) {isEiligibleForOption=true;}
         this.loginPage=us;
         this.viewAccountsPanel = createViewAccountsPanel();
         this.createCreateAccountPanel = createCreateAccountPanel();
-        Map<String, Double> profits = BankManager.calculateProfits(userName);
-        double realized_profit=profits.get("realized_profit");
-        if(realized_profit>=10000) {isEiligibleForOption=true;}
     }
 
     public void run() {
@@ -45,7 +45,9 @@ public class AccountPage {
         tabbedPane.addTab("Create Account", this.createCreateAccountPanel);
         frame.add(tabbedPane,BorderLayout.CENTER);
         frame.add(createLogoutPanel(), BorderLayout.NORTH);
-        checkAndNotifyOptionalAccountEligibility(0);
+        if(isEiligibleForOption) {
+            JOptionPane.showMessageDialog(frame, "Congratulations! Your total realized profit is over 10,000. You are eligible to open an Optional account.");
+        }
         frame.setVisible(true);
     }
 
@@ -132,7 +134,7 @@ public class AccountPage {
 
             // Add account type label and combo box to the panel
             JLabel accountTypeLabel = new JLabel("Account Type:");
-            String[] accountTypes = {"Trading", "Optional"};
+            String[] accountTypes = {"Trade", "Options"};
             JComboBox<String> accountTypeComboBox = new JComboBox<>(accountTypes);
 
             gbc.gridx = 0;
@@ -187,18 +189,6 @@ public class AccountPage {
         });
 
         return panel;
-    }
-
-    private boolean checkAndNotifyOptionalAccountEligibility(double profit) {
-//        Map<String, Double> profits = BankManager.calculateProfits(userName);
-//        double realized_profit=profits.get("realized_profit");
-        if (profit > 10000) {
-            JOptionPane.showMessageDialog(frame, "Congratulations! Your total realized profit is over 10,000. You are eligible to open an Optional account.");
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
 }

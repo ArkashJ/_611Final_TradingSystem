@@ -23,7 +23,7 @@ public class RequestReviewPage {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Create a table to display account requests
-        DefaultTableModel tableModel = new DefaultTableModel(new String[]{"ID", "User Name", "Initial Balance"}, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(new String[]{"ID", "User Name", "Initial Balance","account type"}, 0);
         JTable requestTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(requestTable);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
