@@ -2,6 +2,10 @@ package main.Persons;
 
 import main.Enums.UserType;
 
+/*
+    * @Description: Customer Factor takes the type of the customer and creates a new customer
+    * @Methods: createCustomer(String type,String userName, String password,long accountNumber, UserType accountType)
+ */
 public class CustomerFactory {
     // Factory design pattern: create Client, Manager, or Person
     public static Person createCustomer(String type,String userName, String password,long accountNumber, UserType accountType) {
