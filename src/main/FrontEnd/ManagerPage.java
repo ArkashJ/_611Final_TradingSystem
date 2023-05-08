@@ -19,6 +19,18 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * @Description: This class is used to create a Manager Page
+ * This class is part of the main.FrontEnd package and provides an interface for the manager/administrator.
+ * The manager can view and manage accounts, update stock prices in the market, review account requests,
+ * and view transaction logs. The interface also allows the manager to toggle the visibility of different
+ * sections within the page.
+ *
+ * Dependencies: main.Accounts.TradingAccount, main.Database.Database, main.PortfolioManager.BankManager,
+ * main.Stocks.Market, main.Stocks.MarketStock, main.Stocks.Stock
+ */
+
 public class ManagerPage {
     private JFrame frame;
     private String AdminName;

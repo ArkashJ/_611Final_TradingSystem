@@ -7,6 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/*
+    * @Description: This class represents a log system, a singleton class
+    * @Methods: logTransaction(int accountNumber, String stockName, double stockPrice, int quantity, String type) : log a transaction
+ */
+
 public class logSystem {
     //singleton
     private static logSystem instance = new logSystem();
@@ -18,7 +23,7 @@ public class logSystem {
 
     // log a transaction
     public static boolean logTransaction(int accountNumber, String stockName, double stockPrice, int quantity, String type) {
-        //todo: if the amount is over 10k, inform everyone
+        //if the amount is over 10k, inform everyone
         String sql = "INSERT INTO log (account_number, stock, price, quantity, type, time) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn= Database.getConnection();
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
