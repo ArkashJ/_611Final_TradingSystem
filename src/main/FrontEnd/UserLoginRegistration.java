@@ -103,6 +103,8 @@ public class UserLoginRegistration {
 
     private JPanel createRegistrationPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.PINK); // Set the background color to blue
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
 
@@ -115,6 +117,18 @@ public class UserLoginRegistration {
         JLabel accountNumberLabel = new JLabel("Account Number:");
         JTextField accountNumberField = new JTextField(20);
         JButton registerButton = new JButton("Register");
+
+        // Set the font size to 20 for labels, text fields, combo box, and button
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+        nameLabel.setFont(font);
+        nameField.setFont(font);
+        passwordLabel.setFont(font);
+        passwordField.setFont(font);
+        roleLabel.setFont(font);
+        roleComboBox.setFont(font);
+        accountNumberLabel.setFont(font);
+        accountNumberField.setFont(font);
+        registerButton.setFont(font);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -157,6 +171,7 @@ public class UserLoginRegistration {
 
         return panel;
     }
+
 
     public void switchToAccountPage(String ownerName) {
         frame.dispose();
