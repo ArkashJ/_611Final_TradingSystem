@@ -188,7 +188,9 @@ public class MarketPage {
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, true);
                 } catch (NumberFormatException exception) {
-                    JOptionPane.showMessageDialog(null, "Invalid quantity");
+                    JOptionPane.showMessageDialog(null,
+                            "<html><span style='font-size: 15pt;'>Invalid quantity</span></html>", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
         });
@@ -203,7 +205,8 @@ public class MarketPage {
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, false);
                 } catch (NumberFormatException exception) {
-                    JOptionPane.showMessageDialog(null, "Invalid quantity");
+                    JOptionPane.showMessageDialog(null,
+                            "<html><span style='font-size: 15pt;'>Invalid quantity</span></html>", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
