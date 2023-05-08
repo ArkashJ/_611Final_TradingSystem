@@ -30,17 +30,22 @@ yangjx@bu.edu
 ## Files
 |
 | > main
-    -> Accounts
+## -> Accounts
         |> Account.java
         |> ITrading.java
         |> OptionsAccount.java
         |> TradingAccount.java
         |> TradingAccountFactory.java
-    -> Database
+
+##   -> Database
         |> Database.java
-    -> Enums
+
+
+##    -> Enums
         |> UserType.java
-    -> ModifiedFrontend
+
+
+##    -> ModifiedFrontend
         |> AccManagement.java
         |> Explanations.md
         |> AccountPage.java
@@ -49,36 +54,52 @@ yangjx@bu.edu
         |> RegisterPage.java
         |> StockMarket.java
         |> StockPage.java
-     -> Initiator
+
+
+##     -> Initiator
         |> Initiator.java
-     -> Log
+
+
+##     -> Log
         |> logSystem.java
-     -> Persons
+
+
+##     -> Persons
         |> Client.java
         |> CustomerFactory.java
         |> Person.java
         |> Manager.java
         |> IPerson.java
-     -> PotfolioManager
+
+
+##     -> PotfolioManager
         |> BankManager.java
         |> Trading.java
-     -> Stocks
+
+
+##     -> Stocks
         |> CustomerStock.java
         |> CustomerStocks.java
         |> Market.java
         |> MarketStock.java
         |> Stock.java
         |> StockFactory.java
-     -> txtFiles
+
+
+##     -> txtFiles
         |> accounts.txt
         |> stocks.txt
         |> users.txt
         |> customer_stocks.txt
         |> Description.md
-     -> Utils
+
+
+##     -> Utils
         |> Profit_Loss.java
         |> Notify.java
-    -> Main.java
+
+
+##    -> Main.java
 
 
 ### Workflow:
