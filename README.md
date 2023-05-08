@@ -241,6 +241,12 @@ We have used the following design patterns:
 3. Strategy Pattern - Person and Trading interfaces are examples of horizontal inheritance
 
 
+### Extendability
+
+1. Future teams can improve the UI by simply changing the backend connections from the old one to the new one
+2. Options account can be added to the factory and options can easily be traded by adding classed in stocks, making a table in the database and adding a new page in the frontend
+3. We realize that the database class can be refractored to make service classes. Future teams can make those classes, initialize DB connections and simply copy paste our code there for it to work.
+
 ## How to compile and run
 
 These are my current versions:
