@@ -60,6 +60,8 @@ public class AccountPage{
 
     private JPanel createViewAccountsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.PINK);
+
         List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
 
         JPanel accountListPanel = new JPanel();
@@ -67,11 +69,15 @@ public class AccountPage{
 
         for (TradingAccount account : accounts) {
             JPanel accountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            accountPanel.setBackground(Color.PINK);
 
             JLabel accountLabel = new JLabel("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
+            accountLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
+            accountLabel.setForeground(Color.BLACK);
             accountPanel.add(accountLabel);
 
             JButton enterButton = new JButton("Enter");
+            enterButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
             enterButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
