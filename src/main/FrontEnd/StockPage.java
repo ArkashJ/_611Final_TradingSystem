@@ -59,7 +59,7 @@ public class StockPage {
         // Get account information
         String ownerName = tradingAccount.getOwnerName();
         double balance = tradingAccount.getBalance();
-        Map<String,Double> profit = tradingAccount.getProfitsForAccount();
+        Map<String, Double> profit = tradingAccount.getProfitsForAccount();
 
         // Create account info panel
         JPanel accountInfoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -68,11 +68,11 @@ public class StockPage {
                         + " | Account: " + accountNumber
                         + " | Balance: " + balance
                         + " | Profit: " + profit.get("realized")
-                        + " ( expect:  " + profit.get("unrealized") + " )"
-                );
+                        + " ( Unrealized:  " + profit.get("unrealized") + " )"
+        );
+        accountInfoLabel.setFont(accountInfoLabel.getFont().deriveFont(Font.ITALIC, 16f));
         accountInfoPanel.add(accountInfoLabel);
-        checkAndNotifyOptionalAccountEligibility();  // 在run方法中添加此行
-        // Create main panel with BorderLayout
+        checkAndNotifyOptionalAccountEligibility();
 
         JButton enterMarketButton = new JButton("Enter market");
         enterMarketButton.addActionListener(new ActionListener() {
@@ -93,13 +93,12 @@ public class StockPage {
         stockListPanel.add(userStocksScrollPane);
         JPanel sellStockPanel = createSellStockPanel();
         frame.add(sellStockPanel, BorderLayout.SOUTH);
-//        JPanel exitButtonPanel = createExitPanel();
         frame.add(accountInfoPanel, BorderLayout.NORTH);
         frame.add(marketButtonPanel, BorderLayout.EAST);
         frame.add(stockListPanel, BorderLayout.CENTER);
-//        frame.add(exitButtonPanel, BorderLayout.NORTH);
         frame.setVisible(true);
     }
+
 
     private JScrollPane createStockListScrollPane(boolean isUserStocks) {
         List<CustomerStock> userHoldings = tradingAccount.getHoldings();
