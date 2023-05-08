@@ -8,6 +8,10 @@ import main.Stocks.MarketStock;
 import main.Stocks.Stock;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +44,7 @@ public class ManagerPage {
     private JScrollPane accountsInfoScrollPane;
     private JScrollPane marketStocksScrollPane;
     private JScrollPane logScrollPane;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     public ManagerPage(String AdminName) {
         this.AdminName = AdminName;
@@ -48,7 +53,7 @@ public class ManagerPage {
     public void run() {
         frame = new JFrame("Manager Page");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1600, 600);
+        frame.setSize(screenSize.width, screenSize.height);
 
         // Create main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -130,31 +135,65 @@ public class ManagerPage {
 
         String sql = "SELECT * FROM accounts WHERE account_type = 'TRADE';";
         Connection conn = Database.getConnection();
-        try(PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             ResultSet resultSet = pstmt.executeQuery();
+
+            // Create the table model
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Name");
+            model.addColumn("Account");
+            model.addColumn("Balance");
+            model.addColumn("Realized Profit");
+            model.addColumn("Unrealized Profit");
+
             while (resultSet.next()) {
                 String ownerName = resultSet.getString("user_name");
                 int accountNumber = resultSet.getInt("account_number");
                 double balance = resultSet.getDouble("balance");
-                Map<String,Double> profits = BankManager.calculateProfits(accountNumber);
-                JPanel accountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                JLabel accountInfoLabel = new JLabel(
-                        "Name: " + ownerName
-                                + " | Account: " + accountNumber
-                                + " | Balance: " + balance
-                                + " | Profit: " + profits.get("realized")
-                                + "( expect : " + profits.get("unrealized") + ")"
-                );
-                accountPanel.add(accountInfoLabel);
-                accountsInfoPanel.add(accountPanel);
+                Map<String, Double> profits = BankManager.calculateProfits(accountNumber);
+
+                // Add row to the table model
+                model.addRow(new Object[] {
+                        ownerName,
+                        accountNumber,
+                        balance,
+                        profits.get("realized"),
+                        profits.get("unrealized")
+                });
             }
+
+            // Create the table
+            JTable table = new JTable(model);
+            table.setShowVerticalLines(true);
+            table.setShowHorizontalLines(true);
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+            table.setDefaultRenderer(Object.class, centerRenderer);
+
+            TableColumnModel columnModel = table.getColumnModel();
+
+            TableColumn balanceColumn = columnModel.getColumn(2);
+            int bPreferredWidth = 150; // Set your preferred width for the "Time" column
+            balanceColumn.setPreferredWidth(bPreferredWidth);
+
+            TableColumn profitColumn = columnModel.getColumn(3);
+            int pPreferredWidth = 150; // Set your preferred width for the "Time" column
+            profitColumn.setPreferredWidth(pPreferredWidth);
+
+            TableColumn uprofitColumn = columnModel.getColumn(4);
+            int uPreferredWidth = 150; // Set your preferred width for the "Time" column
+            uprofitColumn.setPreferredWidth(uPreferredWidth);
+
+            // Add the table to a scroll pane
+            JScrollPane scrollPane = new JScrollPane(table);
+            return scrollPane;
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        JScrollPane scrollPane = new JScrollPane(accountsInfoPanel);
-        return scrollPane;
+        return null;
     }
+
 
     private JScrollPane createMarketStocksScrollPane() {
         List<MarketStock> marketStocks = Market.getStocks();
@@ -205,8 +244,13 @@ public class ManagerPage {
     }
 
     private JScrollPane createLogScrollPane() {
-        JPanel logPanel = new JPanel();
-        logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.Y_AXIS));
+        // Create the table model
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Account");
+        model.addColumn("Stock");
+        model.addColumn("Price");
+        model.addColumn("Quantity");
+        model.addColumn("Time");
 
         String sql = "SELECT * FROM log ORDER BY time DESC;";
         Connection conn = Database.getConnection();
@@ -221,24 +265,40 @@ public class ManagerPage {
                 int quantity = resultSet.getInt("quantity");
                 String time = sdf.format(resultSet.getTimestamp("time"));
 
-                JPanel logEntryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                JLabel logEntryLabel = new JLabel(
-                        "Account: " + accountNumber
-                                + " | Stock: " + stock
-                                + " | Price: " + price
-                                + " | Quantity: " + quantity
-                                + " | Time: " + time
-                );
-                logEntryPanel.add(logEntryLabel);
-                logPanel.add(logEntryPanel);
+                // Add row to the table model
+                model.addRow(new Object[]{
+                        accountNumber,
+                        stock,
+                        price,
+                        quantity,
+                        time
+                });
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        JScrollPane scrollPane = new JScrollPane(logPanel);
+        // Create the table
+        JTable table = new JTable(model);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Ensure horizontal scroll bar appears
+        table.setShowVerticalLines(true);
+        table.setShowHorizontalLines(true);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+
+        // Adjust column width for "Time" column
+        TableColumnModel columnModel = table.getColumnModel();
+        TableColumn timeColumn = columnModel.getColumn(4);
+        int preferredWidth = 200; // Set your preferred width for the "Time" column
+        timeColumn.setPreferredWidth(preferredWidth);
+
+        // Add the table to a scroll pane
+        JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;
     }
+
+
 
     public void refresh() {
         frame.dispose();
