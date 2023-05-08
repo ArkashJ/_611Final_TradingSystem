@@ -8,6 +8,7 @@ import main.Stocks.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -81,18 +82,17 @@ public class MarketPage {
 
     private JScrollPane createStockListScrollPane() {
         List<MarketStock> marketStocks = Market.getStocks();
-        Object data [][] = new Object[marketStocks.size()][3];
+        Object data[][] = new Object[marketStocks.size()][3];
 
         JPanel stockListPanel = new JPanel();
         stockListPanel.setLayout(new BoxLayout(stockListPanel, BoxLayout.Y_AXIS));
-            for (MarketStock stock : marketStocks) {
-                Object [] items = createMarketStockPanel(stock);
-                data[marketStocks.indexOf(stock)] = items;
-            }
+        for (MarketStock stock : marketStocks) {
+            Object[] items = createMarketStockPanel(stock);
+            data[marketStocks.indexOf(stock)] = items;
+        }
 
         Object[] columnNames = {"Stock Name", "Quantity", "Current Price ($)"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
-
 
         // Create the table
         JTable table = new JTable(model);
@@ -102,10 +102,20 @@ public class MarketPage {
         centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         table.setDefaultRenderer(Object.class, centerRenderer);
 
+        // Set the font size for column names
+        JTableHeader tableHeader = table.getTableHeader();
+        Font headerFont = tableHeader.getFont().deriveFont(Font.BOLD, 18f);
+        tableHeader.setFont(headerFont);
+
+        // Set the font size for column values
+        Font cellFont = table.getFont().deriveFont(Font.PLAIN, 15f);
+        table.setFont(cellFont);
+
         // Add the table to a scroll pane
         JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;
     }
+
 
     private Object [] createMarketStockPanel(MarketStock stock) {
         JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
