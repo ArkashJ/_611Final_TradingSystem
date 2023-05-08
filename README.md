@@ -11,6 +11,12 @@ This project is a simulation of a trading system which has the following feature
 
 All of this is displayed in a GUI built on Java Swing
 
+### Equal Work Division
+
+We did the work in sprints and you can clearly see from our commit history that we divided the work evenly
+<img width="812" alt="Screenshot 2023-05-08 at 7 55 06 PM" src="https://user-images.githubusercontent.com/86805856/236961202-92bc3774-4f8f-46da-8e3d-2d1fdf4d23ea.png">
+
+
 ## Presentation
 A Presentation explaining everything we did
 [Stock Trading System.pdf](https://github.com/ArkashJ/_611Final_TradingSystem/files/11422753/Stock.Trading.System.pdf)
