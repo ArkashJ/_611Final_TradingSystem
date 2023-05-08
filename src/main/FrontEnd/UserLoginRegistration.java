@@ -42,6 +42,8 @@ public class UserLoginRegistration {
 
     private JPanel createLoginPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.CYAN); // Set the background color to blue
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
 
@@ -50,6 +52,14 @@ public class UserLoginRegistration {
         JLabel passwordLabel = new JLabel("Password:");
         JPasswordField passwordField = new JPasswordField(20);
         JButton loginButton = new JButton("Login");
+
+        // Set the font size to 20 for labels, text fields, and button
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+        nameLabel.setFont(font);
+        nameField.setFont(font);
+        passwordLabel.setFont(font);
+        passwordField.setFont(font);
+        loginButton.setFont(font);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -89,6 +99,7 @@ public class UserLoginRegistration {
 
         return panel;
     }
+
 
     private JPanel createRegistrationPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
