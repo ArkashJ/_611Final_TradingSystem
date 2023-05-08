@@ -106,24 +106,24 @@ public class StockPage {
 
         JPanel stockListPanel = new JPanel();
         stockListPanel.setLayout(new BoxLayout(stockListPanel, BoxLayout.Y_AXIS));
-        Object data [][] = new Object[userHoldings.size()][3];
+        Object data[][] = new Object[userHoldings.size()][3];
 
         if (isUserStocks) {
-            HashMap<String,Integer> stock_numbers = new HashMap<>();
+            HashMap<String, Integer> stock_numbers = new HashMap<>();
             for (CustomerStock holding : userHoldings) {
                 String stockName = holding.getStockName();
-                if(stock_numbers.containsKey(stockName)) {
+                if (stock_numbers.containsKey(stockName)) {
                     stock_numbers.put(stockName, stock_numbers.get(stockName) + holding.getStockNumber());
                 } else {
                     stock_numbers.put(stockName, holding.getStockNumber());
                 }
             }
-            int i =0;
-            for(Map.Entry<String, Integer> entry : stock_numbers.entrySet()) {
+            int i = 0;
+            for (Map.Entry<String, Integer> entry : stock_numbers.entrySet()) {
                 String stockName = entry.getKey();
                 int stockNumber = entry.getValue();
                 CustomerStock holding = new CustomerStock(stockName, stockNumber, 0);
-                Object [] stock = {holding.getStockName(),holding.getStockNumber(),holding.getProfit()};
+                Object[] stock = {holding.getStockName(), holding.getStockNumber(), holding.getProfit()};
                 data[i] = stock;
                 i++;
             }
@@ -131,7 +131,6 @@ public class StockPage {
 
         Object[] columnNames = {"Stock Name", "Quantity", "Price ($)"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
-
 
         // Create the table
         JTable table = new JTable(model);
@@ -141,10 +140,20 @@ public class StockPage {
         centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         table.setDefaultRenderer(Object.class, centerRenderer);
 
+        // Set font size of the table
+        Font tableFont = table.getFont().deriveFont(15f);
+        table.setFont(tableFont);
+
+        // Set font size of the column names
+        Font columnNameFont = table.getTableHeader().getFont().deriveFont(18f);
+        table.getTableHeader().setFont(columnNameFont);
+
         // Add the table to a scroll pane
         JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;
     }
+
+
 
     private Object[] createUserStockPanel(CustomerStock holding) {
         JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -243,6 +252,7 @@ public class StockPage {
     private void checkAndNotifyOptionalAccountEligibility() {
         double profit = tradingAccount.getProfitsForAccount().get("realized");
         if (profit > 10000) {
+
             JOptionPane.showMessageDialog(frame, "Congratulations! Your profit is over 10,000. You are eligible to open an Optional account.");
         }
     }
