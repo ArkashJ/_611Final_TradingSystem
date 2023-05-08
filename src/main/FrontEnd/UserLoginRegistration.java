@@ -13,8 +13,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
- * todo : Add a authentication system for Manager to approve them to create a account
- *        give two login page to demonstrate the difference between Manager and User
+* @Description: This class is used to create a User Login & Registration Page
+* This class is part of the main.FrontEnd package and provides an interface for the user to login or register.
+* The interface allows the user to login with their username and password, or register a new account.
+* The user can also choose to login as an admin.
+* Dependencies: main.Database.Database, main.Enums.UserType, java.sql.* and javax.swing.*
  */
 
 public class UserLoginRegistration {

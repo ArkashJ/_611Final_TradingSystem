@@ -16,6 +16,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+
+- The StockPage class represents the user's stock management page in the trading application.
+This page allows users to view their stock holdings, sell stocks, and navigate to the market
+and account pages. The class uses the Java Swing library to create and manage the GUI components.
+
+    - Key components of the class include:
+- Constructor: Initializes the stock management page with account information.
+- run(): Sets up the main JFrame for the stock management page and makes it visible.
+- createStockListScrollPane(): Creates a JScrollPane for displaying the user's stock holdings.
+- createExitPanel(): Creates a panel with buttons to logout and navigate to the account page.
+- createSellStockPanel(): Creates a panel for selling stocks.
+- checkAndNotifyOptionalAccountEligibility(): Checks if the user is eligible for an optional account.
+- refresh(): Refreshes the stock management page to reflect any changes.
+
+- The class interacts with the TradingAccount, Trading, MarketPage, and Database classes to manage
+user stocks and perform stock-related actions.
+*/
+
 public class StockPage {
     private int accountNumber;
     private AccountPage accountPage;

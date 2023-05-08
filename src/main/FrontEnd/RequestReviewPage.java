@@ -12,6 +12,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+
+-   The RequestReviewPage class represents a graphical user interface (GUI) for reviewing account
+    requests in a trading application. It allows administrators to view pending account requests,
+    approve or reject them, and provides real-time updates to the displayed request list. The class
+    uses the Java Swing library to create and manage the GUI components.
+
+    -   Key components of the class include:
+-   Constructor: Initializes the JFrame for the request review page.
+-   run(): Sets up the main JFrame for the request review page and makes it visible.
+-   loadAccountRequests(): Populates the JTable with account requests from the database.
+-   actionPerformed(): Handles the actionPerformed events for approve and reject buttons.
+
+-   The class interacts with the Database class to create new trading accounts, remove approved or
+rejected requests, and load pending account requests.
+*/
+
 public class RequestReviewPage {
     private JFrame frame;
 

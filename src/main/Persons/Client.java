@@ -11,7 +11,7 @@ import java.util.Random;
 
 /*
     * @Description: This class represents a client, a subclass of Person
-    * @Methods:createAccount()      : create a new account
+    * @Methods:createAccount() c     : create a new account
     *          displayAccounts()    : display all accounts
     *          getTradingAccounts() : get all trading accounts
     *          getOptionsAccounts() : get all options accounts
