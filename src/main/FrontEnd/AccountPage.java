@@ -48,15 +48,16 @@ public class AccountPage{
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("View Accounts", this.viewAccountsPanel);
-        tabbedPane.addTab("Create Account", this.createCreateAccountPanel);
-        frame.add(tabbedPane,BorderLayout.CENTER);
+        tabbedPane.addTab("<html><body><i><font size='5'>View Accounts</font></i></body></html>", this.viewAccountsPanel);
+        tabbedPane.addTab("<html><body><i><font size='5'>Create Account</font></i></body></html>", this.createCreateAccountPanel);
+        frame.add(tabbedPane, BorderLayout.CENTER);
         frame.add(createLogoutPanel(), BorderLayout.NORTH);
-        if(isEiligibleForOption) {
+        if (isEiligibleForOption) {
             JOptionPane.showMessageDialog(frame, "Congratulations! Your total realized profit is over 10,000. You are eligible to open an Optional account.");
         }
         frame.setVisible(true);
     }
+
 
     private JPanel createViewAccountsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
