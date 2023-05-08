@@ -21,8 +21,7 @@ import java.util.Map;
  *
  * Dependencies: main.Database.Database, main.Accounts.TradingAccount, main.PortfolioManager.BankManager
  */
- */
-public class AccountPage {
+public class AccountPage{
     private String userName;
     private JFrame frame;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
