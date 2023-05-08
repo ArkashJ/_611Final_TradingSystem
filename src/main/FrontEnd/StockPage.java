@@ -234,22 +234,28 @@ public class StockPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String stockNameInput = stockName.getText();
-                int stockQuantityInput;
+                int stockQuantityInput = 0;
 
                 try {
                     stockQuantityInput = Integer.parseInt(stockQuantity.getText());
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Invalid quantity input. Please enter a valid number.");
-                    return;
+                    JOptionPane.showMessageDialog(frame,
+                            "<html><span style='font-size: 15pt;'>Invalid quantity input. Please enter a valid number.</span></html>", "Error", JOptionPane.ERROR_MESSAGE);
+
+                    refresh();
                 }
 
                 boolean result = Trading.sellStock(tradingAccount.getAccountNumber(), stockNameInput, stockQuantityInput);
 
                 if (result) {
-                    JOptionPane.showMessageDialog(frame, "Stock sold successfully!");
+                    JOptionPane.showMessageDialog(frame,
+                            "<html><span style='font-size: 15pt;'>Stock sold successfully!</span></html>", "Success", JOptionPane.INFORMATION_MESSAGE);
+
                     refresh();
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Error selling stock. Please check stock name and quantity.");
+                    JOptionPane.showMessageDialog(frame,
+                            "<html><span style='font-size: 15pt;'>Error selling stock. Please check stock name and quantity.</span></html>", "Error", JOptionPane.ERROR_MESSAGE);
+                    refresh();
                 }
             }
         });
