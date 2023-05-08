@@ -153,6 +153,8 @@ public class AccountPage{
     private JPanel createLogoutPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton logoutButton = new JButton("Logout");
+        Font buttonFont = new Font(logoutButton.getFont().getName(), Font.BOLD, 15);
+        logoutButton.setFont(buttonFont);
         panel.add(logoutButton);
 
         logoutButton.addActionListener(new ActionListener() {
@@ -165,5 +167,6 @@ public class AccountPage{
 
         return panel;
     }
+
 
 }
