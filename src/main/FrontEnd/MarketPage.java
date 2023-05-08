@@ -16,6 +16,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+
+-   The MarketPage class represents a graphical user interface (GUI) for a stock market application.
+-   It allows users to view available stocks, buy or sell stocks, search for stocks, and navigate
+    to other pages within the application, such as the account and stock pages. The class uses the
+    Java Swing library to create and manage the GUI components.
+-   Key components of the class include:
+-   Constructor: Initializes class variables and sets up the market panel.
+-   run(): Sets up the main JFrame for the market page and makes it visible.
+-   createMarketPanel(): Creates the main panel that displays the list of stocks.
+-   tradeStockPanel(): Creates a panel with components to buy, sell, and search for stocks.
+-   showConfirmDialog(): Displays a confirmation dialog for buying or selling stocks.
+-   createExitPanel(): Creates a panel with buttons for navigation and logout.
+-   createStockListScrollPane() and refreshMarketPanel(): Methods to create and refresh the
+
+*/
+
 public class MarketPage {
 
     private JFrame frame;
