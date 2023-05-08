@@ -11,6 +11,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+    * @Description: This class is used to connect to the database and perform operations on it
+        * Singleton class
+        * Has a static method getInstance() which returns the instance of the class
+    * Has a static method getConnection() which returns the connection to the database
+    * @Methods:
+    * connect() - connects to the database
+    * deleteAllTables() - deletes all the tables in the database
+    * createTables() - creates all the tables in the database
+    * checkLogin(String username, String password) - checks if the username and password are correct
+    * registerUser(String username, String password, UserType userType) - registers a new user
+    * getAccountNumber(String username) - returns the account number of the user
+    * getTradingAccountsForUser(String username) - returns a list of trading accounts for the user
+    * getOptionsAccountsForUser(String username) - returns a list of options accounts for the user
+    * getStocksForUser(String username) - returns a list of stocks for the user
+    * insertStock(Stock stock) - inserts a stock into the database
+    * insertAccounts(int account_number, String userName, double balance,String accountType) - inserts an account into the database
+    * insertStockIntoMarket(String stockName, int quantity) - inserts a stock into the market
+    * insertStockIntoCustomerStocks(int account_number,String stockName,double price_bought, int quantity) - inserts a stock into the customer stocks
+    * submitAccountRequest(String username, String accountType) - submits an account request'
+    * removeAccountRequest(int id) - removes an account request
+ */
+
+
+
 public class Database {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/trading_system";
     private static final String uname = "root";
@@ -19,6 +44,7 @@ public class Database {
     private static Database dbInstance = new Database();
     private static Connection conn;
 
+    // ------------------ Constructor ------------------
     private Database() {
         conn = connect();
     }
@@ -26,6 +52,8 @@ public class Database {
     public static synchronized Database getInstance() {
         return dbInstance;
     }
+
+    // ----------------- Connection -----------------
     public static Connection getConnection() {
         return conn;
     }
@@ -40,6 +68,7 @@ public class Database {
         return conn;
     }
 
+    // ----------------- Delete Tables -----------------
     public static void deleteAllTables() {
         String sql = "DROP TABLE IF EXISTS users, accounts, stocks, customer_stocks,market,log,account_requests";
         try (Statement stmt = conn.createStatement()) {
@@ -50,6 +79,7 @@ public class Database {
     }
 
 
+     // ----------------- Create Tables -----------------
     public static void createTables() {
         String usersTable = "CREATE TABLE IF NOT EXISTS users ("
                 + "id INT AUTO_INCREMENT PRIMARY KEY,"
@@ -127,6 +157,7 @@ public class Database {
         }
     }
 
+     // ----------------- CheckLogin -----------------
     public static boolean checkLogin1(String name, String password) {
         synchronized (conn) {
             try {
@@ -142,6 +173,8 @@ public class Database {
             }
         }
     }
+
+    // ----------------- CheckLogin -----------------
     public static UserType checkLogin(String name, String password) {
         synchronized (conn) {
             try {
@@ -161,6 +194,7 @@ public class Database {
         }
     }
 
+     // ----------------- Register A User -----------------
     public static boolean registerUser(String name, String password, UserType account_type, int accountNumber) {
         synchronized (conn) {
             try {
@@ -179,6 +213,7 @@ public class Database {
         }
     }
 
+    // ----------------- Create A Trading Account -----------------
     /**
      * get
      */
@@ -198,6 +233,7 @@ public class Database {
         }
     }
 
+    // ----------------- Get Stock -----------------
     //get stock from stock table
     public static Stock getStock(String stockName) {
         Stock stock = null;
@@ -228,6 +264,7 @@ public class Database {
         return stock;
     }
 
+    // ----------------- Get Customer Stocks -----------------
     //get CustomerStocks
     public static CustomerStocks getCustomerStocks(int accountNumber) {
         CustomerStocks cs=new CustomerStocks(accountNumber);
@@ -248,6 +285,7 @@ public class Database {
         return cs;
     }
 
+    // ----------------- Set Market Stocks -----------------
     //get all Market Stocks
     public static void setMarketStocks() {
         String sql = "SELECT stock, quantity FROM market";
@@ -267,6 +305,7 @@ public class Database {
         }
     }
 
+    // ----------------- Get Trading Account -----------------
     //get a TradingAccount
     public static TradingAccount getTradingAccount(int account_number) {
         TradingAccount tradingAccount = null;
@@ -291,6 +330,7 @@ public class Database {
         return tradingAccount;
     }
 
+    // ----------------- Get Trading Account for this User -----------------
     //get all TradingAccount given a userName
     public static List<TradingAccount> getTradingAccountsForUser(String userName) {
         List<TradingAccount> tradingAccounts = new ArrayList<>();
@@ -313,6 +353,9 @@ public class Database {
         return tradingAccounts;
     }
 
+     
+
+     // ----------------- Get Options Account -----------------
     //get all OptionsAccount
     public static List<OptionsAccount> getOptionsAccountForUser(String userName) {
         List<OptionsAccount> tradingAccounts = new ArrayList<>();
@@ -335,9 +378,12 @@ public class Database {
         return tradingAccounts;
     }
 
-    /**
-     * put
-     */
+   
+
+
+    //-------------------------------------------------------------------------------------------------------
+    // -- INSERTS --
+    // ----------------- Insert Stock -----------------
     public static void insertStock(String stockName, String companyName, double currentPrice, double lastClosingPrice, double highestPrice, double lowestPrice, int dividend) {
         String sql = "INSERT INTO stocks (name, companyName, currentPrice, lastClosingPrice, highestPrice, lowestPrice, dividend) VALUES (?, ?, ?, ?, ?, ?, ?)";
         // dont put conn in try-with-resources, otherwise it will be closed before we can use it
@@ -356,6 +402,8 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+
+    // ----------------- Insert User -----------------
     public static void insertUsers(String userName,String password,int account_number,String accountType) {
         String sql= "INSERT INTO users (name, password, account_number, account_type) VALUES (?, ?, ?, ?)";
         Connection conn = Database.getConnection();
@@ -369,6 +417,8 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+
+    // ----------------- Insert Account -----------------
     public static void insertAccounts(int account_number, String userName, double balance,String accountType) {
         String sql = "INSERT INTO accounts (account_number, user_name, balance, account_type) VALUES (?, ?, ?, ?)";
         Connection conn = Database.getConnection();
@@ -382,6 +432,8 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+
+    // ----------------- Insert Stocks in Market -----------------
     public static void insertStockIntoMarket(String stockName, int quantity) {
         String checkStockSql = "SELECT * FROM market WHERE stock = ?";
         String updateQuantitySql = "UPDATE market SET quantity = quantity + ? WHERE stock = ?";
@@ -412,6 +464,8 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+
+     // ----------------- Insert Stocks in Customer Stocks -----------------
     public static void insertStockIntoCustomerStocks(int account_number,String stockName,double price_bought, int quantity) {
         String sql= "INSERT INTO customer_stocks (account_number, stock, price_bought, quantity) VALUES (?, ?, ?, ?)";
         Connection conn = Database.getConnection();
@@ -427,9 +481,10 @@ public class Database {
     }
 
 
-    /**
+     /**
      *  submit request to request table
      */
+    // ----------------- Submit Request -----------------
     public static boolean submitAccountRequest(String userName, double initialBalance, String type) {
         synchronized (conn) {
             try {
@@ -446,9 +501,10 @@ public class Database {
         }
     }
 
-    /**
+     /**
      *  remove request by id
      */
+    // ----------------- Remove Request -----------------
     public static boolean removeAccountRequest(int id) {
         synchronized (conn) {
             try {
