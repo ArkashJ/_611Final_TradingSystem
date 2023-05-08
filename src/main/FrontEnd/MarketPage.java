@@ -148,17 +148,49 @@ public class MarketPage {
         panel.add(searchButton, gbc);
 
 
+//        buyButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                try {
+//                    String name = stockName.getText();
+//                    int quantity = Integer.parseInt(stockQuantity.getText());
+//                    Boolean result = Trading.buyStock(accountNumber, name, quantity);
+//                    if(result){
+//                        JOptionPane.showMessageDialog(null, "You have successfully bought " + quantity + " " + name + " stocks");
+//                        refreshMarketPanel();
+//                    }
+//                } catch (NumberFormatException exception) {
+//                    JOptionPane.showMessageDialog(null, "Invalid quantity");
+//                }
+//            }
+//        });
+//
+//        sellButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                try{
+//                    String name = stockName.getText();
+//                    int quantity = Integer.parseInt(stockQuantity.getText());
+//                    Boolean result = Trading.sellStock(accountNumber, name, quantity);
+//                    if(result){
+//                        JOptionPane.showMessageDialog(null, "You have successfully sold " + quantity + " " + name + " stocks");
+//                        refreshMarketPanel();
+//                    }
+//                } catch (NumberFormatException exception) {
+//                    JOptionPane.showMessageDialog(null, "Invalid quantity");
+//                }
+//            }
+//        });
+
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     String name = stockName.getText();
+                    Stock stock=Database.getStock(name);
                     int quantity = Integer.parseInt(stockQuantity.getText());
-                    Boolean result = Trading.buyStock(accountNumber, name, quantity);
-                    if(result){
-                        JOptionPane.showMessageDialog(null, "You have successfully bought " + quantity + " " + name + " stocks");
-                        refreshMarketPanel();
-                    }
+                    double totalAmount = stock.getCurrentPrice() * quantity;
+                    showConfirmDialog(accountNumber, name, quantity, totalAmount, true);
                 } catch (NumberFormatException exception) {
                     JOptionPane.showMessageDialog(null, "Invalid quantity");
                 }
@@ -168,20 +200,17 @@ public class MarketPage {
         sellButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
+                try {
                     String name = stockName.getText();
+                    Stock stock=Database.getStock(name);
                     int quantity = Integer.parseInt(stockQuantity.getText());
-                    Boolean result = Trading.sellStock(accountNumber, name, quantity);
-                    if(result){
-                        JOptionPane.showMessageDialog(null, "You have successfully sold " + quantity + " " + name + " stocks");
-                        refreshMarketPanel();
-                    }
+                    double totalAmount = stock.getCurrentPrice() * quantity;
+                    showConfirmDialog(accountNumber, name, quantity, totalAmount, false);
                 } catch (NumberFormatException exception) {
                     JOptionPane.showMessageDialog(null, "Invalid quantity");
                 }
             }
         });
-
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -191,6 +220,57 @@ public class MarketPage {
         });
 
         return panel;
+    }
+
+    private void showConfirmDialog(int accountNumber, String stockName, int quantity, double totalAmount, boolean isBuy) {
+        JDialog confirmDialog = new JDialog(frame, "Confirm Transaction", true);
+        confirmDialog.setLayout(new GridLayout(4, 1));
+        confirmDialog.setSize(300, 200);
+        TradingAccount tradingAccount = Database.getTradingAccount(accountNumber);
+        double balance = tradingAccount.getBalance();
+
+        JLabel transactionAmountLabel = new JLabel("Transaction Amount: " + totalAmount);
+        JLabel balanceLabel = new JLabel("Current Balance: " + balance);
+
+        confirmDialog.add(transactionAmountLabel);
+        confirmDialog.add(balanceLabel);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton confirmButton = new JButton("Confirm");
+        JButton cancelButton = new JButton("Cancel");
+
+        buttonPanel.add(confirmButton);
+        buttonPanel.add(cancelButton);
+
+        confirmDialog.add(buttonPanel);
+
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isBuy) {
+                    boolean result = Trading.buyStock(accountNumber, stockName, quantity);
+                    if (result) {
+                        JOptionPane.showMessageDialog(null, "You have successfully bought " + quantity + " " + stockName + " stocks");
+                        refreshMarketPanel();
+                    }
+                } else {
+                    boolean result = Trading.sellStock(accountNumber, stockName, quantity);
+                    if (result) {
+                        JOptionPane.showMessageDialog(null, "You have successfully sold " + quantity + " " + stockName + " stocks");
+                        refreshMarketPanel();
+                    }
+                }
+                confirmDialog.dispose();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                confirmDialog.dispose();
+            }
+        });
+        confirmDialog.setVisible(true);
     }
 
     private JPanel createExitPanel() {
