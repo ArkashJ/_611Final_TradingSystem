@@ -95,7 +95,7 @@ public class UserLoginRegistration {
                 String password = String.valueOf(passwordField.getPassword());
                 UserType userType = Database.checkLogin(name, password);
                 if (userType != null) {
-                    JOptionPane.showMessageDialog(null, "Login successful!");
+                    JOptionPane.showMessageDialog(null, "<html><body><font size='5'>Login successful!</font></body></html>");
                     switch (userType) {
                         case ADMIN:
                             switchToManagerPage(name);
@@ -105,7 +105,7 @@ public class UserLoginRegistration {
                             break;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Login failed. Please check your credentials.");
+                    JOptionPane.showMessageDialog(null, "<html><body><font size='5'>Login failed. Please check your credentials.</font></body></html>");
                 }
             }
         });
@@ -175,9 +175,9 @@ public class UserLoginRegistration {
                 UserType role = UserType.valueOf(((String) roleComboBox.getSelectedItem()).toUpperCase());
                 int accountNumber = Integer.parseInt(accountNumberField.getText());
                 if (Database.registerUser(name, password, role, accountNumber)) {
-                    JOptionPane.showMessageDialog(null, "Registration successful!");
+                    JOptionPane.showMessageDialog(null, "<html><body><font size='5'>Registration successful!</font></body></html>");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Registration failed. Please try again.");
+                    JOptionPane.showMessageDialog(null, "<html><body><font size='5'>Registration failed. Please try again.</font></body></html>");
                 }
             }
         });
