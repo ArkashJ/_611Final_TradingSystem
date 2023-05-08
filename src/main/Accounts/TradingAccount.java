@@ -23,7 +23,7 @@ import java.util.Scanner;
  * @Description: This class is used to create a Trading Account
  */
 
-public class TradingAccount extends Account implements ITrading{
+public class TradingAccount implements ITrading{
     private String ownerName;
     private int accountNumber;
     private String accountType;
