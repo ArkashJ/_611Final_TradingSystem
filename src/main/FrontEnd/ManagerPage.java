@@ -8,10 +8,7 @@ import main.Stocks.MarketStock;
 import main.Stocks.Stock;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -162,8 +159,10 @@ public class ManagerPage {
                 });
             }
 
-            // Create the table
+            // Create the table with font size 18
+//            Font tableFont = new Font(Font.DIALOG, Font.PLAIN, 18);
             JTable table = new JTable(model);
+//            table.setFont(tableFont);
             table.setShowVerticalLines(true);
             table.setShowHorizontalLines(true);
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -172,17 +171,25 @@ public class ManagerPage {
 
             TableColumnModel columnModel = table.getColumnModel();
 
-            TableColumn balanceColumn = columnModel.getColumn(2);
-            int bPreferredWidth = 150; // Set your preferred width for the "Time" column
-            balanceColumn.setPreferredWidth(bPreferredWidth);
+            // Adjust the width of each column based on the largest entry
+            for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
+                TableColumn column = columnModel.getColumn(columnIndex);
+                int maxWidth = 0;
+                TableCellRenderer renderer = column.getHeaderRenderer();
+                if (renderer == null) {
+                    renderer = table.getTableHeader().getDefaultRenderer();
+                }
+                Component headerComp = renderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, -1, columnIndex);
+                maxWidth = Math.max(maxWidth, headerComp.getPreferredSize().width);
 
-            TableColumn profitColumn = columnModel.getColumn(3);
-            int pPreferredWidth = 150; // Set your preferred width for the "Time" column
-            profitColumn.setPreferredWidth(pPreferredWidth);
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    TableCellRenderer cellRenderer = table.getCellRenderer(row, columnIndex);
+                    Component comp = table.prepareRenderer(cellRenderer, row, columnIndex);
+                    maxWidth = Math.max(maxWidth, comp.getPreferredSize().width);
+                }
 
-            TableColumn uprofitColumn = columnModel.getColumn(4);
-            int uPreferredWidth = 150; // Set your preferred width for the "Time" column
-            uprofitColumn.setPreferredWidth(uPreferredWidth);
+                column.setPreferredWidth(maxWidth + 10); // Adjusted column width with padding
+            }
 
             // Add the table to a scroll pane
             JScrollPane scrollPane = new JScrollPane(table);
@@ -193,6 +200,8 @@ public class ManagerPage {
 
         return null;
     }
+
+
 
 
     private JScrollPane createMarketStocksScrollPane() {
