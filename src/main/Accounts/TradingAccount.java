@@ -15,10 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
 //Create a trading account for a customer
 
+
 /**
- *
+ * @Description: This class is used to create a Trading Account
  */
 
 public class TradingAccount extends Account implements ITrading{
@@ -89,8 +91,7 @@ public class TradingAccount extends Account implements ITrading{
     }
 
     /**
-     * By Jianxiao : checkBalance(optionsAccounts.size()) why check Accounts size?
-     * @param optionsAccounts : if a customer has gained more than 10k, he can open an options account
+     * if a customer has gained more than 10k, they can open an options account
      */
     public void createOptionsAccount(List<OptionsAccount> optionsAccounts){
         if(checkBalance(optionsAccounts.size())){
@@ -109,6 +110,10 @@ public class TradingAccount extends Account implements ITrading{
         }
     }
 
+    /**
+     * if a customer has gained more than 10k, they can open an options account
+     */
+
     public boolean checkBalance(double numOptions){
         if(numOptions==0){
             if(this.balance>=10000){
@@ -123,6 +128,9 @@ public class TradingAccount extends Account implements ITrading{
         return false;
     }
 
+    /*
+     * @Description: The methods below are used to check the balance, update balance and get owner details
+     */
     public boolean checkBalance(Stock stock,int num) {
         return this.balance >= stock.getCurrentPrice() * num;
     }
