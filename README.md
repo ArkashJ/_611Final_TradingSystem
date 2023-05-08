@@ -82,7 +82,32 @@ yangjx@bu.edu
 
 
 ### Workflow:
-
+- Workflow initiation: Read text files and begin the process
+- User Login Page: The starting point for users
+    - Login option:
+        - Click the login button, retrieve username and password, and verify login credentials using the database class
+        - Proceed if successful, otherwise display a failed login attempt message
+    - Registration option:
+        - Provide name, password, and role, then initiate user registration in the database
+        - Add to the database if no conflicts are detected
+        - Automatically transition to the Account Page
+        - Display all user accounts on the Account Page, iterating through each account to retrieve the user's trading account from the database's accounts table
+        - Create a new account, and set the Enter button to trigger an event that displays stocks on the Stock Page
+        - To proceed, input an initial balance and submit an Account Request to the Database Page, which the manager can review from the account requests table; users can also view this information
+        - Continuously calculate profit to determine eligibility for additional account types; if eligible, add a new account type
+- Bank Manager Functions:
+    - Consolidate buy and sell operations in this section
+    - Record all transaction prices in a log
+    - Implement a sell function in the trading class, allowing queries by stock name only
+    - Handle cases where customers purchased stocks at different prices by only displaying the stock name
+    - If the requested sell quantity is unavailable, display an error message; otherwise, update the account
+    - Update the market as the fourth step
+    - Buy Stock:
+        - If sufficient balance is available, purchase the stock and update the customer's stock table
+- Manager Page:
+    - Display market, log, and user information
+    - Use the GetStocks function to retrieve market stocks
+- Account Page Notifications: Trigger notifications when selling a stock, calculate realized profit, and call the associated event
 
 ### main
 This folder contains all the java files for the project
