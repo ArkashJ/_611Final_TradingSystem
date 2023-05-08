@@ -53,7 +53,9 @@ public class AccountPage{
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.add(createLogoutPanel(), BorderLayout.NORTH);
         if (isEiligibleForOption) {
-            JOptionPane.showMessageDialog(frame, "Congratulations! Your total realized profit is over 10,000. You are eligible to open an Optional account.");
+            JOptionPane.showMessageDialog(frame,
+                    "<html><body><font size='5'>Congratulations! Your total realized profit is over 10,000. You are eligible to open an Optional account.</font></body></html>");
+
         }
         frame.setVisible(true);
     }
@@ -131,10 +133,12 @@ public class AccountPage{
             public void actionPerformed(ActionEvent e) {
                 double initialBalance = Double.parseDouble(balanceField.getText());
                 if (Database.submitAccountRequest(userName, initialBalance, "TRADE")) {
-                    JOptionPane.showMessageDialog(null, "Trading account creation request submitted!");
+                    JOptionPane.showMessageDialog(null,
+                            "<html><body><font size='5'>Trading account creation request submitted!</font></body></html>");
                     refreshCreateCreateAccountsPanel();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
+                    JOptionPane.showMessageDialog(null,
+                            "<html><body><font size='5'>Failed to create a new trading account. Please try again.</font></body></html>");
                 }
             }
         });
