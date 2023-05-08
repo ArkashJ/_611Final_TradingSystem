@@ -274,6 +274,7 @@ public class MarketPage {
     private JPanel createExitPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
         JButton logoutButton = new JButton("Logout");
+        logoutButton.setFont(logoutButton.getFont().deriveFont(Font.BOLD, 15f));
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -283,6 +284,7 @@ public class MarketPage {
         });
 
         JButton accountButton = new JButton("Go to account page");
+        accountButton.setFont(accountButton.getFont().deriveFont(Font.BOLD, 15f));
         accountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -292,6 +294,7 @@ public class MarketPage {
         });
 
         JButton stockButton = new JButton("View stocks in account");
+        stockButton.setFont(stockButton.getFont().deriveFont(Font.BOLD, 15f));
         stockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -306,6 +309,7 @@ public class MarketPage {
 
         return buttonPanel;
     }
+
 
     private JScrollPane createStockListScrollPane(String keyword) {
         List<MarketStock> marketStocks = Market.getStocks(keyword);
