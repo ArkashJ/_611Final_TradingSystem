@@ -9,6 +9,11 @@ import java.util.List;
 
 /**
  * @Description: This class represents a customer's stocks.txt. like a bag
+    * CustomerStocks initializes an account number and makes a list of stocks for the customer
+    * Constructor:
+        * CustomerStocks(int accountNumber) - initializes the accountNumber and the list of stocks.
+    * add(String stockName, int stockNumber, double stock_boughtAt) - This function loops through the customers stocks, sees if they exist and then add them to the list, followed by an update to the number of stocks in the list
+    * remove(String stockName, int stockNumber) - This function loops through the customers stocks, sees if they exist and then removes them from the list unless the stock number is 0
  */
 
 public class CustomerStocks {

@@ -1,9 +1,31 @@
 package main.Stocks;
 
 
+
 /**
- * @Description: This class represents a stock. It implements the IStock interface.
+ * @Description: This class represents a stock and implements the IStock interface. This is the basic element for the entire project used by the MarketStock and CustomerStock classes.
  * @Params: symbol, a company name, and a current price.
+    *   Constructor:
+        *   Stock(String name, String companyName, double currentPrice, double lastClosingPrice, double highPrice, double lowPrice, double dividend) -
+            ### initializes the name, companyName, currentPrice, lastClosingPrice, highPrice, lowPrice, and dividend.
+    * getName()
+ *  getCompanyName() - returns the company name
+ *  getCurrentPrice() - returns the current price
+ *  setCurrentPrice(double currentPrice) - sets the current price
+ *  updatePrice(double newPrice) - updates the current price
+ *  getLastClosingPrice() - returns the last closing price
+ *  setLastClosingPrice(double lastClosingPrice) - sets the last closing price
+ *  getHighPrice() - returns the high price
+ *  setHighPrice(double highPrice) - sets the high price
+ *  getLowPrice() - returns the low price
+ *  setLowPrice(double lowPrice) - sets the low price
+ *  getDividend() - returns the dividend
+ *  getPriceBoughtAt() - returns the price bought at
+ *  setPriceBoughtAt(double priceBoughtAt) - sets the price bought at
+ *  getChangePercent() - returns the change percent
+ *  getChangeAmount() - returns the change amount
+ *  getChangePercentSinceBought() - returns the change percent since bought
+ *  getChangeAmountSinceBought() - returns the change amount since bought
  */
 
 public class Stock {

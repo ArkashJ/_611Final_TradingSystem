@@ -1,6 +1,12 @@
 package main.Utils;
 import main.Stocks.Stock;
-
+/**
+ * @Description: This class is used to calculate the profit/loss of a stock
+ * Profit_Loss() - constructor to initialize stock and profitLoss
+ * getProfitLoss() - returns profitLoss
+ * setProfitLoss() - sets profitLoss
+ * calculateProfitLoss() - calculates the profit/loss of a stock
+ */
 public class Profit_Loss {
     private Stock stock;
     private double profitLoss;

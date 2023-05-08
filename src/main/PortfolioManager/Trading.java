@@ -14,7 +14,17 @@ import java.util.Map;
 /**
  * @Description: This class represents trading between customers and the market, a singleton class
  * @Methods: buyStock(int accountNumber, String stockName, int quantity) buy a stock
- *          sellStock(int accountNumber, String stockName, int quantity) sell a stock
+                - Check if the stock is available in the market from the market table
+                - Establish database connection and the currentstock price and quantity from the stocks table
+                - Check if there is available stocks, get the account balance from the accounts table
+                - Check if the account balance is enough to buy the stock
+                - Update the accounts table and customer_stocks table
+                - Log the transaction
+             sellStock(int accountNumber, String stockName, int quantity) sell a stock
+               - Check if the stock is available in the customer_stocks table
+               - Establish database connection and the current stock price from the stocks table
+               - Check if there is enough stocks to sell
+               - Loop through the stocks list and sell the stocks
  */
 public class Trading {
     // The trading is a singleton class
@@ -114,6 +124,8 @@ public class Trading {
 
         return true;
     }
+
+
     public static boolean sellStock(int accountNumber, String stockName, int quantity) {
         // 1. Get the stock of that account in customer_stocks table,按照stockName和accountNumber获取对应的所有行的信息
         //    check if the whole quantity is enough
@@ -143,8 +155,6 @@ public class Trading {
             return false; // Not enough stock to sell
         }
 
-        // 2. 将股票按照顺序卖出股票，直到卖出的股票数量达到quantity
-        // 当customer_stocks表中的某行股票数量减到0时，删除该条记录
         double currentPrice = Database.getStock(stockName).getCurrentPrice();
         double profit = 0;
         int remainingQuantityToSell = quantity;
@@ -178,8 +188,6 @@ public class Trading {
             }
         }
 
-        // 3. 在对每行做操作的时候顺便记录profit，假设customer_stocks的某行卖出了n个，那么profit就加上stockName对应的（currenPrice） * n
-        // 最后将profit加到account的balance上
         sql = "UPDATE accounts SET balance = balance + ? WHERE account_number = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setDouble(1, profit);

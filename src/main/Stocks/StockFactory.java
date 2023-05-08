@@ -3,7 +3,12 @@ package main.Stocks;
 /*
     * This class is a factory used to create a stock object
     @Description: This class is a SINGLETON factory used to create a stock object
+    * Methods:
+        * createStock(String name, String CompanyName, double stockPrice, double lastClosingPrice, double highPrice, double lowPrice, double dividend) - creates a stock object
+        * copyStock(Stock) - copies a stock object
+        * copyStock_withPriceBoughtAt(Stock, double priceBoughtAt) - copies a stock object and sets the price bought at
  */
+
 
 public class StockFactory {
 
