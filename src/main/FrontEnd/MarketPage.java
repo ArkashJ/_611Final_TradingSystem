@@ -127,12 +127,13 @@ public class MarketPage {
         return items;
     }
 
-    private JPanel tradeStockPanel(int accountNumber, TradingAccount tradingAccount){
+    private JPanel tradeStockPanel(int accountNumber, TradingAccount tradingAccount) {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
 
         JLabel stockNameField = new JLabel("Name");
+        stockNameField.setFont(stockNameField.getFont().deriveFont(Font.BOLD, 15f));
         JTextField stockName = new JTextField(15);
 
         gbc.gridx = 0;
@@ -142,6 +143,7 @@ public class MarketPage {
         panel.add(stockName, gbc);
 
         JLabel stockQuantityField = new JLabel("Quantity");
+        stockQuantityField.setFont(stockQuantityField.getFont().deriveFont(Font.BOLD, 15f));
         JTextField stockQuantity = new JTextField(15);
         stockQuantity.setToolTipText("Quantity");
 
@@ -151,20 +153,22 @@ public class MarketPage {
         gbc.gridy = 1;
         panel.add(stockQuantity, gbc);
 
-
         JButton buyButton = new JButton("Buy");
+        buyButton.setFont(buyButton.getFont().deriveFont(Font.PLAIN, 15f));
         gbc.gridx = 0;
         gbc.gridy = 2;
         panel.add(buyButton, gbc);
 
         JButton sellButton = new JButton("Sell");
+        sellButton.setFont(sellButton.getFont().deriveFont(Font.PLAIN, 15f));
         gbc.gridx = 1;
         panel.add(sellButton, gbc);
 
-
         JLabel searchLabel = new JLabel("Search");
+        searchLabel.setFont(searchLabel.getFont().deriveFont(Font.BOLD, 15f));
         JTextField searchField = new JTextField(15);
         JButton searchButton = new JButton("Search");
+        searchButton.setFont(searchButton.getFont().deriveFont(Font.PLAIN, 15f));
 
         gbc.gridx = 2;
         gbc.gridy = 0;
@@ -174,47 +178,12 @@ public class MarketPage {
         gbc.gridy = 2;
         panel.add(searchButton, gbc);
 
-
-//        buyButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    String name = stockName.getText();
-//                    int quantity = Integer.parseInt(stockQuantity.getText());
-//                    Boolean result = Trading.buyStock(accountNumber, name, quantity);
-//                    if(result){
-//                        JOptionPane.showMessageDialog(null, "You have successfully bought " + quantity + " " + name + " stocks");
-//                        refreshMarketPanel();
-//                    }
-//                } catch (NumberFormatException exception) {
-//                    JOptionPane.showMessageDialog(null, "Invalid quantity");
-//                }
-//            }
-//        });
-//
-//        sellButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try{
-//                    String name = stockName.getText();
-//                    int quantity = Integer.parseInt(stockQuantity.getText());
-//                    Boolean result = Trading.sellStock(accountNumber, name, quantity);
-//                    if(result){
-//                        JOptionPane.showMessageDialog(null, "You have successfully sold " + quantity + " " + name + " stocks");
-//                        refreshMarketPanel();
-//                    }
-//                } catch (NumberFormatException exception) {
-//                    JOptionPane.showMessageDialog(null, "Invalid quantity");
-//                }
-//            }
-//        });
-
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     String name = stockName.getText();
-                    Stock stock=Database.getStock(name);
+                    Stock stock = Database.getStock(name);
                     int quantity = Integer.parseInt(stockQuantity.getText());
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, true);
@@ -229,7 +198,7 @@ public class MarketPage {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String name = stockName.getText();
-                    Stock stock=Database.getStock(name);
+                    Stock stock = Database.getStock(name);
                     int quantity = Integer.parseInt(stockQuantity.getText());
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, false);
@@ -238,6 +207,7 @@ public class MarketPage {
                 }
             }
         });
+
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -248,6 +218,7 @@ public class MarketPage {
 
         return panel;
     }
+
 
     private void showConfirmDialog(int accountNumber, String stockName, int quantity, double totalAmount, boolean isBuy) {
         JDialog confirmDialog = new JDialog(frame, "Confirm Transaction", true);
