@@ -11,6 +11,10 @@ This project is a simulation of a trading system which has the following feature
 
 All of this is displayed in a GUI built on Java Swing
 
+## Presentation
+A Presentation explaining everything we did
+[Stock Trading System.pdf](https://github.com/ArkashJ/_611Final_TradingSystem/files/11422753/Stock.Trading.System.pdf)
+
 ## Infrastructure - 1st iteration
 [InitialStructure.pdf](https://github.com/ArkashJ/_611Final_TradingSystem/files/11223661/InitialStructure.pdf)
 
