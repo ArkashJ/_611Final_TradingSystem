@@ -103,45 +103,82 @@ public class AccountPage{
 
     private JPanel createCreateAccountPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(Color.CYAN);
+        if(!isEiligibleForOption) {
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(4, 4, 4, 4);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
+            JLabel balanceLabel = new JLabel("Initial Balance:");
+            JTextField balanceField = new JTextField(20);
+            JButton createAccountButton = new JButton("Create Account");
 
-        JLabel balanceLabel = new JLabel("Initial Balance:");
-        JTextField balanceField = new JTextField(20);
-        JButton createAccountButton = new JButton("Create Account");
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            panel.add(balanceLabel, gbc);
+            gbc.gridx = 1;
+            panel.add(balanceField, gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            panel.add(createAccountButton, gbc);
 
-        Font labelFont = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
-        Font buttonFont = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
-
-        balanceLabel.setFont(labelFont);
-        balanceField.setFont(labelFont);
-        createAccountButton.setFont(buttonFont);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(balanceLabel, gbc);
-        gbc.gridx = 1;
-        panel.add(balanceField, gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        panel.add(createAccountButton, gbc);
-
-        createAccountButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                double initialBalance = Double.parseDouble(balanceField.getText());
-                if (Database.submitAccountRequest(userName, initialBalance, "TRADE")) {
-                    JOptionPane.showMessageDialog(null,
-                            "<html><body><font size='5'>Trading account creation request submitted!</font></body></html>");
-                    refreshCreateCreateAccountsPanel();
-                } else {
-                    JOptionPane.showMessageDialog(null,
-                            "<html><body><font size='5'>Failed to create a new trading account. Please try again.</font></body></html>");
+            createAccountButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    double initialBalance = Double.parseDouble(balanceField.getText());
+                    if (Database.submitAccountRequest(userName, initialBalance, "TRADE")) {
+                        JOptionPane.showMessageDialog(null, "Trading account creation request submitted!");
+                        refreshCreateCreateAccountsPanel();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to create a new trading account. Please try again.");
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(4, 4, 4, 4);
+
+            JLabel balanceLabel = new JLabel("Initial Balance:");
+            JTextField balanceField = new JTextField(20);
+            JButton createAccountButton = new JButton("Create Account");
+
+            // Add balance label and field to the panel
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            panel.add(balanceLabel, gbc);
+            gbc.gridx = 1;
+            panel.add(balanceField, gbc);
+
+            // Add account type label and combo box to the panel
+            JLabel accountTypeLabel = new JLabel("Account Type:");
+            String[] accountTypes = {"Trade", "Options"};
+            JComboBox<String> accountTypeComboBox = new JComboBox<>(accountTypes);
+
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            panel.add(accountTypeLabel, gbc);
+            gbc.gridx = 1;
+            panel.add(accountTypeComboBox, gbc);
+
+            // Add create account button to the panel
+            gbc.gridx = 1;
+            gbc.gridy = 2;
+            panel.add(createAccountButton, gbc);
+
+            // Add action listener to the create account button
+            createAccountButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    double initialBalance = Double.parseDouble(balanceField.getText());
+                    String accountType = (String) accountTypeComboBox.getSelectedItem();
+                    if (Database.submitAccountRequest(userName, initialBalance, accountType.toUpperCase())) {
+                        JOptionPane.showMessageDialog(null, accountType + " account creation request submitted!");
+                        refreshCreateCreateAccountsPanel();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to create a new " + accountType + " account. Please try again.");
+                    }
+                }
+            });
+        }
 
         return panel;
     }
