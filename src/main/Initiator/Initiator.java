@@ -20,7 +20,7 @@ public class Initiator {
         return initiator;
     }
 
-    public static void initiateAll() {
+    public static void initiateAll(boolean load_user) {
         boolean reset = true;
 
         String dir_path = "src/main/txtfiles/";
@@ -34,15 +34,17 @@ public class Initiator {
 
             //2. market
             insertMarketData();
+            if(load_user) {
 
-            //3. load users
-            loadUsersFromFile(dir_path + "users.txt");
+                //3. load users
+                loadUsersFromFile(dir_path + "users.txt");
 
-            //3. load accounts
-            loadAccountsFromFile(dir_path + "accounts.txt");
+                //3. load accounts
+                loadAccountsFromFile(dir_path + "accounts.txt");
 
-            //4. load CustomerStocks
-            loadCustomerStocksFromFile(dir_path + "customer_stocks.txt");
+                //4. load CustomerStocks
+                loadCustomerStocksFromFile(dir_path + "customer_stocks.txt");
+            }
         }
     }
 
