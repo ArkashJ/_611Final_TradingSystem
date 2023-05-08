@@ -63,6 +63,7 @@ public class StockPage {
 
         // Create account info panel
         JPanel accountInfoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+//        accountInfoPanel.setBackground(Color.PINK);
         JLabel accountInfoLabel = new JLabel(
                 "Name: " + ownerName
                         + " | Account: " + accountNumber
@@ -74,7 +75,8 @@ public class StockPage {
         accountInfoPanel.add(accountInfoLabel);
         checkAndNotifyOptionalAccountEligibility();
 
-        JButton enterMarketButton = new JButton("Enter market");
+        JButton enterMarketButton = new JButton("Enter Market");
+        enterMarketButton.setFont(enterMarketButton.getFont().deriveFont(Font.BOLD, 15f));
         enterMarketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,19 +87,25 @@ public class StockPage {
         });
 
         JPanel marketButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+//        marketButtonPanel.setBackground(Color.CYAN);
         marketButtonPanel.add(enterMarketButton);
 
         JScrollPane userStocksScrollPane = createStockListScrollPane(true);
+//        userStocksScrollPane.getViewport().setBackground(Color.PINK);
+
 
         JPanel stockListPanel = new JPanel(new GridLayout(1, 2));
+//        stockListPanel.setBackground(Color.PINK);
         stockListPanel.add(userStocksScrollPane);
         JPanel sellStockPanel = createSellStockPanel();
+//        sellStockPanel.setBackground(Color.PINK);
         frame.add(sellStockPanel, BorderLayout.SOUTH);
         frame.add(accountInfoPanel, BorderLayout.NORTH);
         frame.add(marketButtonPanel, BorderLayout.EAST);
         frame.add(stockListPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
+
 
 
     private JScrollPane createStockListScrollPane(boolean isUserStocks) {
@@ -195,6 +203,7 @@ public class StockPage {
 
     private JPanel createSellStockPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+//        panel.setBackground(Color.CYAN);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
 
