@@ -199,7 +199,9 @@ public class StockPage {
         gbc.insets = new Insets(4, 4, 4, 4);
 
         JLabel stockNameField = new JLabel("Name");
+        stockNameField.setFont(stockNameField.getFont().deriveFont(Font.PLAIN, 18f));
         JTextField stockName = new JTextField(15);
+        stockName.setFont(stockName.getFont().deriveFont(Font.PLAIN, 18f));
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -208,7 +210,9 @@ public class StockPage {
         panel.add(stockName, gbc);
 
         JLabel stockQuantityField = new JLabel("Quantity");
+        stockQuantityField.setFont(stockQuantityField.getFont().deriveFont(Font.PLAIN, 18f));
         JTextField stockQuantity = new JTextField(15);
+        stockQuantity.setFont(stockQuantity.getFont().deriveFont(Font.PLAIN, 18f));
         gbc.gridx = 1;
         gbc.gridy = 0;
         panel.add(stockQuantityField, gbc);
@@ -216,6 +220,7 @@ public class StockPage {
         panel.add(stockQuantity, gbc);
 
         JButton sellButton = new JButton("Sell");
+        sellButton.setFont(sellButton.getFont().deriveFont(Font.PLAIN, 18f));
         sellButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -248,11 +253,12 @@ public class StockPage {
         return panel;
     }
 
+
     private void checkAndNotifyOptionalAccountEligibility() {
         double profit = tradingAccount.getProfitsForAccount().get("realized");
         if (profit > 10000) {
 
-            JOptionPane.showMessageDialog(frame, "Congratulations! Your profit is over 10,000. You are eligible to open an Optional account.");
+            JOptionPane.showMessageDialog(frame, "Congratulations! Your profit is over 10,000. You are eligible to open an Options account.");
         }
     }
 
