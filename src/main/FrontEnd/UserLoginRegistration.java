@@ -4,6 +4,7 @@ import main.Database.Database;
 import main.Enums.UserType;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +25,6 @@ public class UserLoginRegistration {
     private JFrame frame;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     public void run() {
-
         frame = new JFrame("User Login & Registration");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(screenSize.width, screenSize.height);
@@ -35,10 +35,23 @@ public class UserLoginRegistration {
 
         tabbedPane.addTab("Login", loginPanel);
         tabbedPane.addTab("Register", registrationPanel);
-        frame.add(tabbedPane);
 
+        // Create a custom TabbedPaneUI to modify the tab names
+        tabbedPane.setUI(new BasicTabbedPaneUI() {
+            @Override
+            protected void paintText(Graphics g, int tabPlacement, Font font, FontMetrics metrics,
+                                     int tabIndex, String title, Rectangle textRect, boolean isSelected) {
+                Font italicFont = font.deriveFont(Font.ITALIC, 15); // Set the font style and size
+                g.setFont(italicFont);
+                super.paintText(g, tabPlacement, italicFont, metrics, tabIndex, title, textRect, isSelected);
+            }
+        });
+
+        frame.add(tabbedPane);
         frame.setVisible(true);
     }
+
+
 
     private JPanel createLoginPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
