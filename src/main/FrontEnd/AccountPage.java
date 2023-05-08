@@ -13,6 +13,14 @@ import java.util.Map;
 
 /**
  * @Description: show all accounts of a user, and user can click into one account
+ * 
+ * This class is part of the main.FrontEnd package, and provides an interface for users to manage their accounts.
+ * It is responsible for displaying a user's trading accounts and facilitating the creation of new accounts.
+ * Additionally, it allows users to view their account details and navigate to the stock trading page.
+ * Users who are eligible for opening an optional account, based on their realized profits, will be notified.
+ *
+ * Dependencies: main.Database.Database, main.Accounts.TradingAccount, main.PortfolioManager.BankManager
+ */
  */
 public class AccountPage {
     private String userName;
