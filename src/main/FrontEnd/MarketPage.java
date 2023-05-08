@@ -230,7 +230,7 @@ public class MarketPage {
     }
 
     private JScrollPane createStockListScrollPane(String keyword) {
-        List<MarketStock> marketStocks = Market.getStocks();
+        List<MarketStock> marketStocks = Market.getStocks(keyword);
         Object data [][] = new Object[marketStocks.size()][3];
 
         JPanel stockListPanel = new JPanel();
