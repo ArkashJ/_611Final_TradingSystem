@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         
         // Load the data from the txt files into the database
-        Initiator.initiateAll(false);
+//        Initiator.initiateAll(false);
 
         SwingUtilities.invokeLater(() -> {
             // One page for registering manager

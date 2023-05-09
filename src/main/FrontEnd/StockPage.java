@@ -238,6 +238,9 @@ public class StockPage {
 
                 try {
                     stockQuantityInput = Integer.parseInt(stockQuantity.getText());
+                    if(stockQuantityInput < 0) {
+                        throw new NumberFormatException("wrong number");
+                    }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame,
                             "<html><span style='font-size: 15pt;'>Invalid quantity input. Please enter a valid number.</span></html>", "Error", JOptionPane.ERROR_MESSAGE);

@@ -185,6 +185,9 @@ public class MarketPage {
                     String name = stockName.getText();
                     Stock stock = Database.getStock(name);
                     int quantity = Integer.parseInt(stockQuantity.getText());
+                    if(quantity < 0) {
+                        throw new RuntimeException("worng number");
+                    }
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, true);
                 } catch (RuntimeException exception) {
@@ -202,6 +205,9 @@ public class MarketPage {
                     String name = stockName.getText();
                     Stock stock = Database.getStock(name);
                     int quantity = Integer.parseInt(stockQuantity.getText());
+                    if(quantity < 0) {
+                        throw new RuntimeException("worng number");
+                    }
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, false);
                 } catch (RuntimeException exception) {
