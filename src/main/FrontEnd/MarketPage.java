@@ -187,9 +187,9 @@ public class MarketPage {
                     int quantity = Integer.parseInt(stockQuantity.getText());
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, true);
-                } catch (NumberFormatException exception) {
+                } catch (RuntimeException exception) {
                     JOptionPane.showMessageDialog(null,
-                            "<html><span style='font-size: 15pt;'>Invalid quantity</span></html>", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
+                            "<html><span style='font-size: 15pt;'>Invalid Input</span></html>", "Invalid Input", JOptionPane.ERROR_MESSAGE);
 
                 }
             }
@@ -204,9 +204,9 @@ public class MarketPage {
                     int quantity = Integer.parseInt(stockQuantity.getText());
                     double totalAmount = stock.getCurrentPrice() * quantity;
                     showConfirmDialog(accountNumber, name, quantity, totalAmount, false);
-                } catch (NumberFormatException exception) {
+                } catch (RuntimeException exception) {
                     JOptionPane.showMessageDialog(null,
-                            "<html><span style='font-size: 15pt;'>Invalid quantity</span></html>", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
+                            "<html><span style='font-size: 15pt;'>Invalid Input</span></html>", "Invalid Input", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

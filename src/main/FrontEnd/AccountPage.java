@@ -124,7 +124,10 @@ public class AccountPage{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     double initialBalance = Double.parseDouble(balanceField.getText());
-                    if (Database.submitAccountRequest(userName, initialBalance, "TRADE")) {
+                    if(initialBalance < 0) {
+                        JOptionPane.showMessageDialog(null, "Balance < 0. Please try again.");
+                    }
+                    else if (Database.submitAccountRequest(userName, initialBalance, "TRADE")) {
                         JOptionPane.showMessageDialog(null, "Trading account creation request submitted!");
                         refreshCreateCreateAccountsPanel();
                     } else {
