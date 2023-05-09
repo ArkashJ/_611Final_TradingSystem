@@ -1,5 +1,6 @@
 package main.FrontEnd;
 
+import main.Accounts.OptionsAccount;
 import main.Database.Database;
 import main.Accounts.TradingAccount;
 import main.PortfolioManager.BankManager;
@@ -66,6 +67,7 @@ public class AccountPage{
         panel.setBackground(Color.PINK);
 
         List<TradingAccount> accounts = Database.getTradingAccountsForUser(this.userName);
+        List<OptionsAccount> accounts_option = Database.getOptionsAccountForUser(this.userName);
 
         JPanel accountListPanel = new JPanel();
         accountListPanel.setLayout(new BoxLayout(accountListPanel, BoxLayout.Y_AXIS));
@@ -74,7 +76,30 @@ public class AccountPage{
             JPanel accountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             accountPanel.setBackground(Color.PINK);
 
-            JLabel accountLabel = new JLabel("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance());
+            JLabel accountLabel = new JLabel("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance() + "| Type:" + account.getAccountType());
+            accountLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
+            accountLabel.setForeground(Color.BLACK);
+            accountPanel.add(accountLabel);
+
+            JButton enterButton = new JButton("Enter");
+            enterButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
+            enterButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    StockPage stockPage = new StockPage(account.getAccountNumber(), AccountPage.this, loginPage);
+                    stockPage.run();
+                    frame.dispose();
+                }
+            });
+            accountPanel.add(enterButton);
+
+            accountListPanel.add(accountPanel);
+        }
+        for (OptionsAccount account : accounts_option) {
+            JPanel accountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            accountPanel.setBackground(Color.PINK);
+
+            JLabel accountLabel = new JLabel("Account Number: " + account.getAccountNumber() + " | Balance: " + account.getBalance() + "Type:" + account.getAccountType());
             accountLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
             accountLabel.setForeground(Color.BLACK);
             accountPanel.add(accountLabel);

@@ -232,6 +232,21 @@ public class Database {
             }
         }
     }
+    public static boolean createOptionalAccount(String userName,double balance) {
+        synchronized (conn) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO accounts (user_name, balance, account_type) VALUES (?, ?, ?)");
+                statement.setString(1, userName);
+                statement.setDouble(2, balance);
+                statement.setString(3, "OPTIONS");
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
+    }
 
     // ----------------- Get Stock -----------------
     //get stock from stock table

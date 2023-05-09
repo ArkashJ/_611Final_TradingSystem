@@ -40,6 +40,14 @@ public class TradingAccount implements ITrading{
         this.accountType = "Trading";
     }
 
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
     @Override
     public void viewAccountDetails() {
         System.out.println("Account Details");

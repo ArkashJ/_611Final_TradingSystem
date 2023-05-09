@@ -65,12 +65,22 @@ public class RequestReviewPage {
                     int requestId = (int) tableModel.getValueAt(selectedRow, 0);
                     String userName = (String) tableModel.getValueAt(selectedRow, 1);
                     double initialBalance = (double) tableModel.getValueAt(selectedRow, 2);
-
-                    if (Database.createTradingAccount(userName, initialBalance) && Database.removeAccountRequest(requestId)) {
-                        JOptionPane.showMessageDialog(frame, "Account request approved and account created.");
-                        tableModel.removeRow(selectedRow);
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Failed to approve account request.", "Error", JOptionPane.ERROR_MESSAGE);
+                    String accountType = (String) tableModel.getValueAt(selectedRow, 3);
+                    if(accountType.equals("TRADE")) {
+                        if (Database.createTradingAccount(userName, initialBalance) && Database.removeAccountRequest(requestId)) {
+                            JOptionPane.showMessageDialog(frame, "Account request approved and account created.");
+                            tableModel.removeRow(selectedRow);
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Failed to approve account request.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    else {
+                        if (Database.createOptionalAccount(userName, initialBalance) && Database.removeAccountRequest(requestId)) {
+                            JOptionPane.showMessageDialog(frame, "Account request approved and account created.");
+                            tableModel.removeRow(selectedRow);
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Failed to approve account request.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             }
