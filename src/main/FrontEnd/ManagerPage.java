@@ -229,6 +229,9 @@ public class ManagerPage {
                     double newPrice;
                     try {
                         newPrice = Double.parseDouble(newPriceField.getText());
+                        if(newPrice < 0) {
+                            throw new NumberFormatException("price < 0");
+                        }
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(frame, "Invalid price entered.", "Error", JOptionPane.ERROR_MESSAGE);
                         return;

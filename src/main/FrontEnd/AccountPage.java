@@ -169,6 +169,9 @@ public class AccountPage{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     double initialBalance = Double.parseDouble(balanceField.getText());
+                    if(initialBalance < 0 ) {
+                        JOptionPane.showMessageDialog(null, "Invalid balance. Please enter a balance greater than or equal to 0.");
+                    }
                     String accountType = (String) accountTypeComboBox.getSelectedItem();
                     if (Database.submitAccountRequest(userName, initialBalance, accountType.toUpperCase())) {
                         JOptionPane.showMessageDialog(null, accountType + " account creation request submitted!");
